@@ -164,6 +164,7 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_offset):
 
 
 
+
 def lade_kapitel(pfad):
     with open(pfad, encoding="utf-8") as f:
         return yaml.safe_load(f)
