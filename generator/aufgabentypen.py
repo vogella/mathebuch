@@ -572,6 +572,8 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     mauern = abschnitt["mauern"]  # list of walls, each a list of rows bottom-to-top
+    if not mauern:
+        return start_y - (2.5*cm + y_off)
     count = len(mauern)
     spacing = (W - 3*cm) / count
     brick_w = 2.0*cm
