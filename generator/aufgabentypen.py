@@ -78,7 +78,7 @@ def draw_lückenaufgaben(c, abschnitt, farb_key, start_y):
 
     aufgaben = abschnitt["aufgaben"]
     loesungen = abschnitt.get("loesungen", [None] * len(aufgaben))
-    halb = len(aufgaben) // 2
+    halb = (len(aufgaben) + 1) // 2
     col1 = aufgaben[:halb]
     col2 = aufgaben[halb:]
     loes1 = loesungen[:halb]
@@ -231,7 +231,7 @@ def _draw_ein_zahlenhaus(c, cx, ty, roof_num, loesung=None):
     box_h = 1.1*cm
     bx = cx - roof_size
     by = ty - roof_size * 0.9 - box_h
-    colors = [FARBEN["antwort"], HexColor("#FFF0E8")]
+    colors = [FARBEN["antwort"], FARBEN["hellorange"]]
     for j in range(2):
         c.setFillColor(colors[j])
         c.setStrokeColor(FARBEN["orange"])
@@ -332,7 +332,7 @@ def _draw_ein_dreieck(c, tx, ty, r_tri, werte, node_r=0.6*cm):
 def _draw_tipp_box(c, x, y, tipp_zeilen):
     """Draws a tip box with custom lines of text."""
     box_h = max(3*cm, (len(tipp_zeilen) + 1) * 0.65*cm + 1*cm)
-    c.setFillColor(HexColor("#FFFBEA"))
+    c.setFillColor(FARBEN["tipp_bg"])
     c.setStrokeColor(FARBEN["yellow"])
     c.setLineWidth(1.5)
     c.roundRect(x, y - box_h/2, 6*cm, box_h, radius=8, fill=1, stroke=1)
@@ -709,7 +709,6 @@ def draw_nachbarzahlen(c, abschnitt, farb_key, start_y):
     cols = 2
     col_w = (W - 3*cm) / cols
     row_h = 2.3*cm
-    halb = (len(aufgaben) + 1) // 2
 
     row_y = start_y - 1.8*cm - y_off
 
