@@ -17,8 +17,9 @@ sys.path.insert(0, os.path.dirname(__file__))
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
+from reportlab.lib.colors import white
 from layout import (draw_page_bg, draw_header, draw_name_date,
-                    draw_page_number, FARBEN)
+                    draw_page_number, FARBEN, RAND_FARBEN)
 from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_zahlenhaus, draw_rechenraupe,
                            draw_magisches_dreieck, draw_magische_dreiecke,
@@ -54,6 +55,112 @@ TYPEN = {
     "zahlen_ordnen":      draw_zahlen_ordnen,
     "textaufgaben":       draw_textaufgaben,
 }
+
+TRENNLINIE_Y = H - 15.5   # Y-Position der Trennlinie zwischen Abschnitten
+
+
+def render_titelseite(c):
+    """Titelseite mit Buchtitel, Namensfeld und Malblock."""
+    draw_page_bg(c)
+
+    # Großer bunter Titel
+    y_top = H - 4 * cm
+    c.setFillColor(FARBEN["blau"])
+    c.roundRect(2 * cm, y_top, W - 4 * cm, 3 * cm, radius=15, fill=1, stroke=0)
+    c.setFillColor(white)
+    c.setFont("Helvetica-Bold", 30)
+    c.drawCentredString(W / 2, y_top + 1.8 * cm, "Mein Mathebuch")
+    c.setFont("Helvetica", 16)
+    c.drawCentredString(W / 2, y_top + 0.6 * cm, "Klasse 1 – Rechnen macht Spaß!")
+
+    # Bunte Deko-Kreise
+    deko_colors = RAND_FARBEN
+    for i, col in enumerate(deko_colors):
+        cx = 2.5 * cm + i * 2.8 * cm
+        c.setFillColor(col)
+        c.circle(cx, y_top - 1.2 * cm, 0.4 * cm, fill=1, stroke=0)
+
+    # Namensfeld
+    name_y = y_top - 3.5 * cm
+    c.setFillColor(FARBEN["dunkel"])
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(2.5 * cm, name_y + 0.2 * cm, "Dieses Buch gehört:")
+    c.setStrokeColor(FARBEN["blau"])
+    c.setFillColor(white)
+    c.setLineWidth(2)
+    c.roundRect(2.5 * cm, name_y - 1.5 * cm, W - 5 * cm, 1.3 * cm,
+                radius=8, fill=1, stroke=1)
+
+    # Malblock: "Male dich selbst!"
+    mal_y = name_y - 3.5 * cm
+    c.setFillColor(FARBEN["dunkel"])
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(2.5 * cm, mal_y + 0.2 * cm, "Male dich selbst:")
+    # Großer Rahmen zum Malen
+    box_h = 10 * cm
+    c.setStrokeColor(FARBEN["hellgrau"])
+    c.setFillColor(white)
+    c.setLineWidth(1.5)
+    c.setDash(4, 4)
+    c.roundRect(2.5 * cm, mal_y - box_h, W - 5 * cm, box_h,
+                radius=10, fill=1, stroke=1)
+    c.setDash()  # Reset dash
+
+
+def render_inhaltsverzeichnis(c, alle_kapitel, seiten_offset):
+    """Inhaltsverzeichnis auf einer Seite."""
+    draw_page_bg(c)
+
+    # Header
+    c.setFillColor(FARBEN["orange"])
+    c.roundRect(1.5 * cm, H - 3.5 * cm, W - 3 * cm, 2.2 * cm,
+                radius=12, fill=1, stroke=0)
+    c.setFillColor(white)
+    c.setFont("Helvetica-Bold", 20)
+    c.drawCentredString(W / 2, H - 2.5 * cm, "Inhaltsverzeichnis")
+
+    y = H - 5.0 * cm
+    line_h = 0.75 * cm
+
+    for seite_nr, (dateiname, kap_data) in enumerate(alle_kapitel, start=seiten_offset):
+        kap = kap_data["kapitel"]
+        titel = kap["titel"]
+        emoji = kap.get("emoji", "")
+        farb_key = kap.get("farbe", "blau")
+
+        if y < 2.5 * cm:
+            break
+
+        # Emoji
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(2 * cm, y, emoji)
+
+        # Titel
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont("Helvetica", 11)
+        c.drawString(3.2 * cm, y, titel)
+
+        # Gepunktete Linie
+        titel_w = c.stringWidth(titel, "Helvetica", 11)
+        dot_start = 3.2 * cm + titel_w + 0.3 * cm
+        dot_end = W - 3.5 * cm
+        if dot_end > dot_start:
+            c.setFillColor(FARBEN["hellgrau"])
+            c.setFont("Helvetica", 8)
+            dots = ""
+            while c.stringWidth(dots + " .", "Helvetica", 8) < (dot_end - dot_start):
+                dots += " ."
+            c.drawString(dot_start, y, dots)
+
+        # Seitennummer
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont("Helvetica-Bold", 11)
+        c.drawRightString(W - 2 * cm, y, str(seite_nr))
+
+        y -= line_h
+
+
 
 def lade_kapitel(pfad):
     with open(pfad, encoding="utf-8") as f:
@@ -124,18 +231,39 @@ def main():
 
     c = canvas.Canvas(output_path, pagesize=A4)
 
+    # Alle Kapitel vorladen
     alle_kapitel = []
-    for i, yaml_file in enumerate(yaml_files, start=1):
-        print(f"  Rendere Seite {i}: {os.path.basename(yaml_file)} ...")
+    for yaml_file in yaml_files:
         data = lade_kapitel(yaml_file)
         alle_kapitel.append((os.path.basename(yaml_file), data))
-        render_kapitel(c, data, i)
+
+    # Seiten-Offset: Titelseite + Inhaltsverzeichnis = 2 Seiten
+    seiten_offset = 3  # Kapitel starten ab Seite 3
+
+    # Titelseite
+    print("  Rendere Titelseite ...")
+    render_titelseite(c)
+    c.showPage()
+
+    # Inhaltsverzeichnis
+    print("  Rendere Inhaltsverzeichnis ...")
+    render_inhaltsverzeichnis(c, alle_kapitel, seiten_offset)
+    c.showPage()
+
+    # Kapitel
+    for i, (dateiname, data) in enumerate(alle_kapitel):
+        seite = seiten_offset + i
+        print(f"  Rendere Seite {seite}: {dateiname} ...")
+        render_kapitel(c, data, seite)
         c.showPage()
 
     # Lösungsseiten am Ende
     from loesungen import render_loesungsseiten
+    loes_start = seiten_offset + len(alle_kapitel)
     print("  Rendere Lösungsseiten ...")
-    n_loes = render_loesungsseiten(c, alle_kapitel, len(yaml_files) + 1)
+    n_loes = render_loesungsseiten(c, alle_kapitel, loes_start)
+    if n_loes > 0:
+        c.showPage()
     print(f"  → {n_loes} Lösungsseite(n)")
 
     c.save()

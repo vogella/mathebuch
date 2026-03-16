@@ -281,9 +281,10 @@ def draw_rechenraupe(c, abschnitt, farb_key, start_y):
         c.setStrokeColor(col if is_answer else HexColor("#00000000"))
         c.setLineWidth(2)
         c.circle(cx, cy, r, fill=1, stroke=1 if is_answer else 0)
-        c.setFillColor(white if not is_answer else FARBEN["blau"])
-        c.setFont("Helvetica-Bold", 13 if len(seg) <= 2 else 11)
-        c.drawCentredString(cx, cy - 0.2*cm, seg)
+        if not is_answer:
+            c.setFillColor(white)
+            c.setFont("Helvetica-Bold", 13 if len(seg) <= 2 else 11)
+            c.drawCentredString(cx, cy - 0.2*cm, seg)
 
 
     return cy - 2*cm
