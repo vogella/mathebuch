@@ -1,0 +1,15 @@
+kapitel:
+  titel: "So funktioniert's! (3c)"
+  untertitel: "Vervielfachen erklärt."
+  emoji: "📖"
+  farbe: "orange"
+  zahlenraum: 20
+  erklaerungsseite: true
+
+abschnitte:
+  - typ: vervielfachen
+    titel: "Vervielfachen"
+    beschreibung: "Wie oft musst du die Zahl mit sich selbst addieren, um auf das Ergebnis zu kommen? Zum Beispiel: 2 + 2 + 2 = 6, also passt die 2 dreimal in die 6."
+    aufgaben:
+      - [2, 6]
+    loesungen: [3]

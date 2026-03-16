@@ -29,7 +29,8 @@ from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_kettenaufgaben, draw_tauschaufgaben,
                            draw_verdoppeln_halbieren,
                            draw_zahlenstrahl, draw_punktefeld,
-                           draw_zahlen_ordnen, draw_textaufgaben)
+                           draw_zahlen_ordnen, draw_vervielfachen,
+                           draw_textaufgaben)
 
 W, H = A4
 
@@ -53,6 +54,7 @@ TYPEN = {
     "zahlenstrahl":       draw_zahlenstrahl,
     "punktefeld":         draw_punktefeld,
     "zahlen_ordnen":      draw_zahlen_ordnen,
+    "vervielfachen":      draw_vervielfachen,
     "textaufgaben":       draw_textaufgaben,
 }
 

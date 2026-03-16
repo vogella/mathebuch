@@ -195,6 +195,14 @@ def _solve_zahlenhaus(abschnitt):
     return results
 
 
+def _solve_vervielfachen(abschnitt):
+    results = []
+    for aufg in abschnitt["aufgaben"]:
+        zahl, ziel = aufg
+        results.append(str(ziel // zahl))
+    return results
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -211,6 +219,7 @@ SOLVER = {
     "zahlzerlegung": _solve_zahlzerlegung,
     "zahlen_ordnen": _solve_zahlen_ordnen,
     "zahlenhaus": _solve_zahlenhaus,
+    "vervielfachen": _solve_vervielfachen,
 }
 
 # Types to skip (explanation, visual-only, or too complex for auto-solve)

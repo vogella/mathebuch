@@ -1152,6 +1152,60 @@ def draw_zahlen_ordnen(c, abschnitt, farb_key, start_y):
     return row_y - len(aufgaben) * row_h - 0.3*cm
 
 
+# ── Vervielfachen ────────────────────────────────────────
+
+def draw_vervielfachen(c, abschnitt, farb_key, start_y):
+    """How many times must you add a number to itself to reach a target?"""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]  # list of [zahl, ziel]
+    loesungen = abschnitt.get("loesungen", [])
+    cols = 2
+    col_w = (W - 3*cm) / cols
+    row_h = 1.6*cm
+    row_y = start_y - 1.5*cm - y_off
+
+    for idx, aufg in enumerate(aufgaben):
+        zahl, ziel = aufg
+        loes = loesungen[idx] if idx < len(loesungen) else None
+        col = idx % cols
+        row = idx // cols
+        x = 1.8*cm + col * col_w
+        y = row_y - row * row_h
+
+        # Number in colored circle
+        c.setFillColor(FARBEN[farb_key])
+        c.circle(x + 0.5*cm, y + 0.1*cm, 0.5*cm, fill=1, stroke=0)
+        c.setFillColor(white)
+        c.setFont("Helvetica-Bold", 16)
+        c.drawCentredString(x + 0.5*cm, y - 0.1*cm, str(zahl))
+
+        # "×" symbol
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont("Helvetica-Bold", 18)
+        c.drawCentredString(x + 1.3*cm, y, "×")
+
+        # Answer box for "how many times"
+        if loes is not None:
+            _draw_filled_answer_box(c, x + 1.7*cm, y - 0.3*cm, loes,
+                                    w=1.3*cm, h=1.0*cm)
+        else:
+            draw_answer_box(c, x + 1.7*cm, y - 0.3*cm, w=1.3*cm, h=1.0*cm)
+
+        # "=" and target number
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont("Helvetica-Bold", 18)
+        c.drawCentredString(x + 3.4*cm, y, "=")
+
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont("Helvetica-Bold", 18)
+        c.drawCentredString(x + 4.2*cm, y, str(ziel))
+
+    total_rows = (len(aufgaben) + cols - 1) // cols
+    return row_y - total_rows * row_h - 0.3*cm
+
+
 # ── Textaufgaben ──────────────────────────────────────────
 
 def draw_textaufgaben(c, abschnitt, farb_key, start_y):
