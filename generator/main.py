@@ -55,9 +55,6 @@ TYPEN = {
     "textaufgaben":       draw_textaufgaben,
 }
 
-TRENNLINIE_Y = H - 15.5   # Y-Position der Trennlinie zwischen Abschnitten
-
-
 def lade_kapitel(pfad):
     with open(pfad, encoding="utf-8") as f:
         return yaml.safe_load(f)
@@ -139,8 +136,6 @@ def main():
     from loesungen import render_loesungsseiten
     print("  Rendere Lösungsseiten ...")
     n_loes = render_loesungsseiten(c, alle_kapitel, len(yaml_files) + 1)
-    if n_loes > 0:
-        c.showPage()
     print(f"  → {n_loes} Lösungsseite(n)")
 
     c.save()

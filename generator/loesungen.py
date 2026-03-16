@@ -57,7 +57,7 @@ def _solve_würfelzählen(abschnitt):
         val = aufg[0]
         for i in range(1, len(aufg)):
             op = ops[i - 1] if i - 1 < len(ops) else default_op
-            if op in ("+",):
+            if op == "+":
                 val += aufg[i]
             else:  # − or -
                 val -= aufg[i]
@@ -250,8 +250,6 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
                 if label and len(label) >= 1:
                     first = label.strip().split()[0] if label.strip() else ""
                     if len(first) <= 2 and first.isalpha():
-                        short_label = first
-                    elif first and first[0].isalpha() and len(first) <= 2:
                         short_label = first
                 sektionen.append((short_label, antworten))
         if sektionen:

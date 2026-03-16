@@ -18,8 +18,10 @@ FARBEN = {
     "purple":   HexColor("#A78BFA"),
     "dunkel":   HexColor("#2D2A3E"),
     "antwort":  HexColor("#E8F4FF"),
-    "grau":     HexColor("#AAAAAA"),
-    "hellgrau": HexColor("#DDDDDD"),
+    "grau":       HexColor("#AAAAAA"),
+    "hellgrau":   HexColor("#DDDDDD"),
+    "hellorange": HexColor("#FFF0E8"),
+    "tipp_bg":    HexColor("#FFFBEA"),
 }
 
 RAND_FARBEN = [
@@ -32,7 +34,7 @@ def draw_page_bg(c):
     """Cremefarbener Hintergrund mit buntem Randmuster."""
     c.setFillColor(FARBEN["bg"])
     c.rect(0, 0, W, H, fill=1, stroke=0)
-    sq = 18
+    sq = 18  # border square size in points
     colors = RAND_FARBEN * 2
     for i, col in enumerate(colors):
         c.setFillColor(col)
