@@ -1,0 +1,19 @@
+kapitel:
+  titel: "Drei Würfel – Plus und Minus"
+  untertitel: "Drei Würfel, gemischte Rechenzeichen!"
+  emoji: "🎲"
+  farbe: "purple"
+  zahlenraum: 12
+
+abschnitte:
+  - typ: würfelzählen
+    titel: "A  Drei Würfel – Plus und Minus"
+    beschreibung: "Schau dir die Zeichen zwischen den Würfeln genau an. Rechne plus oder minus!"
+    aufgaben:
+      - [6, 3, 2]
+      - [5, 4, 1]
+      - [4, 2, 3]
+      - [6, 5, 2]
+      - [5, 3, 1]
+      - [6, 2, 4]
+    operatoren: ["+, −", "−, +", "+, +", "−, −", "+, −", "−, +"]
