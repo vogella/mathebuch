@@ -1,0 +1,27 @@
+kapitel:
+  titel: "So funktioniert's! (6)"
+  untertitel: "Magisches Quadrat und Textaufgaben."
+  emoji: "📖"
+  farbe: "blau"
+  zahlenraum: 20
+  erklaerungsseite: true
+
+abschnitte:
+  - typ: magisches_quadrat
+    titel: "Magisches Quadrat – Aufgabe & Lösung"
+    beschreibung: "Setze die Zahlen so ein, dass jede Reihe und Spalte zusammen addiert die gleiche Summe ergibt. Bei den Übungen sind bestimmte Felder schon vorgegeben."
+    zielsumme: 15
+    werte: [2, null, null, null, 5, null, null, null, 8]
+    paar:
+      label_links: "Aufgabe"
+      label_rechts: "Lösung"
+      werte: [2, 7, 6, 9, 5, 1, 4, 3, 8]
+
+  - typ: erklaerung
+    titel: "Textaufgaben"
+    zeilen:
+      - "Lies die Aufgabe genau durch. Überlege, ob du plus oder minus rechnen musst."
+      - "Schreibe die Rechnung und die Antwort in die Kästchen."
+      - ""
+      - "**  Beispiel: Anna hat 3 Äpfel. Ben gibt ihr 4 dazu.**"
+      - "**  Rechnung: 3 + 4 = 7    Antwort: 7 Äpfel**"

@@ -1,0 +1,28 @@
+kapitel:
+  titel: "Nachbarzahlen"
+  untertitel: "Welche Zahlen stehen davor und danach?"
+  emoji: "🔢"
+  farbe: "blau"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: nachbarzahlen
+    titel: "A  Finde die Nachbarn!"
+    aufgaben:
+      # [Vorgänger, Zahl, Nachfolger] – null = ausfüllen
+      - [null, 5, null]
+      - [null, 8, null]
+      - [null, 3, null]
+      - [null, 12, null]
+      - [null, 7, null]
+      - [null, 15, null]
+
+  - typ: nachbarzahlen
+    titel: "B  Einer fehlt – welcher?"
+    aufgaben:
+      - [4, null, 6]
+      - [null, 9, 10]
+      - [11, 12, null]
+      - [null, 14, 15]
+      - [7, null, 9]
+      - [16, null, 18]

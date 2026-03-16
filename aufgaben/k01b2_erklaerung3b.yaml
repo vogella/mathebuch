@@ -1,0 +1,20 @@
+kapitel:
+  titel: "So funktioniert's! (3b)"
+  untertitel: "Rechenmauer erklärt."
+  emoji: "📖"
+  farbe: "orange"
+  zahlenraum: 20
+  erklaerungsseite: true
+
+abschnitte:
+  - typ: rechenmauer
+    titel: "Rechenmauer – Aufgabe & Lösung"
+    beschreibung: "Jeder Stein ist die Summe der zwei Steine direkt darunter. Rechne von unten nach oben!"
+    mauern:
+      - - [2, 3, 1]
+        - [null, null]
+        - [null]
+      - - [2, 3, 1]
+        - [5, 4]
+        - [9]
+    mauer_labels: ["Aufgabe", "Lösung"]

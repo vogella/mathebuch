@@ -1,0 +1,36 @@
+kapitel:
+  titel: "So funktioniert's! (2)"
+  untertitel: "Noch mehr Aufgabentypen erklärt."
+  emoji: "📖"
+  farbe: "gruen"
+  zahlenraum: 20
+  erklaerungsseite: true
+
+abschnitte:
+  - typ: zahlenhaus
+    titel: "Zahlenhaus"
+    beschreibung: "Finde zwei verschiedene Zahlen, die zusammen die Dachzahl ergeben. Die verbotenen Zahlen darfst du nicht verwenden!"
+    verboten: [1, 2]
+    dachzahlen: [7]
+    loesungen:
+      - [3, 4]
+
+  - typ: würfelzählen
+    titel: "Würfelzählen"
+    beschreibung: "Zähle die Augen auf den Würfeln zusammen und schreibe das Ergebnis in das Kästchen."
+    aufgaben:
+      - [4, 5]
+    loesungen: [9]
+
+  - typ: tauschaufgaben
+    titel: "Tauschaufgaben"
+    beschreibung: "Rechne beide Seiten aus. Du wirst sehen: Wenn man die Zahlen tauscht, bleibt das Ergebnis gleich!"
+    aufgaben:
+      - [3, 5]
+    loesungen: [8]
+
+  - typ: zahlzerlegung
+    titel: "Zahlzerlegung"
+    beschreibung: "Eine Zahl wird in zwei Teile zerlegt. Finde die fehlenden Teile, die zusammen die obere Zahl ergeben."
+    aufgaben:
+      - [8, 3, 5]

@@ -1,0 +1,40 @@
+kapitel:
+  titel: "So funktioniert's! (1)"
+  untertitel: "Hier siehst du, wie die Aufgaben gelöst werden."
+  emoji: "📖"
+  farbe: "blau"
+  zahlenraum: 20
+  erklaerungsseite: true
+
+abschnitte:
+  - typ: erklaerung
+    titel: "Willkommen!"
+    zeilen:
+      - "In diesem Buch findest du viele verschiedene Rechenaufgaben."
+      - "Schau dir die Beispiele an – die grünen Zahlen zeigen die Lösung."
+
+  - typ: punktefeld
+    titel: "Punktefeld"
+    beschreibung: "Du siehst ein Feld mit Kreisen. Einige davon sind ausgefüllt. Zähle die ausgefüllten Punkte und schreibe die Anzahl in das Kästchen."
+    felder: 10
+    aufgaben:
+      - 4
+    loesungen: [4]
+
+  - typ: nachbarzahlen
+    titel: "Nachbarzahlen"
+    beschreibung: "Jede Zahl hat einen Vorgänger (davor) und einen Nachfolger (danach). Schreibe die fehlenden Nachbarn in die leeren Kästchen."
+    aufgaben:
+      - [null, 5, null]
+    loesungen:
+      - [4, null, 6]
+
+  - typ: lückenaufgaben
+    titel: "Lückenaufgaben"
+    beschreibung: "In jeder Rechnung fehlt eine Zahl. Finde die fehlende Zahl und schreibe sie in das blaue Kästchen."
+    aufgaben:
+      - [3, "+", 5, null]
+      - [12, "-", null, 8]
+    loesungen:
+      - [null, null, 8]
+      - [null, 4, null]

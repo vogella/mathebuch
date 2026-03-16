@@ -1,0 +1,26 @@
+kapitel:
+  titel: "Zahlenstrahl"
+  untertitel: "Welche Zahlen fehlen auf dem Zahlenstrahl?"
+  emoji: "📏"
+  farbe: "blau"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: zahlenstrahl
+    titel: "A  Ergänze die fehlenden Zahlen!"
+    strahlen:
+      - von: 0
+        bis: 10
+        werte: [0, null, 2, null, 4, null, 6, null, 8, null, 10]
+      - von: 0
+        bis: 10
+        werte: [null, 1, null, 3, null, 5, null, 7, null, 9, null]
+      - von: 0
+        bis: 20
+        werte: [0, null, null, 3, null, 5, null, null, 8, null, 10, null, 12, null, null, 15, null, null, 18, null, 20]
+      - von: 5
+        bis: 15
+        werte: [5, null, null, 8, null, 10, null, null, 13, null, 15]
+      - von: 10
+        bis: 20
+        werte: [10, null, null, null, 14, null, 16, null, null, null, 20]

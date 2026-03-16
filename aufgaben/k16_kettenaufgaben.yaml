@@ -1,0 +1,21 @@
+kapitel:
+  titel: "Kettenaufgaben"
+  untertitel: "Rechne Schritt für Schritt!"
+  emoji: "🔗"
+  farbe: "orange"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: kettenaufgaben
+    titel: "A  Rechne die Kette aus!"
+    aufgaben:
+      - "3 + 2 − 1"
+      - "5 + 4 − 3"
+      - "1 + 6 + 2"
+      - "8 − 3 + 4"
+      - "7 + 3 − 5"
+      - "2 + 8 − 6"
+      - "9 − 4 + 3"
+      - "4 + 5 − 2 + 1"
+      - "10 − 3 − 2 + 5"
+      - "6 + 4 − 7 + 3"

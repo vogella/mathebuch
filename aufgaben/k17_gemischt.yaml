@@ -1,0 +1,32 @@
+kapitel:
+  titel: "Gemischt bis 20 – Rätselspaß!"
+  untertitel: "Kannst du alle lösen?"
+  emoji: "🔢"
+  farbe: "blau"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: lückenaufgaben
+    titel: "A  Plus und Minus bis 20"
+    aufgaben:
+      - [11, "+", 5,    null]
+      - [18, "-", 7,    null]
+      - [14, "+", null, 20]
+      - [16, "-", null, 9]
+      - [null, "+", 8,  15]
+      - [null, "-", 6,  8]
+      - [13, "+", 4,    null]
+      - [20, "-", 13,   null]
+
+  - typ: magisches_dreieck
+    titel: "B  Magisches Dreieck"
+    beschreibung: "Jede Seite des Dreiecks soll die Summe 12 ergeben."
+    hinweis: "Benutze die Zahlen 1–6. Keine Zahl zweimal!"
+    # Ecken: oben, links-unten, rechts-unten; Mitten: links, unten, rechts
+    werte: [null, null, null, null, null, null]
+    tipp_zeilen:
+      - "Benutze die"
+      - "Zahlen 1, 2, 3,"
+      - "4, 5 und 6."
+      - "Keine Zahl"
+      - "zweimal!"

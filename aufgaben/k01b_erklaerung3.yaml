@@ -1,0 +1,29 @@
+kapitel:
+  titel: "So funktioniert's! (3)"
+  untertitel: "Und noch mehr Aufgabentypen!"
+  emoji: "📖"
+  farbe: "orange"
+  zahlenraum: 20
+  erklaerungsseite: true
+
+abschnitte:
+  - typ: verdoppeln_halbieren
+    titel: "Verdoppeln & Halbieren"
+    beschreibung: "Beim Verdoppeln rechnest du die Zahl plus sich selbst. Beim Halbieren teilst du die Zahl durch 2. Im Beispiel suchst du die Zahl, die mit sich selbst plus wieder die 10 wird."
+    aufgaben:
+      - [4, "doppelt"]
+      - [10, "halb"]
+    loesungen: [8, 5]
+
+  - typ: rechenraupe
+    titel: "Rechenraupe – Aufgabe"
+    beschreibung: "Rechne Schritt für Schritt von links nach rechts. Jeder Kreis zeigt eine Rechnung oder ein Ergebnis. Ein leerer Kreis ist blau und ist das Ergebnis."
+    start: 2
+    schritte: ["+3", "+1", "+4"]
+
+  - typ: rechenraupe
+    titel: "Rechenraupe – Lösung"
+    start: 2
+    schritte: ["+3", "+1", "+4"]
+    loesungen: [5, 6, 10]
+
