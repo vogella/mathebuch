@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import cm
 from layout import (draw_page_bg, draw_header, draw_name_date,
                     draw_page_number, FARBEN)
 from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
@@ -65,7 +66,6 @@ def lade_kapitel(pfad):
 def zeichne_trennlinie(c, y):
     c.setStrokeColor(FARBEN["hellgrau"])
     c.setLineWidth(1)
-    from reportlab.lib.units import cm
     c.line(1.5*cm, y, W - 1.5*cm, y)
 
 
@@ -80,8 +80,6 @@ def render_kapitel(c, kapitel_data, seitennummer):
     if not ist_erklaerung:
         draw_name_date(c)
 
-    from reportlab.lib.units import cm
-
     # Startposition: ohne Name/Datum-Felder mehr Platz
     y = H - 5.5*cm if ist_erklaerung else H - 7.0*cm
     abschnitte = kapitel_data.get("abschnitte", [])
@@ -90,7 +88,7 @@ def render_kapitel(c, kapitel_data, seitennummer):
         typ = abschnitt.get("typ")
         fn  = TYPEN.get(typ)
         if fn is None:
-            print(f"  Warnung: Unbekannter Typ '{typ}', wird übersprungen.")
+            print(f"  Warnung: Unbekannter Typ '{typ}', wird übersprungen.", file=sys.stderr)
             continue
 
         # Trennlinie zwischen Abschnitten (nicht vor dem ersten)

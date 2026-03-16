@@ -55,7 +55,7 @@ def draw_erklaerung(c, abschnitt, farb_key, start_y):
             # Bold example line
             c.setFillColor(FARBEN["dunkel"])
             c.setFont("Helvetica-Bold", 11)
-            c.drawString(2.5*cm, y, zeile[2:].strip().rstrip("*"))
+            c.drawString(2.5*cm, y, zeile.strip().strip('*').strip())
             y -= 0.6*cm
         else:
             c.setFillColor(FARBEN["dunkel"])
@@ -1158,31 +1158,31 @@ def draw_textaufgaben(c, abschnitt, farb_key, start_y):
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of {text, hinweis}
-    row_y = start_y - 1.5*cm - y_off
-    row_h = 2.8*cm
+    y = start_y - 1.5*cm - y_off
 
     for idx, aufg in enumerate(aufgaben):
         text = aufg["text"]
         hinweis = aufg.get("hinweis", "")
-        y = row_y - idx * row_h
 
         # Number
         c.setFillColor(FARBEN[farb_key])
         c.setFont("Helvetica-Bold", 12)
         c.drawString(1.8*cm, y, f"{idx + 1}.")
 
-        # Problem text with simple word wrap
+        # Problem text with proper word wrap using stringWidth
         c.setFillColor(FARBEN["dunkel"])
         c.setFont("Helvetica", 11)
+        max_w = W - 4.3*cm  # 2.8cm left indent + 1.5cm right margin
         words = text.split()
         lines = []
         line = ""
         for w in words:
-            if len(line + " " + w) > 65:
+            test = (line + " " + w).strip()
+            if c.stringWidth(test, "Helvetica", 11) > max_w:
                 lines.append(line)
                 line = w
             else:
-                line = (line + " " + w).strip()
+                line = test
         if line:
             lines.append(line)
 
@@ -1206,4 +1206,7 @@ def draw_textaufgaben(c, abschnitt, farb_key, start_y):
         c.drawString(10*cm, bottom + 0.3*cm, "Antwort:")
         draw_answer_box(c, 12*cm, bottom, w=6*cm, h=0.9*cm)
 
-    return row_y - len(aufgaben) * row_h
+        # Advance y dynamically based on actual content height
+        y = bottom - 0.5*cm
+
+    return y
