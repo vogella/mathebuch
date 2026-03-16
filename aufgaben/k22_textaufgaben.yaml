@@ -16,3 +16,4 @@ abschnitte:
       - text: "Tom hat 10 Buntstifte. Er verschenkt 6 an seine Freundin. Wie viele Buntstifte hat Tom noch?"
       - text: "Auf dem Spielplatz sind 7 Mädchen und 5 Jungen. Wie viele Kinder spielen insgesamt?"
       - text: "Lisa sammelt 9 Kastanien. 4 davon verliert sie auf dem Weg. Wie viele Kastanien hat sie noch?"
+    loesungen: [7, 5, 9, 4, 12, 5]

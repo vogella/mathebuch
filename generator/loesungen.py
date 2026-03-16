@@ -253,32 +253,11 @@ def _solve_rechenraupe(abschnitt):
     return results
 
 
-def _solve_magisches_dreieck(abschnitt):
-    werte = list(abschnitt.get("werte", []))
-    hinweis = abschnitt.get("hinweis", "")
-    # Extract available numbers from hint like "Benutze die Zahlen 1–6"
-    import re
-    m = re.search(r"(\d+)[–-](\d+)", hinweis)
-    if m:
-        zahlen = list(range(int(m.group(1)), int(m.group(2)) + 1))
-    else:
-        zahlen = list(range(1, 7))  # default 1-6
-
-    # Extract target sum from beschreibung
-    beschreibung = abschnitt.get("beschreibung", "")
-    m2 = re.search(r"Summe\s+(\d+)", beschreibung)
-    if m2:
-        ziel = int(m2.group(1))
-    else:
-        return []
-
-    # Triangle: indices 0,1,2 = corners (top, bottom-left, bottom-right)
-    #           indices 3,4,5 = midpoints (left, bottom, right)
-    # Sides: [0,3,1], [1,4,2], [2,5,0]
+def _solve_single_dreieck(werte, ziel, zahlen):
+    """Solve a single magic triangle given values, target sum, and available numbers."""
     from itertools import permutations
-    given = {i: v for i, v in enumerate(werte) if v is not None}
     blanks = [i for i, v in enumerate(werte) if v is None]
-    used = set(given.values())
+    used = set(v for v in werte if v is not None)
     available = [z for z in zahlen if z not in used]
 
     for perm in permutations(available, len(blanks)):
@@ -288,8 +267,43 @@ def _solve_magisches_dreieck(abschnitt):
         if (trial[0] + trial[3] + trial[1] == ziel and
                 trial[1] + trial[4] + trial[2] == ziel and
                 trial[2] + trial[5] + trial[0] == ziel):
-            return [",".join(str(trial[i]) for i in blanks)]
-    return []
+            return ",".join(str(trial[i]) for i in blanks)
+    return None
+
+
+def _solve_magisches_dreieck(abschnitt):
+    import re
+    # Handle "magische_dreiecke" type with a list of triangles
+    dreiecke = abschnitt.get("dreiecke")
+    if dreiecke:
+        results = []
+        for dreieck in dreiecke:
+            werte = list(dreieck.get("werte", []))
+            ziel = dreieck.get("zielsumme", 0)
+            zahlen = list(range(1, 7))  # default 1-6
+            result = _solve_single_dreieck(werte, ziel, zahlen)
+            if result:
+                results.append(result)
+        return results
+
+    # Handle single "magisches_dreieck" type
+    werte = list(abschnitt.get("werte", []))
+    hinweis = abschnitt.get("hinweis", "")
+    m = re.search(r"(\d+)[–-](\d+)", hinweis)
+    if m:
+        zahlen = list(range(int(m.group(1)), int(m.group(2)) + 1))
+    else:
+        zahlen = list(range(1, 7))  # default 1-6
+
+    beschreibung = abschnitt.get("beschreibung", "")
+    m2 = re.search(r"Summe\s+(\d+)", beschreibung)
+    if m2:
+        ziel = int(m2.group(1))
+    else:
+        return []
+
+    result = _solve_single_dreieck(werte, ziel, zahlen)
+    return [result] if result else []
 
 
 def _solve_magisches_quadrat(abschnitt):
