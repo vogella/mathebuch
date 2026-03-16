@@ -17,12 +17,3 @@ abschnitte:
       - [3, 2]
       - [5, 5]
     operatoren: ["+", "−", "+", "−", "+", "−"]
-
-  - typ: würfelzählen
-    titel: "B  Drei Würfel – Plus und Minus"
-    aufgaben:
-      - [6, 3, 2]
-      - [5, 4, 1]
-      - [4, 2, 3]
-      - [6, 5, 2]
-    operatoren: ["+, −", "−, +", "+, +", "−, −"]
