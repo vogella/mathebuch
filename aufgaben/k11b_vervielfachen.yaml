@@ -1,5 +1,5 @@
 kapitel:
-  titel: "Vervielfachen"
+  titel: "Vervielfachen (1)"
   untertitel: "Wie oft musst du die Zahl addieren?"
   emoji: "🔁"
   farbe: "orange"
@@ -8,7 +8,7 @@ kapitel:
 abschnitte:
   - typ: vervielfachen
     titel: "A  Wie oft passt die Zahl hinein?"
-    beschreibung: "Wie oft musst du die Zahl mit sich selbst addieren, um auf das Ergebnis zu kommen?"
+    beschreibung: "Schreibe zuerst die Plusaufgabe, dann wie oft die Zahl hineinpasst."
     aufgaben:
       # [zahl, ziel] → Antwort: ziel / zahl
       - [2, 6]
@@ -17,19 +17,3 @@ abschnitte:
       - [2, 8]
       - [5, 10]
       - [4, 8]
-      - [3, 12]
-      - [2, 14]
-      - [5, 15]
-      - [2, 20]
-
-  - typ: vervielfachen
-    titel: "B  Jetzt wird's kniffliger!"
-    aufgaben:
-      - [3, 15]
-      - [4, 12]
-      - [2, 16]
-      - [5, 20]
-      - [3, 18]
-      - [4, 16]
-      - [2, 12]
-      - [4, 20]
