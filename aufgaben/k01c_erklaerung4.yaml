@@ -1,0 +1,32 @@
+kapitel:
+  titel: "So funktioniert's! (4)"
+  untertitel: "Zahlenstrahl, Vergleiche und Kettenaufgaben."
+  emoji: "📖"
+  farbe: "pink"
+  zahlenraum: 20
+  erklaerungsseite: true
+
+abschnitte:
+  - typ: zahlenstrahl
+    titel: "Zahlenstrahl"
+    beschreibung: "Auf dem Zahlenstrahl fehlen Zahlen. Schreibe die fehlenden Zahlen in die Kästchen."
+    strahlen:
+      - von: 0
+        bis: 5
+        werte: [0, null, 2, null, 4, null]
+        loesungen: [null, 1, null, 3, null, 5]
+
+  - typ: vergleiche
+    titel: "Vergleiche"
+    beschreibung: "Vergleiche die Zahlen links und rechts. Schreibe >, < oder = in den Kreis."
+    aufgaben:
+      - [3, 5]
+      - [7, 7]
+    loesungen: ["<", "="]
+
+  - typ: kettenaufgaben
+    titel: "Kettenaufgaben"
+    beschreibung: "Rechne Schritt für Schritt von links nach rechts und schreibe das Ergebnis in das Kästchen."
+    aufgaben:
+      - "3 + 2 − 1"
+    loesungen: [4]

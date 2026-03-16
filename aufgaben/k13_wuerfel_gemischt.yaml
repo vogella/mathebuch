@@ -1,0 +1,28 @@
+kapitel:
+  titel: "Würfel – Plus und Minus gemischt"
+  untertitel: "Addiere oder subtrahiere die Würfelaugen!"
+  emoji: "🎲"
+  farbe: "purple"
+  zahlenraum: 12
+
+abschnitte:
+  - typ: würfelzählen
+    titel: "A  Würfel – Plus und Minus"
+    beschreibung: "Schau dir das Zeichen zwischen den Würfeln genau an. Rechne plus oder minus!"
+    aufgaben:
+      - [5, 3]
+      - [6, 2]
+      - [4, 4]
+      - [6, 1]
+      - [3, 2]
+      - [5, 5]
+    operatoren: ["+", "−", "+", "−", "+", "−"]
+
+  - typ: würfelzählen
+    titel: "B  Drei Würfel – Plus und Minus"
+    aufgaben:
+      - [6, 3, 2]
+      - [5, 4, 1]
+      - [4, 2, 3]
+      - [6, 5, 2]
+    operatoren: ["+, −", "−, +", "+, +", "−, −"]

@@ -1,0 +1,26 @@
+kapitel:
+  titel: "Subtraktion bis 10"
+  untertitel: "Fülle die Lücken aus!"
+  emoji: "➖"
+  farbe: "pink"
+  zahlenraum: 10
+
+abschnitte:
+  - typ: lückenaufgaben
+    titel: "A  Wie viel bleibt übrig?"
+    aufgaben:
+      - [9,  "-", 3, null]
+      - [8,  "-", 5, null]
+      - [7,  "-", 4, null]
+      - [10, "-", 6, null]
+      - [6,  "-", 6, null]
+      - [10, "-", null, 4]
+      - [9,  "-", null, 2]
+      - [8,  "-", null, 5]
+      - [7,  "-", null, 3]
+      - [6,  "-", null, 1]
+
+  - typ: rechenraupe
+    titel: "B  Rechenraupe – Rechne weiter!"
+    start: 10
+    schritte: ["-3", "-2", "+4"]

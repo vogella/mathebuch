@@ -1,0 +1,35 @@
+kapitel:
+  titel: "Verdoppeln & Halbieren"
+  untertitel: "Kannst du verdoppeln und halbieren?"
+  emoji: "✖️"
+  farbe: "blau"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: verdoppeln_halbieren
+    titel: "A  Verdopple die Zahl!"
+    aufgaben:
+      - [1, "doppelt"]
+      - [2, "doppelt"]
+      - [3, "doppelt"]
+      - [4, "doppelt"]
+      - [5, "doppelt"]
+      - [6, "doppelt"]
+      - [7, "doppelt"]
+      - [8, "doppelt"]
+      - [9, "doppelt"]
+      - [10, "doppelt"]
+
+  - typ: verdoppeln_halbieren
+    titel: "B  Halbiere die Zahl!"
+    aufgaben:
+      - [2, "halb"]
+      - [4, "halb"]
+      - [6, "halb"]
+      - [8, "halb"]
+      - [10, "halb"]
+      - [12, "halb"]
+      - [14, "halb"]
+      - [16, "halb"]
+      - [18, "halb"]
+      - [20, "halb"]

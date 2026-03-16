@@ -1,0 +1,21 @@
+kapitel:
+  titel: "Magisches Quadrat"
+  untertitel: "Jede Zeile, Spalte und Diagonale ergibt die gleiche Summe!"
+  emoji: "🟪"
+  farbe: "purple"
+  zahlenraum: 15
+
+abschnitte:
+  - typ: magisches_quadrat
+    titel: "A  Magisches Quadrat – Summe 15"
+    beschreibung: "Setze die Zahlen 1–9 ein. Jede Reihe und Spalte soll zusammen addiert 15 ergeben."
+    zielsumme: 15
+    # Reihenfolge: Zeile für Zeile von oben links nach unten rechts
+    # Lösung: 2,7,6 / 9,5,1 / 4,3,8
+    werte: [2, null, null, null, 5, null, null, null, 8]
+    tipp_zeilen:
+      - "Benutze die"
+      - "Zahlen 1 bis 9."
+      - "Die 5 steht"
+      - "immer in"
+      - "der Mitte!"

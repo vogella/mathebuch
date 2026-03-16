@@ -1,0 +1,20 @@
+kapitel:
+  titel: "Drei Würfel – Subtraktion"
+  untertitel: "Ziehe die Augen ab!"
+  emoji: "🎲"
+  farbe: "pink"
+  zahlenraum: 6
+
+abschnitte:
+  - typ: würfelzählen
+    titel: "A  Wie viel bleibt übrig?"
+    operator: "−"
+    aufgaben:
+      # Ergebnis ist immer >= 0
+      - [6, 2, 1]
+      - [5, 1, 2]
+      - [6, 3, 2]
+      - [4, 1, 1]
+      - [5, 2, 1]
+      - [6, 4, 1]
+      - [6, 1, 3]

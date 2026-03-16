@@ -1,0 +1,27 @@
+kapitel:
+  titel: "So funktioniert's! (5)"
+  untertitel: "Sortieren, Dreiecke, Quadrate und Textaufgaben."
+  emoji: "📖"
+  farbe: "purple"
+  zahlenraum: 20
+  erklaerungsseite: true
+
+abschnitte:
+  - typ: zahlen_ordnen
+    titel: "Zahlen ordnen"
+    beschreibung: "Du bekommst Zahlen durcheinander. Ordne sie von der kleinsten zur größten Zahl und schreibe sie in die Kästchen."
+    aufgaben:
+      - [5, 2, 8]
+    loesungen:
+      - [2, 5, 8]
+
+  - typ: magische_dreiecke
+    titel: "Magisches Dreieck – Aufgabe & Lösung"
+    beschreibung: "Setze die Zahlen so ein, dass jede Seite des Dreiecks die gleiche Summe ergibt. Es gibt mehrere Möglichkeiten die Zahlen in das Dreieck einzusetzen, finde eine davon."
+    dreiecke:
+      - zielsumme: 9
+        label: "Aufgabe"
+        werte: [1, 2, 3, null, null, null]
+      - zielsumme: 9
+        label: "Lösung"
+        werte: [1, 2, 3, 6, 4, 5]

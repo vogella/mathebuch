@@ -1,0 +1,24 @@
+kapitel:
+  titel: "Punktefeld"
+  untertitel: "Zähle die Punkte im Zehnerfeld!"
+  emoji: "⚫"
+  farbe: "gruen"
+  zahlenraum: 10
+
+abschnitte:
+  - typ: punktefeld
+    titel: "A  Wie viele Punkte siehst du?"
+    felder: 10
+    aufgaben:
+      - 3
+      - 7
+      - 5
+      - 1
+      - 9
+      - 4
+      - 8
+      - 2
+      - 6
+      - 10
+      - 0
+      - 7

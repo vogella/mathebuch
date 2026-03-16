@@ -1,0 +1,19 @@
+kapitel:
+  titel: "Tauschaufgaben"
+  untertitel: "Tauschen erlaubt – das Ergebnis bleibt gleich!"
+  emoji: "🔄"
+  farbe: "pink"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: tauschaufgaben
+    titel: "A  Rechne beide Seiten aus!"
+    aufgaben:
+      - [3, 5]
+      - [2, 7]
+      - [4, 6]
+      - [1, 9]
+      - [8, 3]
+      - [5, 5]
+      - [6, 4]
+      - [7, 2]

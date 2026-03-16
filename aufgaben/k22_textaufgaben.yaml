@@ -1,0 +1,18 @@
+kapitel:
+  titel: "Textaufgaben"
+  untertitel: "Lies genau und rechne!"
+  emoji: "📝"
+  farbe: "orange"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: textaufgaben
+    titel: "A  Sachaufgaben"
+    aufgaben:
+      - text: "Anna hat 3 Äpfel. Ben gibt ihr 4 Äpfel dazu. Wie viele Äpfel hat Anna jetzt?"
+        hinweis: "Tipp: Zusammenzählen!"
+      - text: "Im Bus sitzen 8 Kinder. An der Haltestelle steigen 3 Kinder aus. Wie viele Kinder sitzen noch im Bus?"
+      - text: "Mama kauft 5 Brötchen und 4 Croissants. Wie viele Teile hat sie insgesamt?"
+      - text: "Tom hat 10 Buntstifte. Er verschenkt 6 an seine Freundin. Wie viele Buntstifte hat Tom noch?"
+      - text: "Auf dem Spielplatz sind 7 Mädchen und 5 Jungen. Wie viele Kinder spielen insgesamt?"
+      - text: "Lisa sammelt 9 Kastanien. 4 davon verliert sie auf dem Weg. Wie viele Kastanien hat sie noch?"

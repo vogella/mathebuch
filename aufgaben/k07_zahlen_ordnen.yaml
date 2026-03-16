@@ -1,0 +1,19 @@
+kapitel:
+  titel: "Zahlen ordnen"
+  untertitel: "Ordne die Zahlen von klein nach groß!"
+  emoji: "📊"
+  farbe: "purple"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: zahlen_ordnen
+    titel: "A  Sortiere von klein nach groß!"
+    aufgaben:
+      - [5, 2, 8]
+      - [3, 7, 1]
+      - [9, 4, 6]
+      - [10, 2, 5]
+      - [8, 1, 4, 6]
+      - [7, 3, 9, 2]
+      - [12, 5, 18, 3]
+      - [15, 8, 11, 20]

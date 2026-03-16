@@ -1,0 +1,28 @@
+kapitel:
+  titel: "Addition bis 10"
+  untertitel: "Fülle die Lücken aus!"
+  emoji: "➕"
+  farbe: "gruen"
+  zahlenraum: 10
+
+abschnitte:
+  - typ: lückenaufgaben
+    titel: "A  Wie viel ist das?"
+    aufgaben:
+      # Format: a, op, b, ergebnis  –  null = Lücke
+      - [2, "+", 3, null]
+      - [1, "+", 5, null]
+      - [4, "+", 4, null]
+      - [3, "+", 6, null]
+      - [0, "+", 7, null]
+      - [5, "+", null, 8]
+      - [3, "+", null, 9]
+      - [2, "+", null, 6]
+      - [4, "+", null, 10]
+      - [1, "+", null, 4]
+
+  - typ: zahlenhaus
+    titel: "B  Zahlenhaus – Ergänze alle Felder!"
+    beschreibung: "Finde zwei verschiedene Zahlen, die zusammen die Dachzahl ergeben."
+    verboten: [1, 2, 3]
+    dachzahlen: [8, 9, 10, 11]
