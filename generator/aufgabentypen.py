@@ -1155,55 +1155,73 @@ def draw_zahlen_ordnen(c, abschnitt, farb_key, start_y):
 # ── Vervielfachen ────────────────────────────────────────
 
 def draw_vervielfachen(c, abschnitt, farb_key, start_y):
-    """How many times must you add a number to itself to reach a target?"""
+    """How many times must you add a number to itself to reach a target?
+    Shows two lines per task: addition line and multiplication line."""
     draw_section_label(c, abschnitt["titel"], farb_key, start_y)
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of [zahl, ziel]
     loesungen = abschnitt.get("loesungen", [])
-    cols = 2
-    col_w = (W - 3*cm) / cols
-    row_h = 1.6*cm
+    row_h = 2.8*cm
     row_y = start_y - 1.5*cm - y_off
 
     for idx, aufg in enumerate(aufgaben):
         zahl, ziel = aufg
         loes = loesungen[idx] if idx < len(loesungen) else None
-        col = idx % cols
-        row = idx // cols
-        x = 1.8*cm + col * col_w
-        y = row_y - row * row_h
+        x = 1.8*cm
+        y = row_y - idx * row_h
 
-        # Number in colored circle
-        c.setFillColor(FARBEN[farb_key])
-        c.circle(x + 0.5*cm, y + 0.1*cm, 0.5*cm, fill=1, stroke=0)
-        c.setFillColor(white)
-        c.setFont("Helvetica-Bold", 16)
-        c.drawCentredString(x + 0.5*cm, y - 0.1*cm, str(zahl))
-
-        # "×" symbol
-        c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 18)
-        c.drawCentredString(x + 1.3*cm, y, "×")
-
-        # Answer box for "how many times"
-        if loes is not None:
-            _draw_filled_answer_box(c, x + 1.7*cm, y - 0.3*cm, loes,
-                                    w=1.3*cm, h=1.0*cm)
-        else:
-            draw_answer_box(c, x + 1.7*cm, y - 0.3*cm, w=1.3*cm, h=1.0*cm)
-
-        # "=" and target number
-        c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 18)
-        c.drawCentredString(x + 3.4*cm, y, "=")
-
+        # ── Line 1: addition ──  zahl + [___________] = ziel
+        y1 = y
         c.setFillColor(FARBEN["dunkel"])
         c.setFont("Helvetica-Bold", 18)
-        c.drawCentredString(x + 4.2*cm, y, str(ziel))
+        c.drawCentredString(x + 0.5*cm, y1, str(zahl))
 
-    total_rows = (len(aufgaben) + cols - 1) // cols
-    return row_y - total_rows * row_h - 0.3*cm
+        c.setFillColor(FARBEN[farb_key])
+        c.drawCentredString(x + 1.3*cm, y1, "+")
+
+        # Long box for writing repeated addition (e.g. "2 + 2 + 2")
+        plus_box_w = 6.5*cm
+        draw_answer_box(c, x + 1.8*cm, y1 - 0.3*cm, w=plus_box_w, h=1.0*cm)
+        if loes is not None:
+            # Show the repeated addition in green
+            addition_text = (" + ".join([str(zahl)] * (loes - 1)))
+            c.setFillColor(FARBEN["gruen"])
+            c.setFont("Helvetica-Bold", 13)
+            c.drawCentredString(x + 1.8*cm + plus_box_w / 2,
+                                y1 - 0.05*cm, addition_text)
+
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont("Helvetica-Bold", 18)
+        eq_x = x + 1.8*cm + plus_box_w + 0.4*cm
+        c.drawCentredString(eq_x, y1, "=")
+
+        c.setFillColor(FARBEN["dunkel"])
+        c.drawCentredString(eq_x + 1.0*cm, y1, str(ziel))
+
+        # ── Line 2: multiplication ──  zahl × [___] = ziel
+        y2 = y - 1.3*cm
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont("Helvetica-Bold", 18)
+        c.drawCentredString(x + 0.5*cm, y2, str(zahl))
+
+        c.setFillColor(FARBEN[farb_key])
+        c.drawCentredString(x + 1.3*cm, y2, "×")
+
+        if loes is not None:
+            _draw_filled_answer_box(c, x + 1.8*cm, y2 - 0.3*cm, loes,
+                                    w=1.3*cm, h=1.0*cm)
+        else:
+            draw_answer_box(c, x + 1.8*cm, y2 - 0.3*cm, w=1.3*cm, h=1.0*cm)
+
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont("Helvetica-Bold", 18)
+        c.drawCentredString(x + 3.5*cm, y2, "=")
+
+        c.setFillColor(FARBEN["dunkel"])
+        c.drawCentredString(x + 4.3*cm, y2, str(ziel))
+
+    return row_y - len(aufgaben) * row_h - 0.3*cm
 
 
 # ── Textaufgaben ──────────────────────────────────────────
