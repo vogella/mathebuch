@@ -1,6 +1,7 @@
 """
 loesungen.py – Berechnet und rendert kompakte Lösungsseiten am Ende des Buchs.
 """
+import sys
 from reportlab.lib.colors import HexColor, white
 from reportlab.lib.units import cm
 from reportlab.lib.pagesizes import A4
@@ -99,11 +100,26 @@ def _solve_vergleiche(abschnitt):
 def _solve_kettenaufgaben(abschnitt):
     results = []
     for kette in abschnitt["aufgaben"]:
-        # Replace − with - for eval
-        expr = kette.replace("−", "-").replace("×", "*").replace("÷", "/")
         try:
-            results.append(str(int(eval(expr))))
-        except Exception:
+            tokens = kette.split()
+            val = float(tokens[0])
+            it = iter(tokens[1:])
+            for op_str, num_str in zip(it, it):
+                num = float(num_str)
+                if op_str == '+':
+                    val += num
+                elif op_str in ('-', '−'):
+                    val -= num
+                elif op_str in ('*', '×'):
+                    val *= num
+                elif op_str in ('/', '÷'):
+                    if num == 0:
+                        raise ZeroDivisionError
+                    val /= num
+                else:
+                    raise ValueError(f"Unknown operator: {op_str}")
+            results.append(str(int(val)))
+        except (ValueError, IndexError, ZeroDivisionError):
             results.append("?")
     return results
 
@@ -224,7 +240,8 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
                 continue
             try:
                 antworten = solver(abschnitt)
-            except Exception:
+            except Exception as e:
+                print(f"Warnung: Fehler bei der Lösungsberechnung für Typ '{typ}' in Seite '{dateiname}': {e}", file=sys.stderr)
                 continue
             if antworten:
                 label = abschnitt.get("titel", "")
