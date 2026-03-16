@@ -68,29 +68,66 @@ def _solve_würfelzählen(abschnitt):
 def _solve_rechenmauer(abschnitt):
     results = []
     for mauer in abschnitt["mauern"]:
-        # Compute from bottom up
         rows = [list(r) for r in mauer]
-        for ri in range(1, len(rows)):
-            for bi in range(len(rows[ri])):
-                if rows[ri][bi] is None:
-                    rows[ri][bi] = rows[ri - 1][bi] + rows[ri - 1][bi + 1]
+        # Iteratively fill in values (both up and down) until no more progress
+        changed = True
+        while changed:
+            changed = False
+            for ri in range(1, len(rows)):
+                for bi in range(len(rows[ri])):
+                    # Up: sum of two below
+                    if rows[ri][bi] is None and rows[ri - 1][bi] is not None and rows[ri - 1][bi + 1] is not None:
+                        rows[ri][bi] = rows[ri - 1][bi] + rows[ri - 1][bi + 1]
+                        changed = True
+                    # Down-left: parent minus right child
+                    if rows[ri][bi] is not None and rows[ri - 1][bi] is None and rows[ri - 1][bi + 1] is not None:
+                        rows[ri - 1][bi] = rows[ri][bi] - rows[ri - 1][bi + 1]
+                        changed = True
+                    # Down-right: parent minus left child
+                    if rows[ri][bi] is not None and rows[ri - 1][bi + 1] is None and rows[ri - 1][bi] is not None:
+                        rows[ri - 1][bi + 1] = rows[ri][bi] - rows[ri - 1][bi]
+                        changed = True
         # Collect non-given values
         wall_results = []
         for ri in range(len(mauer)):
             for bi in range(len(mauer[ri])):
                 if mauer[ri][bi] is None:
-                    wall_results.append(str(rows[ri][bi]))
+                    wall_results.append(str(rows[ri][bi]) if rows[ri][bi] is not None else "?")
         results.append(",".join(wall_results))
     return results
+
+
+def _eval_simple_expr(val):
+    """Evaluate a value that may be a number or a simple arithmetic string."""
+    if isinstance(val, (int, float)):
+        return val
+    if isinstance(val, str):
+        tokens = val.replace("−", "-").replace("×", "*").replace("÷", "/").split()
+        result = float(tokens[0])
+        it = iter(tokens[1:])
+        for op, num in zip(it, it):
+            n = float(num)
+            if op == '+':
+                result += n
+            elif op == '-':
+                result -= n
+            elif op == '*':
+                result *= n
+            elif op == '/':
+                result /= n
+        return result
+    return val
 
 
 def _solve_vergleiche(abschnitt):
     results = []
     for aufg in abschnitt["aufgaben"]:
         l, r = aufg
-        if l < r:
+        lv = _eval_simple_expr(l)
+        rv = _eval_simple_expr(r)
+        if lv < rv:
             results.append("<")
-        elif l > r:
+        elif lv > rv:
             results.append(">")
         else:
             results.append("=")
@@ -203,6 +240,87 @@ def _solve_vervielfachen(abschnitt):
     return results
 
 
+def _solve_rechenraupe(abschnitt):
+    results = []
+    val = abschnitt["start"]
+    for schritt in abschnitt["schritte"]:
+        s = schritt.replace("−", "-")
+        if s.startswith("+"):
+            val += int(s[1:])
+        elif s.startswith("-"):
+            val -= int(s[1:])
+        results.append(str(val))
+    return results
+
+
+def _solve_magisches_dreieck(abschnitt):
+    werte = list(abschnitt.get("werte", []))
+    hinweis = abschnitt.get("hinweis", "")
+    # Extract available numbers from hint like "Benutze die Zahlen 1–6"
+    import re
+    m = re.search(r"(\d+)[–-](\d+)", hinweis)
+    if m:
+        zahlen = list(range(int(m.group(1)), int(m.group(2)) + 1))
+    else:
+        zahlen = list(range(1, 7))  # default 1-6
+
+    # Extract target sum from beschreibung
+    beschreibung = abschnitt.get("beschreibung", "")
+    m2 = re.search(r"Summe\s+(\d+)", beschreibung)
+    if m2:
+        ziel = int(m2.group(1))
+    else:
+        return []
+
+    # Triangle: indices 0,1,2 = corners (top, bottom-left, bottom-right)
+    #           indices 3,4,5 = midpoints (left, bottom, right)
+    # Sides: [0,3,1], [1,4,2], [2,5,0]
+    from itertools import permutations
+    given = {i: v for i, v in enumerate(werte) if v is not None}
+    blanks = [i for i, v in enumerate(werte) if v is None]
+    used = set(given.values())
+    available = [z for z in zahlen if z not in used]
+
+    for perm in permutations(available, len(blanks)):
+        trial = list(werte)
+        for i, idx in enumerate(blanks):
+            trial[idx] = perm[i]
+        if (trial[0] + trial[3] + trial[1] == ziel and
+                trial[1] + trial[4] + trial[2] == ziel and
+                trial[2] + trial[5] + trial[0] == ziel):
+            return [",".join(str(trial[i]) for i in blanks)]
+    return []
+
+
+def _solve_magisches_quadrat(abschnitt):
+    werte = list(abschnitt.get("werte", []))
+    ziel = abschnitt.get("zielsumme", 15)
+    from itertools import permutations
+    given = {i: v for i, v in enumerate(werte) if v is not None}
+    blanks = [i for i, v in enumerate(werte) if v is None]
+    used = set(given.values())
+    zahlen = [z for z in range(1, 10) if z not in used]
+
+    lines = [[0, 1, 2], [3, 4, 5], [6, 7, 8],
+             [0, 3, 6], [1, 4, 7], [2, 5, 8],
+             [0, 4, 8], [2, 4, 6]]
+
+    for perm in permutations(zahlen, len(blanks)):
+        trial = list(werte)
+        for i, idx in enumerate(blanks):
+            trial[idx] = perm[i]
+        if all(sum(trial[j] for j in line) == ziel for line in lines):
+            return [",".join(str(trial[i]) for i in blanks)]
+    return []
+
+
+def _solve_textaufgaben(abschnitt):
+    loesungen = abschnitt.get("loesungen", [])
+    if loesungen:
+        return [str(l) for l in loesungen]
+    return []
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -220,11 +338,18 @@ SOLVER = {
     "zahlen_ordnen": _solve_zahlen_ordnen,
     "zahlenhaus": _solve_zahlenhaus,
     "vervielfachen": _solve_vervielfachen,
+    "rechenraupe": _solve_rechenraupe,
+    "magisches_dreieck": _solve_magisches_dreieck,
+    "magische_dreiecke": _solve_magisches_dreieck,
+    "magisches_quadrat": _solve_magisches_quadrat,
+    "textaufgaben": _solve_textaufgaben,
+    "zahlenraetsel": lambda a: [str(a["loesungen"][i]) for i in range(len(a.get("loesungen", [])))],
+    "einkaufen": lambda a: [str(a["loesungen"][i]) for i in range(len(a.get("loesungen", [])))],
+    "kalender_raetsel": lambda a: [str(a["loesungen"][i]) for i in range(len(a.get("loesungen", [])))],
 }
 
-# Types to skip (explanation, visual-only, or too complex for auto-solve)
-SKIP_TYPES = {"erklaerung", "magisches_dreieck", "magische_dreiecke",
-              "magisches_quadrat", "textaufgaben", "rechenraupe"}
+# Types to skip (explanation, visual-only)
+SKIP_TYPES = {"erklaerung", "wuerfel_zuordnen"}
 
 
 # ── Rendering ─────────────────────────────────────────────
