@@ -1350,6 +1350,166 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
     return row_y - 0.3*cm
 
 
+# ── Schatzsuche (Treasure Hunt Maze) ────────────────────
+
+def _draw_maze_path(c, abschnitt, farb_key, start_y, modus="schatz"):
+    """Shared renderer for maze-path exercises (schatzsuche & labyrinth_flucht).
+    modus: 'schatz' = treasure hunt, 'flucht' = maze escape."""
+    import math
+
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]
+    loesungen = abschnitt.get("loesungen", [])
+    row_y = start_y - 1.5*cm - y_off
+
+    node_r = 0.55*cm
+    answer_r = 0.5*cm
+    gap = 0.15*cm
+    path_colors = [FARBEN["blau"], FARBEN["gruen"], FARBEN["orange"],
+                   FARBEN["pink"], FARBEN["purple"]]
+
+    # Theme configuration
+    if modus == "flucht":
+        start_label = "Eingang"
+        end_label = "Ausgang!"
+        end_fill = FARBEN["gruen"]
+        end_stroke = FARBEN["blau"]
+    else:
+        start_label = "Start"
+        end_label = "Schatz!"
+        end_fill = FARBEN["yellow"]
+        end_stroke = FARBEN["orange"]
+
+    for ai, aufg in enumerate(aufgaben):
+        start_val = aufg["start"]
+        schritte = aufg["schritte"]
+        loes = loesungen[ai] if ai < len(loesungen) else None
+
+        n_steps = len(schritte)
+        total_nodes = 1 + n_steps * 2
+
+        # Calculate how many nodes fit per row
+        step_w = 2 * node_r + gap
+        usable_w = W - 5*cm
+        nodes_per_row = max(int(usable_w / step_w), 3)
+
+        # Build rows of nodes (zigzag)
+        rows = []
+        remaining = list(range(total_nodes))
+        while remaining:
+            row = remaining[:nodes_per_row]
+            remaining = remaining[nodes_per_row:]
+            rows.append(row)
+
+        # Compute solutions for intermediate answers
+        intermediate = []
+        val = start_val
+        for s in schritte:
+            op = s[0]
+            num = int(s[1:])
+            val = val + num if op == "+" else val - num
+            intermediate.append(val)
+
+        # Draw the maze path
+        maze_top = row_y
+        row_h = 2.2*cm
+        x_left = 2.5*cm
+        x_right = x_left + (nodes_per_row - 1) * step_w
+
+        prev_cx, prev_cy = None, None
+
+        for ri, row_indices in enumerate(rows):
+            reverse = (ri % 2 == 1)
+            if reverse:
+                row_indices = list(reversed(row_indices))
+
+            cy = maze_top - ri * row_h
+
+            for ni_in_row, node_idx in enumerate(row_indices):
+                cx = x_left + ni_in_row * step_w
+                if reverse:
+                    cx = x_right - ni_in_row * step_w
+
+                # Draw path line from previous node
+                if prev_cx is not None:
+                    dx = cx - prev_cx
+                    dy = cy - prev_cy
+                    dist = math.sqrt(dx*dx + dy*dy)
+                    if dist > 0:
+                        c.setStrokeColor(FARBEN["hellgrau"])
+                        c.setLineWidth(2)
+                        c.setDash(3, 3)
+                        nx, ny = dx/dist, dy/dist
+                        c.line(prev_cx + nx*node_r, prev_cy + ny*node_r,
+                               cx - nx*node_r, cy - ny*node_r)
+                        c.setDash()
+
+                # Determine what this node is
+                if node_idx == 0:
+                    # Start node
+                    c.setFillColor(FARBEN[farb_key])
+                    c.circle(cx, cy, node_r, fill=1, stroke=0)
+                    c.setFillColor(white)
+                    c.setFont("Helvetica-Bold", 14)
+                    c.drawCentredString(cx, cy - 0.18*cm, str(start_val))
+                    c.setFillColor(FARBEN[farb_key])
+                    c.setFont("Helvetica-Bold", 8)
+                    c.drawCentredString(cx, cy + node_r + 0.15*cm, start_label)
+                elif node_idx % 2 == 1:
+                    # Operation node
+                    step_i = node_idx // 2
+                    col = path_colors[step_i % len(path_colors)]
+                    c.setFillColor(col)
+                    c.circle(cx, cy, node_r * 0.85, fill=1, stroke=0)
+                    c.setFillColor(white)
+                    c.setFont("Helvetica-Bold", 13)
+                    c.drawCentredString(cx, cy - 0.18*cm, schritte[step_i])
+                else:
+                    # Answer node
+                    answer_i = node_idx // 2 - 1
+                    is_last = (node_idx == total_nodes - 1)
+
+                    if is_last:
+                        # End node - themed styling
+                        c.setFillColor(end_fill)
+                        c.setStrokeColor(end_stroke)
+                        c.setLineWidth(2.5)
+                        c.circle(cx, cy, node_r, fill=1, stroke=1)
+                        c.setFont("Helvetica-Bold", 8)
+                        c.setFillColor(end_stroke)
+                        c.drawCentredString(cx, cy + node_r + 0.15*cm, end_label)
+                    else:
+                        # Regular answer node
+                        c.setFillColor(FARBEN["antwort"])
+                        c.setStrokeColor(FARBEN[farb_key])
+                        c.setLineWidth(1.5)
+                        c.circle(cx, cy, answer_r, fill=1, stroke=1)
+
+                    # Show solution if available
+                    if loes and answer_i < len(loes):
+                        c.setFillColor(FARBEN["gruen"])
+                        c.setFont("Helvetica-Bold", 13)
+                        c.drawCentredString(cx, cy - 0.18*cm, str(loes[answer_i]))
+
+                prev_cx, prev_cy = cx, cy
+
+        row_y = maze_top - len(rows) * row_h
+
+    return row_y - 0.3*cm
+
+
+def draw_schatzsuche(c, abschnitt, farb_key, start_y):
+    """Maze-style treasure hunt: follow a winding path with operations."""
+    return _draw_maze_path(c, abschnitt, farb_key, start_y, modus="schatz")
+
+
+def draw_labyrinth_flucht(c, abschnitt, farb_key, start_y):
+    """Maze escape: follow a winding path with operations to find the exit."""
+    return _draw_maze_path(c, abschnitt, farb_key, start_y, modus="flucht")
+
+
 # ── Zahlenrätsel (Wer bin ich?) ─────────────────────────
 
 def _draw_hinweis_boxen(c, boxen, farb_key, start_y):
