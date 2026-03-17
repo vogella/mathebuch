@@ -198,16 +198,9 @@ def draw_zahlenhaus(c, abschnitt, farb_key, start_y):
     draw_section_label(c, abschnitt["titel"], farb_key, start_y)
 
     # Optional description and hint text
-    beschreibung = abschnitt.get("beschreibung", "")
+    y_offset = _draw_beschreibung(c, abschnitt, start_y)
+
     hinweis = abschnitt.get("hinweis", "")
-    y_offset = 0
-    if beschreibung:
-        c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica", 10)
-        for line in beschreibung.split("\n"):
-            c.drawString(2*cm, start_y - 0.9*cm - y_offset, line)
-            y_offset += 0.4*cm
-        y_offset += 0.2*cm
     if hinweis:
         c.setFillColor(FARBEN["grau"])
         c.setFont("Helvetica-Oblique", 9)
