@@ -69,6 +69,7 @@ TYPEN = {
 }
 
 TRENNLINIE_Y = H - 15.5   # Y-Position der Trennlinie zwischen Abschnitten
+HINWEIS_ERKLAERUNG = "Hier siehst du, wie die Aufgaben gelöst werden."
 
 
 def render_titelseite(c):
@@ -321,7 +322,7 @@ def render_kapitel(c, kapitel_data, seitennummer):
     if ist_erklaerung:
         c.setFillColor(FARBEN["dunkel"])
         c.setFont("Helvetica", 11)
-        c.drawString(2*cm, y, "Hier siehst du, wie die Aufgaben gelöst werden.")
+        c.drawString(2*cm, y, HINWEIS_ERKLAERUNG)
         y -= 1.0*cm
 
     abschnitte = kapitel_data.get("abschnitte", [])
