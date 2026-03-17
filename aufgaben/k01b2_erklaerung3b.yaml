@@ -1,5 +1,5 @@
 kapitel:
-  titel: "So funktioniert's! (3b)"
+  titel: "So funktioniert's!"
   untertitel: "Rechenmauer erklärt."
   emoji: "📖"
   farbe: "orange"
@@ -8,7 +8,7 @@ kapitel:
 
 abschnitte:
   - typ: rechenmauer
-    titel: "Rechenmauer – Aufgabe & Lösung"
+    titel: "Rechenmauer"
     beschreibung: "Jeder Stein ist die Summe der zwei Steine direkt darunter. Rechne von unten nach oben!"
     mauern:
       - - [2, 3, 1]

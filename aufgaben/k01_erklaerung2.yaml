@@ -1,5 +1,5 @@
 kapitel:
-  titel: "So funktioniert's! (2)"
+  titel: "So funktioniert's!"
   untertitel: "Noch mehr Aufgabentypen erklärt."
   emoji: "📖"
   farbe: "gruen"
@@ -9,7 +9,7 @@ kapitel:
 abschnitte:
   - typ: zahlenhaus
     titel: "Zahlenhaus"
-    beschreibung: "Finde zwei verschiedene Zahlen, die zusammen die Dachzahl ergeben. Die verbotenen Zahlen darfst du nicht verwenden!"
+    beschreibung: "Finde zwei verschiedene Zahlen, die zusammen die Dachzahl ergeben.\nDie verbotenen Zahlen darfst du nicht verwenden!"
     verboten: [1, 2]
     dachzahlen: [7]
     loesungen:
@@ -32,5 +32,7 @@ abschnitte:
   - typ: zahlzerlegung
     titel: "Zahlzerlegung"
     beschreibung: "Eine Zahl wird in zwei Teile zerlegt. Finde die fehlenden Teile, die zusammen die obere Zahl ergeben."
+    zerlegung_labels: ["Aufgabe", "Lösung"]
     aufgaben:
+      - [8, 3, null]
       - [8, 3, 5]

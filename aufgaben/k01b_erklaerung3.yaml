@@ -1,5 +1,5 @@
 kapitel:
-  titel: "So funktioniert's! (3)"
+  titel: "So funktioniert's!"
   untertitel: "Und noch mehr Aufgabentypen!"
   emoji: "📖"
   farbe: "orange"
@@ -16,13 +16,13 @@ abschnitte:
     loesungen: [8, 5]
 
   - typ: rechenraupe
-    titel: "Rechenraupe – Aufgabe"
+    titel: "Rechenraupe"
     beschreibung: "Rechne Schritt für Schritt von links nach rechts. Jeder Kreis zeigt eine Rechnung oder ein Ergebnis. Ein leerer Kreis ist blau und ist das Ergebnis."
     start: 2
     schritte: ["+3", "+1", "+4"]
 
   - typ: rechenraupe
-    titel: "Rechenraupe – Lösung"
+    titel: ""
     start: 2
     schritte: ["+3", "+1", "+4"]
     loesungen: [5, 6, 10]

@@ -1,19 +1,20 @@
 kapitel:
-  titel: "Vervielfachen (1)"
+  titel: "Vervielfachen bis 10"
   untertitel: "Wie oft musst du die Zahl addieren?"
   emoji: "🔁"
   farbe: "orange"
-  zahlenraum: 20
+  zahlenraum: 10
 
 abschnitte:
   - typ: vervielfachen
     titel: "A  Wie oft passt die Zahl hinein?"
     beschreibung: "Schreibe zuerst die Plusaufgabe, dann wie oft die Zahl hineinpasst."
     aufgaben:
-      # [zahl, ziel] → Antwort: ziel / zahl
+      - [2, 4]
       - [2, 6]
-      - [2, 10]
-      - [3, 9]
+      - [3, 6]
       - [2, 8]
       - [5, 10]
       - [4, 8]
+      - [2, 10]
+      - [3, 9]

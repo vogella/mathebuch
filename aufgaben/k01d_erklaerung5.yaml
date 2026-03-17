@@ -1,5 +1,5 @@
 kapitel:
-  titel: "So funktioniert's! (5)"
+  titel: "So funktioniert's!"
   untertitel: "Sortieren, Dreiecke, Quadrate und Textaufgaben."
   emoji: "📖"
   farbe: "purple"
@@ -16,7 +16,7 @@ abschnitte:
       - [2, 5, 8]
 
   - typ: magische_dreiecke
-    titel: "Magisches Dreieck – Aufgabe & Lösung"
+    titel: "Magisches Dreieck"
     beschreibung: "Setze die Zahlen so ein, dass jede Seite des Dreiecks die gleiche Summe ergibt. Es gibt mehrere Möglichkeiten die Zahlen in das Dreieck einzusetzen, finde eine davon."
     dreiecke:
       - zielsumme: 9
