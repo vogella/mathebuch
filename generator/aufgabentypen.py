@@ -855,42 +855,50 @@ def draw_zahlzerlegung(c, abschnitt, farb_key, start_y):
 # ── Kettenaufgaben ────────────────────────────────────────
 
 def draw_kettenaufgaben(c, abschnitt, farb_key, start_y):
-    """Chain calculations: 3 + 2 − 1 + 4 = ?"""
+    """Chain calculations: 3 + 2 − 1 + 4 = ? (Two columns)"""
     draw_section_label(c, abschnitt["titel"], farb_key, start_y)
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of strings like "3 + 2 − 1 + 4"
     loesungen = abschnitt.get("loesungen", [])
+    
+    # Calculate columns
+    halb = (len(aufgaben) + 1) // 2
+    col_w = (W - 3*cm) / 2
     row_y = start_y - 1.5*cm - y_off
     row_h = 1.5*cm
 
     for idx, kette in enumerate(aufgaben):
-        y = row_y - idx * row_h
-        c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica-Bold", 18)
-
+        col = 0 if idx < halb else 1
+        row = idx if idx < halb else idx - halb
+        
+        x0 = 1.8*cm + col * col_w
+        y = row_y - row * row_h
+        
         # Number the exercise
         c.setFillColor(FARBEN[farb_key])
         c.setFont("Helvetica-Bold", 12)
-        c.drawString(1.8*cm, y + 0.05*cm, f"{idx + 1}.")
+        c.drawString(x0, y + 0.05*cm, f"{idx + 1}.")
 
         # The chain expression
         c.setFillColor(FARBEN["dunkel"])
         c.setFont("Helvetica-Bold", 18)
-        c.drawString(2.8*cm, y, kette)
+        c.drawString(x0 + 1.0*cm, y, kette)
 
         # = and answer box
         text_w = c.stringWidth(kette, "Helvetica-Bold", 18)
-        eq_x = 2.8*cm + text_w + 0.5*cm
+        eq_x = x0 + 1.0*cm + text_w + 0.5*cm
         c.setFillColor(FARBEN[farb_key])
         c.drawString(eq_x, y, "=")
+        
+        ans_x = eq_x + 1.0*cm
         if idx < len(loesungen):
-            _draw_filled_answer_box(c, eq_x + 1.0*cm, y - 0.25*cm,
+            _draw_filled_answer_box(c, ans_x, y - 0.25*cm,
                                     loesungen[idx], w=1.6*cm, h=1.1*cm)
         else:
-            draw_answer_box(c, eq_x + 1.0*cm, y - 0.25*cm, w=1.6*cm, h=1.1*cm)
+            draw_answer_box(c, ans_x, y - 0.25*cm, w=1.6*cm, h=1.1*cm)
 
-    return row_y - len(aufgaben) * row_h - 0.3*cm
+    return row_y - halb * row_h - 0.3*cm
 
 
 # ── Tauschaufgaben ────────────────────────────────────────
