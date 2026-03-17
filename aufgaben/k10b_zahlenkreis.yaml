@@ -12,3 +12,14 @@ abschnitte:
     aufgaben:
       - [0, null, null, null, null, null]
       - [5, null, null, null, null, null]
+      - [null, null, null, 0, null, null]
+      - [null, null, null, 5, null, null]
+      - [null, null, null, null, null, 0]
+      - [null, 5, null, null, null, null]
+    labels:
+      - "Immer einer mehr"
+      - "Immer einer weniger"
+      - "Immer einer mehr"
+      - "Immer einer weniger"
+      - "Immer einer mehr"
+      - "Immer einer weniger"
