@@ -1,12 +1,53 @@
 """
 aufgabentypen.py – Zeichenfunktionen für jeden Aufgabentyp
 """
+import random as _rnd
 from reportlab.lib.colors import HexColor, white
 from reportlab.lib.units import cm
 from reportlab.lib.pagesizes import A4
 from layout import FARBEN, draw_answer_box, draw_section_label
 
 W, H = A4
+
+
+def _wrap_text(c, text, font_name, font_size, max_width):
+    """Word-wrap text to fit within max_width. Returns list of lines."""
+    words = text.split()
+    lines = []
+    line = ""
+    for w in words:
+        test = (line + " " + w).strip()
+        if c.stringWidth(test, font_name, font_size) > max_width:
+            lines.append(line)
+            line = w
+        else:
+            line = test
+    if line:
+        lines.append(line)
+    return lines
+
+
+def _draw_zerlegung_part(c, cx, cy, circle_r, val, is_blank, is_loesung, farb_key):
+    """Draw a single part circle in a Zahlzerlegung exercise."""
+    if is_blank:
+        c.setFillColor(FARBEN["antwort"])
+        c.setStrokeColor(FARBEN[farb_key])
+        c.setLineWidth(1.5)
+        c.circle(cx, cy, circle_r, fill=1, stroke=1)
+    elif is_loesung:
+        c.setFillColor(FARBEN["antwort"])
+        c.setStrokeColor(FARBEN[farb_key])
+        c.setLineWidth(1.5)
+        c.circle(cx, cy, circle_r, fill=1, stroke=1)
+        c.setFillColor(FARBEN["gruen"])
+        c.setFont("Helvetica-Bold", 16)
+        c.drawCentredString(cx, cy - 0.2*cm, str(val))
+    else:
+        c.setFillColor(FARBEN[farb_key])
+        c.circle(cx, cy, circle_r, fill=1, stroke=0)
+        c.setFillColor(white)
+        c.setFont("Helvetica-Bold", 16)
+        c.drawCentredString(cx, cy - 0.2*cm, str(val))
 
 
 def _draw_beschreibung(c, abschnitt, start_y):
@@ -20,18 +61,10 @@ def _draw_beschreibung(c, abschnitt, start_y):
     # Word-wrap with explicit \n support
     lines = []
     for paragraph in beschreibung.split("\n"):
-        words = paragraph.split()
-        line = ""
-        for w in words:
-            test = (line + " " + w).strip()
-            if c.stringWidth(test, "Helvetica", 10) > max_w:
-                lines.append(line)
-                line = w
-            else:
-                line = test
-        if line:
-            lines.append(line)
-        elif not words:
+        wrapped = _wrap_text(c, paragraph, "Helvetica", 10, max_w)
+        if wrapped:
+            lines.extend(wrapped)
+        else:
             lines.append("")
     for i, l in enumerate(lines):
         c.drawString(2*cm, start_y - 0.9*cm - i * 0.45*cm, l)
@@ -809,54 +842,12 @@ def draw_zahlzerlegung(c, abschnitt, farb_key, start_y):
                       and zerlegung_labels[idx] == "Lösung")
 
         # Left part
-        is_blank_l = t1 is None
-        if is_blank_l:
-            # Empty answer circle
-            c.setFillColor(FARBEN["antwort"])
-            c.setStrokeColor(FARBEN[farb_key])
-            c.setLineWidth(1.5)
-            c.circle(left_cx, part_y, circle_r, fill=1, stroke=1)
-        elif is_loesung:
-            # Solution: same background as blank, green text
-            c.setFillColor(FARBEN["antwort"])
-            c.setStrokeColor(FARBEN[farb_key])
-            c.setLineWidth(1.5)
-            c.circle(left_cx, part_y, circle_r, fill=1, stroke=1)
-            c.setFillColor(FARBEN["gruen"])
-            c.setFont("Helvetica-Bold", 16)
-            c.drawCentredString(left_cx, part_y - 0.2*cm, str(t1))
-        else:
-            # Given value
-            c.setFillColor(FARBEN[farb_key])
-            c.circle(left_cx, part_y, circle_r, fill=1, stroke=0)
-            c.setFillColor(white)
-            c.setFont("Helvetica-Bold", 16)
-            c.drawCentredString(left_cx, part_y - 0.2*cm, str(t1))
+        _draw_zerlegung_part(c, left_cx, part_y, circle_r,
+                             t1, t1 is None, is_loesung, farb_key)
 
         # Right part
-        is_blank_r = t2 is None
-        if is_blank_r:
-            # Empty answer circle
-            c.setFillColor(FARBEN["antwort"])
-            c.setStrokeColor(FARBEN[farb_key])
-            c.setLineWidth(1.5)
-            c.circle(right_cx, part_y, circle_r, fill=1, stroke=1)
-        elif is_loesung:
-            # Solution: same background as blank, green text
-            c.setFillColor(FARBEN["antwort"])
-            c.setStrokeColor(FARBEN[farb_key])
-            c.setLineWidth(1.5)
-            c.circle(right_cx, part_y, circle_r, fill=1, stroke=1)
-            c.setFillColor(FARBEN["gruen"])
-            c.setFont("Helvetica-Bold", 16)
-            c.drawCentredString(right_cx, part_y - 0.2*cm, str(t2))
-        else:
-            # Given value
-            c.setFillColor(FARBEN[farb_key])
-            c.circle(right_cx, part_y, circle_r, fill=1, stroke=0)
-            c.setFillColor(white)
-            c.setFont("Helvetica-Bold", 16)
-            c.drawCentredString(right_cx, part_y - 0.2*cm, str(t2))
+        _draw_zerlegung_part(c, right_cx, part_y, circle_r,
+                             t2, t2 is None, is_loesung, farb_key)
 
     total_rows = (len(aufgaben) + cols - 1) // cols
     return row_y - total_rows * row_h - 0.3*cm
@@ -1105,7 +1096,6 @@ def draw_punktefeld(c, abschnitt, farb_key, start_y):
 
         # Determine which positions are filled
         if muster:
-            import random as _rnd
             _rnd.seed(anzahl * 100 + idx * 7 + felder)
             positions = list(range(felder))
             _rnd.shuffle(positions)
@@ -1303,10 +1293,14 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
 
     for ai, aufg in enumerate(aufgaben):
         spalten = aufg["spalten"]  # list of lists
+        if not spalten:
+            continue
         zielsumme = aufg["zielsumme"]
         loes = loesungen[ai] if ai < len(loesungen) else None
         num_cols = len(spalten)
-        num_rows = max(len(s) for s in spalten)
+        num_rows = max((len(s) for s in spalten), default=0)
+        if num_rows == 0:
+            continue
 
         grid_h = num_rows * 1.6*cm
         grid_top = row_y
@@ -1318,6 +1312,8 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
         c.drawCentredString(1.8*cm, grid_top - grid_h / 2 + 0.1*cm, "Start")
 
         for ci, spalte in enumerate(spalten):
+            if not spalte:
+                continue
             col_x = 3*cm + ci * col_spacing
             col_color = node_colors[ci % len(node_colors)]
             for ri, val in enumerate(spalte):
@@ -1398,17 +1394,7 @@ def _draw_hinweis_boxen(c, boxen, farb_key, start_y):
         c.setFont("Helvetica", 8)
         text = box["text"]
         max_w = full_w - 0.8*cm
-        words = text.split()
-        lines, line = [], ""
-        for w in words:
-            test = (line + " " + w).strip()
-            if c.stringWidth(test, "Helvetica", 8) > max_w:
-                lines.append(line)
-                line = w
-            else:
-                line = test
-        if line:
-            lines.append(line)
+        lines = _wrap_text(c, text, "Helvetica", 8, max_w)
         for li, l in enumerate(lines):
             c.drawString(2.1*cm, ry + row_h - 0.85*cm - li * 0.35*cm, l)
         total_h += row_h + 0.15*cm
@@ -1537,18 +1523,7 @@ def draw_kalender_raetsel(c, abschnitt, farb_key, start_y):
         c.setFillColor(FARBEN["dunkel"])
         c.setFont("Helvetica", 11)
         max_w = W - 5*cm
-        words = text.split()
-        lines = []
-        line = ""
-        for w in words:
-            test = (line + " " + w).strip()
-            if c.stringWidth(test, "Helvetica", 11) > max_w:
-                lines.append(line)
-                line = w
-            else:
-                line = test
-        if line:
-            lines.append(line)
+        lines = _wrap_text(c, text, "Helvetica", 11, max_w)
         for li, l in enumerate(lines):
             c.drawString(2.8*cm, y - li * 0.45*cm, l)
 
@@ -1629,7 +1604,6 @@ def draw_textaufgaben(c, abschnitt, farb_key, start_y):
 def draw_wuerfel_zuordnen(c, abschnitt, farb_key, start_y):
     """Connect numbers on the left with matching dice on the right.
     For 'doppel' mode, two dice per row (sum must match the number)."""
-    import random as _rnd
 
     draw_section_label(c, abschnitt["titel"], farb_key, start_y)
     y_off = _draw_beschreibung(c, abschnitt, start_y)
