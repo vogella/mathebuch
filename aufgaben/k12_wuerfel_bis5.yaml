@@ -22,7 +22,7 @@ abschnitte:
       - [2]
 
   - typ: würfelzählen
-    titel: "B  Zwei Würfel – Plus bis 5"
+    titel: "B  Zwei Würfel – Plus"
     beschreibung: "Wie viele Augen sind es zusammen?"
     aufgaben:
       - [1, 1]

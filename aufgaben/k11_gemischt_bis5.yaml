@@ -22,7 +22,7 @@ abschnitte:
       - [null, "+", 3, 5]
 
   - typ: nachbarzahlen
-    titel: "B  Nachbarzahlen bis 5"
+    titel: "B  Nachbarzahlen"
     beschreibung: "Welche Zahlen stehen davor und danach?"
     aufgaben:
       - [null, 1, null]
