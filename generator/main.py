@@ -71,6 +71,76 @@ TYPEN = {
 TRENNLINIE_Y = H - 15.5   # Y-Position der Trennlinie zwischen Abschnitten
 HINWEIS_ERKLAERUNG = "Hier siehst du, wie die Aufgaben gelöst werden."
 
+# ── Trennseiten-Konfiguration ────────────────────────────────────────
+TRENNSEITEN_INFO = {
+    5:  {"titel": "Rechnen bis 5",  "farbe": "gruen",  "emoji": "✋",
+         "untertitel": "Los geht's mit den ersten Zahlen!"},
+    10: {"titel": "Rechnen bis 10", "farbe": "blau",   "emoji": "⭐",
+         "untertitel": "Jetzt wird es spannend!"},
+    20: {"titel": "Rechnen bis 20", "farbe": "orange",  "emoji": "🚀",
+         "untertitel": "Du bist schon ein Rechen-Profi!"},
+}
+
+
+def _get_chapter_section(kap_data):
+    """Returns section key for a chapter: 'erklaerung', 5, 10, or 20."""
+    kap = kap_data["kapitel"]
+    if kap.get("erklaerungsseite", False):
+        return "erklaerung"
+    return _toc_section_for_zahlenraum(kap.get("zahlenraum", 20))
+
+
+def _berechne_trennseiten(alle_kapitel):
+    """Returns set of chapter indices where a separator page should be inserted BEFORE."""
+    positionen = set()
+    prev_section = None
+    for i, (_, data) in enumerate(alle_kapitel):
+        section = _get_chapter_section(data)
+        if prev_section is not None and section != prev_section and section in TRENNSEITEN_INFO:
+            positionen.add(i)
+        prev_section = section
+    return positionen
+
+
+def render_trennseite(c, section):
+    """Rendert eine Trennseite zwischen Hauptabschnitten."""
+    info = TRENNSEITEN_INFO[section]
+    draw_page_bg(c)
+
+    farbe = FARBEN[info["farbe"]]
+    center_y = H / 2 + 2 * cm
+
+    # Großer farbiger Kreis
+    c.setFillColor(farbe)
+    c.circle(W / 2, center_y, 3 * cm, fill=1, stroke=0)
+
+    # Emoji im Kreis
+    c.setFillColor(white)
+    c.setFont("Helvetica-Bold", 48)
+    c.drawCentredString(W / 2, center_y - 0.5 * cm, info["emoji"])
+
+    # Titel
+    titel_y = center_y - 5 * cm
+    c.setFillColor(farbe)
+    c.roundRect(2 * cm, titel_y - 0.5 * cm, W - 4 * cm, 2.2 * cm,
+                radius=15, fill=1, stroke=0)
+    c.setFillColor(white)
+    c.setFont("Helvetica-Bold", 30)
+    c.drawCentredString(W / 2, titel_y + 0.2 * cm, info["titel"])
+
+    # Untertitel
+    c.setFillColor(FARBEN["dunkel"])
+    c.setFont("Helvetica", 16)
+    c.drawCentredString(W / 2, titel_y - 2 * cm, info["untertitel"])
+
+    # Deko-Punkte
+    deko = RAND_FARBEN
+    total_w = (len(deko) - 1) * 2.5 * cm
+    start_x = W / 2 - total_w / 2
+    for i, col in enumerate(deko):
+        c.setFillColor(col)
+        c.circle(start_x + i * 2.5 * cm, titel_y - 4 * cm, 0.5 * cm, fill=1, stroke=0)
+
 
 def render_titelseite(c):
     """Titelseite mit Buchtitel, Namensfeld und Malblock."""
@@ -383,6 +453,9 @@ def main():
     # Seiten-Offset: Titelseite + Inhaltsverzeichnis = 2 Seiten
     seiten_offset = 3  # Kapitel starten ab Seite 3
 
+    # Trennseiten-Positionen bestimmen
+    trennseiten_pos = _berechne_trennseiten(alle_kapitel)
+
     # ── Pass 1: Probe-Rendering um Seitenzahlen pro Kapitel zu ermitteln ──
     import io
     probe_buf = io.BytesIO()
@@ -394,10 +467,12 @@ def main():
         seiten_pro_kapitel.append(n_pages)
     del probe_c, probe_buf
 
-    # Seitennummern berechnen
+    # Seitennummern berechnen (mit Trennseiten)
     seiten_nummern = []
     aktuelle_seite = seiten_offset
-    for n in seiten_pro_kapitel:
+    for i, n in enumerate(seiten_pro_kapitel):
+        if i in trennseiten_pos:
+            aktuelle_seite += 1  # Trennseite einfügen
         seiten_nummern.append(aktuelle_seite)
         aktuelle_seite += n
 
@@ -414,8 +489,13 @@ def main():
     render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern)
     c.showPage()
 
-    # Kapitel
+    # Kapitel (mit Trennseiten zwischen Hauptabschnitten)
     for i, (dateiname, data) in enumerate(alle_kapitel):
+        if i in trennseiten_pos:
+            section = _get_chapter_section(data)
+            print(f"  Rendere Trennseite: {TRENNSEITEN_INFO[section]['titel']} ...")
+            render_trennseite(c, section)
+            c.showPage()
         print(f"  Rendere Seite {seiten_nummern[i]}: {dateiname} ...")
         render_kapitel(c, data, seiten_nummern[i])
         c.showPage()
