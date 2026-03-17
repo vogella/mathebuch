@@ -18,7 +18,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.lib.colors import white
-from layout import (draw_page_bg, draw_header, draw_name_date,
+from layout import (draw_page_bg, draw_header,
                     draw_page_number, FARBEN, RAND_FARBEN)
 from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_zahlenhaus, draw_rechenraupe,
@@ -305,11 +305,7 @@ def render_kapitel(c, kapitel_data, seitennummer):
             c.showPage()
         draw_page_bg(c)
         draw_header(c, titel, untertitel, emoji, farbe)
-        if not ist_erklaerung:
-            draw_name_date(c)
-            y = H - 7.0*cm
-        else:
-            y = H - 5.5*cm
+        y = H - 5.5*cm
         pages += 1
         seitennr_aktuell = seitennummer + pages - 1
 
