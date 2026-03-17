@@ -1,7 +1,10 @@
 """
 loesungen.py – Berechnet und rendert kompakte Lösungsseiten am Ende des Buchs.
 """
+import re
 import sys
+from itertools import permutations
+
 from reportlab.lib.colors import HexColor, white
 from reportlab.lib.units import cm
 from reportlab.lib.pagesizes import A4
@@ -114,7 +117,11 @@ def _eval_simple_expr(val):
             elif op == '*':
                 result *= n
             elif op == '/':
+                if n == 0:
+                    raise ZeroDivisionError
                 result /= n
+            else:
+                raise ValueError(f"Unknown operator: {op}")
         return result
     return val
 
@@ -123,8 +130,12 @@ def _solve_vergleiche(abschnitt):
     results = []
     for aufg in abschnitt["aufgaben"]:
         l, r = aufg
-        lv = _eval_simple_expr(l)
-        rv = _eval_simple_expr(r)
+        try:
+            lv = _eval_simple_expr(l)
+            rv = _eval_simple_expr(r)
+        except (ValueError, ZeroDivisionError, IndexError):
+            results.append("?")
+            continue
         if lv < rv:
             results.append("<")
         elif lv > rv:
@@ -255,7 +266,6 @@ def _solve_rechenraupe(abschnitt):
 
 def _solve_single_dreieck(werte, ziel, zahlen):
     """Solve a single magic triangle given values, target sum, and available numbers."""
-    from itertools import permutations
     blanks = [i for i, v in enumerate(werte) if v is None]
     used = set(v for v in werte if v is not None)
     available = [z for z in zahlen if z not in used]
@@ -272,7 +282,6 @@ def _solve_single_dreieck(werte, ziel, zahlen):
 
 
 def _solve_magisches_dreieck(abschnitt):
-    import re
     # Handle "magische_dreiecke" type with a list of triangles
     dreiecke = abschnitt.get("dreiecke")
     if dreiecke:
@@ -309,7 +318,6 @@ def _solve_magisches_dreieck(abschnitt):
 def _solve_magisches_quadrat(abschnitt):
     werte = list(abschnitt.get("werte", []))
     ziel = abschnitt.get("zielsumme", 15)
-    from itertools import permutations
     given = {i: v for i, v in enumerate(werte) if v is not None}
     blanks = [i for i, v in enumerate(werte) if v is None]
     used = set(given.values())
@@ -357,9 +365,9 @@ SOLVER = {
     "magische_dreiecke": _solve_magisches_dreieck,
     "magisches_quadrat": _solve_magisches_quadrat,
     "textaufgaben": _solve_textaufgaben,
-    "zahlenraetsel": lambda a: [str(a["loesungen"][i]) for i in range(len(a.get("loesungen", [])))],
-    "einkaufen": lambda a: [str(a["loesungen"][i]) for i in range(len(a.get("loesungen", [])))],
-    "kalender_raetsel": lambda a: [str(a["loesungen"][i]) for i in range(len(a.get("loesungen", [])))],
+    "zahlenraetsel": _solve_textaufgaben,
+    "einkaufen": _solve_textaufgaben,
+    "kalender_raetsel": _solve_textaufgaben,
 }
 
 # Types to skip (explanation, visual-only)
