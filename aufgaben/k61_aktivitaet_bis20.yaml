@@ -1,0 +1,28 @@
+kapitel:
+  titel: "Mathe im Alltag – Bis 20"
+  untertitel: "Rechnen und Entdecken in deiner Welt"
+  emoji: "🚀"
+  farbe: "orange"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: erklaerung
+    titel: "Für Rechen-Profis"
+    zeilen:
+      - "## 🚗 Auto-Kennzeichen"
+      - "Suche dir Zahlen auf Kennzeichen von Autos."
+      - "Kannst du die Zahlen zusammenrechnen? Wie viel"
+      - "kommt raus, wenn du zwei kleine Zahlen addierst?"
+      - ""
+      - "## 🍜 Nudeln & Erbsen"
+      - "Zähle 20 Nudeln oder Erbsen ab."
+      - "Bilde Häufchen mit jeweils 5 Stück. Wie viele"
+      - "Häufchen kannst du daraus machen?"
+      - ""
+      - "## 🚶 Schritt-Schätzer"
+      - "Wähle ein Ziel im Zimmer. Schätze: Wie viele Schritte"
+      - "brauchst du bis dorthin? Gehe dann los und zähle laut bis 20!"
+      - ""
+      - "## 🔢 Hausnummern-Suche"
+      - "Gehe spazieren. Such die höchste Hausnummer"
+      - "bis 20, die du finden kannst!"

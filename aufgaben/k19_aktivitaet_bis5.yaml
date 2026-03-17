@@ -1,0 +1,23 @@
+kapitel:
+  titel: "Mathe im Alltag – Bis 5"
+  untertitel: "Rechnen und Entdecken in deiner Welt"
+  emoji: "🌳"
+  farbe: "gruen"
+  zahlenraum: 5
+
+abschnitte:
+  - typ: erklaerung
+    titel: "Spiele für zwischendurch"
+    zeilen:
+      - "## ✌️ Finger-Flitzer"
+      - "Verstecke deine Hände hinter dem Rücken. Zeige dann blitzschnell"
+      - "einige Finger (0 bis 5). Dein Partner muss so schnell wie möglich"
+      - "die richtige Zahl rufen!"
+      - ""
+      - "## 🎲 Würfel-Wettlauf"
+      - "Würfelt abwechselnd mit einem Würfel. Wer zuerst genau eine 5"
+      - "würfelt, bekommt einen Punkt. Wer hat zuerst 3 Punkte?"
+      - ""
+      - "## 🍎 Küchen-Helfer"
+      - "Zähle beim Kochen oder Essen Dinge bis 5: Wie viele Äpfel"
+      - "liegen in der Schale? Wie viele Gabeln brauchen wir für den Tisch?"
