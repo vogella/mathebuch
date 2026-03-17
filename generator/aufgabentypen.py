@@ -683,7 +683,7 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
         aufgabe_mauer = rows
 
     bottom_y = start_y - top_offset - (max(len(m) for m in mauern) - 1) * brick_h
-    return bottom_y - brick_h - 0.5*cm
+    return bottom_y - 0.5*cm
 
 
 # ── Größer/Kleiner/Gleich ─────────────────────────────────
