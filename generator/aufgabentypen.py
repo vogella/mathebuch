@@ -804,7 +804,8 @@ def draw_zahlzerlegung(c, abschnitt, farb_key, start_y):
     circle_r = 0.5*cm
     vert_gap = 1.5*cm  # vertical distance between top and bottom circles
     row_h = vert_gap + 2 * circle_r + 0.6*cm
-    row_y = start_y - 1.2*cm - y_off
+    beschreibung_extra = 0.4*cm if y_off > 0 else 0
+    row_y = start_y - 1.2*cm - y_off - beschreibung_extra
 
     zerlegung_labels = abschnitt.get("zerlegung_labels", [])
 
@@ -850,7 +851,9 @@ def draw_zahlzerlegung(c, abschnitt, farb_key, start_y):
                              t2, t2 is None, is_loesung, farb_key)
 
     total_rows = (len(aufgaben) + cols - 1) // cols
-    return row_y - total_rows * row_h - 0.3*cm
+    # Note: We omit the typical -0.3*cm padding here to prevent premature 
+    # page breaks if Zahlzerlegung is the last item on a page.
+    return row_y - total_rows * row_h
 
 
 # ── Kettenaufgaben ────────────────────────────────────────
