@@ -150,6 +150,23 @@ def _toc_new_page(c):
     return H - 3.5 * cm
 
 
+def _draw_toc_dots(c, y, text, font_name, font_size):
+    """Draws dotted lines for a TOC entry."""
+    titel_w = c.stringWidth(text, font_name, font_size)
+    dot_start = 3.5 * cm + titel_w + 0.3 * cm
+    dot_end = W - 3.5 * cm
+    if dot_end > dot_start:
+        c.setFillColor(FARBEN["hellgrau"])
+        c.setFont("Helvetica", 8)
+        dot_w = c.stringWidth(" .", "Helvetica", 8)
+        if dot_w > 0:
+            num_dots = int((dot_end - dot_start) / dot_w)
+            dots = " ." * num_dots
+        else:
+            dots = ""
+        c.drawString(dot_start, y, dots)
+
+
 def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
     """Inhaltsverzeichnis mit automatischem Seitenumbruch.
     Gibt die Anzahl der verwendeten Seiten zurück."""
@@ -216,20 +233,7 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
                 c.setFillColor(FARBEN["dunkel"])
                 c.drawString(3.5 * cm, y, ab_titel)
 
-                # Gepunktete Linie
-                titel_w = c.stringWidth(ab_titel, "Helvetica", 9)
-                dot_start = 3.5 * cm + titel_w + 0.3 * cm
-                dot_end = W - 3.5 * cm
-                if dot_end > dot_start:
-                    c.setFillColor(FARBEN["hellgrau"])
-                    c.setFont("Helvetica", 8)
-                    dot_w = c.stringWidth(" .", "Helvetica", 8)
-                    if dot_w > 0:
-                        num_dots = int((dot_end - dot_start) / dot_w)
-                        dots = " ." * num_dots
-                    else:
-                        dots = ""
-                    c.drawString(dot_start, y, dots)
+                _draw_toc_dots(c, y, ab_titel, "Helvetica", 9)
 
                 c.setFillColor(FARBEN["grau"])
                 c.setFont("Helvetica", 9)
@@ -262,20 +266,7 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
         c.setFont("Helvetica", 10)
         c.drawString(3.5 * cm, y, titel)
 
-        # Gepunktete Linie
-        titel_w = c.stringWidth(titel, "Helvetica", 10)
-        dot_start = 3.5 * cm + titel_w + 0.3 * cm
-        dot_end = W - 3.5 * cm
-        if dot_end > dot_start:
-            c.setFillColor(FARBEN["hellgrau"])
-            c.setFont("Helvetica", 8)
-            dot_w = c.stringWidth(" .", "Helvetica", 8)
-            if dot_w > 0:
-                num_dots = int((dot_end - dot_start) / dot_w)
-                dots = " ." * num_dots
-            else:
-                dots = ""
-            c.drawString(dot_start, y, dots)
+        _draw_toc_dots(c, y, titel, "Helvetica", 10)
 
         # Seitennummer
         c.setFillColor(FARBEN[farb_key])
@@ -415,7 +406,8 @@ def main():
     del probe_c, probe_buf
 
     # Seiten-Offset: Titelseite (1) + Inhaltsverzeichnis (toc_pages)
-    seiten_offset = 1 + toc_pages + 1  # +1 weil Seitenzählung bei 1 beginnt
+    # Kapitel starten auf der Seite danach.
+    seiten_offset = 1 + toc_pages + 1
 
     # Seitennummern berechnen
     seiten_nummern = []
