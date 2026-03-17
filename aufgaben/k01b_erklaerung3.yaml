@@ -9,7 +9,7 @@ kapitel:
 abschnitte:
   - typ: verdoppeln_halbieren
     titel: "Verdoppeln & Halbieren"
-    beschreibung: "Beim Verdoppeln rechnest du die Zahl plus sich selbst. Beim Halbieren teilst du die Zahl durch 2. Im Beispiel suchst du die Zahl, die mit sich selbst plus wieder die 10 wird."
+    beschreibung: "Beim Verdoppeln rechnest du die Zahl plus sich selbst. Beim Halbieren teilst du die Zahl durch 2. Im Beispiel für das Halbieren von 10 suchst du die Zahl, die mit sich selbst addiert 10 ergibt."
     aufgaben:
       - [4, "doppelt"]
       - [10, "halb"]
