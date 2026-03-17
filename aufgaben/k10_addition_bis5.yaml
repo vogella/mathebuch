@@ -7,7 +7,7 @@ kapitel:
 
 abschnitte:
   - typ: lückenaufgaben
-    titel: "A  Plus bis 5"
+    titel: "A  Plus"
     beschreibung: "Rechne aus!"
     aufgaben:
       - [1, "+", 1, null]
@@ -22,12 +22,12 @@ abschnitte:
       - [3, "+", 2, null]
 
   - typ: zahlenhaus
-    titel: "B  Zahlenhaus bis 5"
+    titel: "B  Zahlenhaus"
     beschreibung: "Finde alle Zahlenpaare, die zusammen die Dachzahl ergeben!"
     dachzahlen: [3, 4, 5]
 
   - typ: lückenaufgaben
-    titel: "C  Minus bis 5"
+    titel: "C  Minus"
     beschreibung: "Rechne aus!"
     aufgaben:
       - [2, "-", 1, null]

@@ -7,7 +7,7 @@ kapitel:
 
 abschnitte:
   - typ: lückenaufgaben
-    titel: "A  Plus und Minus bis 20"
+    titel: "A  Plus und Minus"
     aufgaben:
       - [11, "+", 5,    null]
       - [18, "-", 7,    null]
