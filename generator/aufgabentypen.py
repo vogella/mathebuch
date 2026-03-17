@@ -204,8 +204,10 @@ def draw_zahlenhaus(c, abschnitt, farb_key, start_y):
     if beschreibung:
         c.setFillColor(FARBEN["dunkel"])
         c.setFont("Helvetica", 10)
-        c.drawString(2*cm, start_y - 0.9*cm, beschreibung)
-        y_offset += 0.6*cm
+        for line in beschreibung.split("\n"):
+            c.drawString(2*cm, start_y - 0.9*cm - y_offset, line)
+            y_offset += 0.4*cm
+        y_offset += 0.2*cm
     if hinweis:
         c.setFillColor(FARBEN["grau"])
         c.setFont("Helvetica-Oblique", 9)
