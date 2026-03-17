@@ -1836,6 +1836,7 @@ def draw_zahlenkreis(c, abschnitt, farb_key, start_y):
 
     aufgaben = abschnitt["aufgaben"]
     loesungen = abschnitt.get("loesungen", [])
+    task_labels = abschnitt.get("labels", [])
     
     cols = 2
     col_w = (W - 3*cm) / cols
@@ -1855,6 +1856,12 @@ def draw_zahlenkreis(c, abschnitt, farb_key, start_y):
         task_loes = loesungen[idx] if idx < len(loesungen) else None
         if isinstance(task_loes, str):
             task_loes = task_loes.split(',')
+
+        # Optional label below circle
+        if idx < len(task_labels):
+            c.setFillColor(FARBEN["grau"])
+            c.setFont("Helvetica-Oblique", 10)
+            c.drawCentredString(cx, cy - radius_kreis - 0.9*cm, task_labels[idx])
 
         # Draw lines between nodes
         c.setStrokeColor(FARBEN["hellgrau"])
