@@ -1,0 +1,18 @@
+kapitel:
+  titel: "Rechenweg-Labyrinth bis 5"
+  untertitel: "Finde den richtigen Weg!"
+  emoji: "🧩"
+  farbe: "gruen"
+  zahlenraum: 5
+
+abschnitte:
+  - typ: rechenweg_labyrinth
+    titel: "A  Finde den Weg!"
+    beschreibung: "Welche Zahlen musst du plus rechnen, um auf das Ziel zu kommen? Verbinde die richtigen Zahlen anhand der Linien."
+    aufgaben:
+      - spalten: [[1, 2], [1, 3], [1, 2]]
+        zielsumme: 5
+      - spalten: [[2, 1], [1, 2], [1, 2]]
+        zielsumme: 4
+      - spalten: [[1, 3], [2, 1], [1, 2]]
+        zielsumme: 5

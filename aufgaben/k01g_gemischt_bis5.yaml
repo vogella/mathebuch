@@ -1,0 +1,33 @@
+kapitel:
+  titel: "Gemischt bis 5"
+  untertitel: "Plus und Minus bis 5!"
+  emoji: "🖐️"
+  farbe: "orange"
+  zahlenraum: 5
+
+abschnitte:
+  - typ: lückenaufgaben
+    titel: "A  Was fehlt?"
+    beschreibung: "Finde die fehlende Zahl!"
+    aufgaben:
+      - [1, "+", null, 3]
+      - [null, "+", 2, 4]
+      - [3, "-", null, 1]
+      - [null, "-", 1, 2]
+      - [2, "+", null, 5]
+      - [null, "+", 1, 5]
+      - [5, "-", null, 3]
+      - [null, "-", 2, 3]
+      - [4, "-", null, 1]
+      - [null, "+", 3, 5]
+
+  - typ: nachbarzahlen
+    titel: "B  Nachbarzahlen bis 5"
+    beschreibung: "Welche Zahlen stehen davor und danach?"
+    aufgaben:
+      - [null, 1, null]
+      - [null, 2, null]
+      - [null, 3, null]
+      - [null, 4, null]
+      - [1, null, 3]
+      - [3, null, 5]

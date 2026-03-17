@@ -1,0 +1,23 @@
+kapitel:
+  titel: "Rechenmauer bis 5"
+  untertitel: "Jeder Stein ist die Summe der zwei darunter!"
+  emoji: "🧱"
+  farbe: "orange"
+  zahlenraum: 5
+
+abschnitte:
+  - typ: rechenmauer
+    titel: "A  Baue die Mauer auf!"
+    mauern:
+      - - [1, 2, 1]
+        - [null, null]
+        - [null]
+      - - [2, 1, 1]
+        - [null, null]
+        - [null]
+      - - [1, 1, 2]
+        - [null, null]
+        - [null]
+      - - [0, 2, 1]
+        - [null, null]
+        - [null]
