@@ -851,6 +851,8 @@ def draw_zahlzerlegung(c, abschnitt, farb_key, start_y):
                              t2, t2 is None, is_loesung, farb_key)
 
     total_rows = (len(aufgaben) + cols - 1) // cols
+    # Note: We omit the typical -0.3*cm padding here to prevent premature 
+    # page breaks if Zahlzerlegung is the last item on a page.
     return row_y - total_rows * row_h
 
 
