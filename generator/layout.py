@@ -63,19 +63,6 @@ def draw_header(c, titel, untertitel, emoji, farb_key):
     c.drawString(4.2*cm, H - 2.8*cm, untertitel)
 
 
-def draw_name_date(c):
-    """Name- und Datumsfelder."""
-    y = H - 4.5*cm
-    c.setStrokeColor(FARBEN["hellgrau"])
-    c.setFillColor(white)
-    c.roundRect(1.5*cm, y - 0.7*cm, 8*cm,   0.9*cm, radius=6, fill=1, stroke=1)
-    c.roundRect(11*cm,  y - 0.7*cm, 8.5*cm, 0.9*cm, radius=6, fill=1, stroke=1)
-    c.setFillColor(FARBEN["grau"])
-    c.setFont("Helvetica", 9)
-    c.drawString(1.8*cm, y - 0.2*cm, "Name:")
-    c.drawString(11.3*cm, y - 0.2*cm, "Datum:")
-
-
 def draw_section_label(c, text, farb_key, y):
     """Farbige Abschnittsüberschrift."""
     c.setFillColor(FARBEN[farb_key])
