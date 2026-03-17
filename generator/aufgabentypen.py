@@ -2,6 +2,7 @@
 aufgabentypen.py – Zeichenfunktionen für jeden Aufgabentyp
 """
 import random as _rnd
+import math
 from reportlab.lib.colors import HexColor, white
 from reportlab.lib.units import cm
 from reportlab.lib.pagesizes import A4
@@ -1824,3 +1825,80 @@ def draw_wuerfel_zuordnen(c, abschnitt, farb_key, start_y):
                    (right_x - 0.3*cm) - 3, ry)
 
     return base_y - n * row_h - 0.3*cm
+
+
+# ── Zahlenkreis ──────────────────────────────────────────
+
+def draw_zahlenkreis(c, abschnitt, farb_key, start_y):
+    """Draws numbers in a circular arrangement."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]
+    loesungen = abschnitt.get("loesungen", [])
+    
+    cols = 2
+    col_w = (W - 3*cm) / cols
+    row_h = 5.0*cm
+    row_y = start_y - 1.5*cm - y_off - 2.5*cm
+    
+    for idx, aufg in enumerate(aufgaben):
+        col = idx % cols
+        row = idx // cols
+        cx = 1.5*cm + col * col_w + col_w/2
+        cy = row_y - row * row_h
+        
+        radius_kreis = 1.6*cm
+        node_r = 0.5*cm
+        
+        num_nodes = len(aufg)
+        task_loes = loesungen[idx] if idx < len(loesungen) else None
+        if isinstance(task_loes, str):
+            task_loes = task_loes.split(',')
+
+        # Draw lines between nodes
+        c.setStrokeColor(FARBEN["hellgrau"])
+        c.setLineWidth(1.5)
+        for i in range(num_nodes):
+            a1 = math.radians(90 - i * (360/num_nodes))
+            a2 = math.radians(90 - (i+1) * (360/num_nodes))
+            x1 = cx + radius_kreis * math.cos(a1)
+            y1 = cy + radius_kreis * math.sin(a1)
+            x2 = cx + radius_kreis * math.cos(a2)
+            y2 = cy + radius_kreis * math.sin(a2)
+            
+            # Shorten line
+            dx, dy = x2 - x1, y2 - y1
+            dist = math.sqrt(dx*dx + dy*dy)
+            if dist > 0:
+                nx, ny = dx/dist, dy/dist
+                c.line(x1 + nx * node_r, y1 + ny * node_r,
+                       x2 - nx * node_r, y2 - ny * node_r)
+
+        # Draw nodes
+        for i in range(num_nodes):
+            angle = math.radians(90 - i * (360/num_nodes))
+            nx = cx + radius_kreis * math.cos(angle)
+            ny = cy + radius_kreis * math.sin(angle)
+            
+            val = aufg[i]
+            is_blank = val is None
+            
+            if is_blank:
+                c.setFillColor(FARBEN["antwort"])
+                c.setStrokeColor(FARBEN[farb_key])
+                c.setLineWidth(1.5)
+                c.circle(nx, ny, node_r, fill=1, stroke=1)
+                if task_loes and i < len(task_loes):
+                     c.setFillColor(FARBEN["gruen"])
+                     c.setFont("Helvetica-Bold", 14)
+                     c.drawCentredString(nx, ny - 0.15*cm, str(task_loes[i]))
+            else:
+                c.setFillColor(FARBEN[farb_key])
+                c.circle(nx, ny, node_r, fill=1, stroke=0)
+                c.setFillColor(white)
+                c.setFont("Helvetica-Bold", 14)
+                c.drawCentredString(nx, ny - 0.15*cm, str(val))
+                
+    total_rows = (len(aufgaben) + cols - 1) // cols
+    return row_y - total_rows * row_h + 1.5*cm

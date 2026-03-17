@@ -358,6 +358,28 @@ def _solve_schatzsuche(abschnitt):
     return results
 
 
+def _solve_zahlenkreis(abschnitt):
+    results = []
+    for aufg in abschnitt["aufgaben"]:
+        n = len(aufg)
+        start = aufg[0]
+        if start == 0:
+            full = list(range(n))
+        elif start == 5:
+            full = [5, 4, 3, 2, 1, 0]
+        else:
+            # Simple fallback: assume +1
+            s = start if start is not None else 0
+            full = [(s + i) for i in range(n)]
+        
+        missing = []
+        for i in range(n):
+            if aufg[i] is None:
+                missing.append(str(full[i]))
+        results.append(",".join(missing))
+    return results
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -385,6 +407,7 @@ SOLVER = {
     "kalender_raetsel": _solve_textaufgaben,
     "schatzsuche": _solve_schatzsuche,
     "labyrinth_flucht": _solve_schatzsuche,
+    "zahlenkreis": _solve_zahlenkreis,
 }
 
 # Types to skip (explanation, visual-only)
