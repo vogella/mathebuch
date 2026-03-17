@@ -1,0 +1,42 @@
+kapitel:
+  titel: "Einkaufen"
+  untertitel: "Rechne mit Preisen!"
+  emoji: "🛒"
+  farbe: "pink"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: einkaufen
+    titel: "A  Was kostet das zusammen?"
+    beschreibung: "Rechne die Preise zusammen!"
+    aufgaben:
+      - artikel:
+          - {name: "Apfel", preis: 2}
+          - {name: "Birne", preis: 3}
+        frage: "Wie viel kosten beide zusammen?"
+      - artikel:
+          - {name: "Brot", preis: 4}
+          - {name: "Butter", preis: 3}
+        frage: "Wie viel kosten beide zusammen?"
+      - artikel:
+          - {name: "Milch", preis: 2}
+          - {name: "Käse", preis: 5}
+          - {name: "Ei", preis: 1}
+        frage: "Wie viel kostet alles zusammen?"
+    loesungen: [5, 7, 8]
+
+  - typ: einkaufen
+    titel: "B  Wie viel Rückgeld?"
+    beschreibung: "Du bezahlst mit dem angegebenen Betrag. Wie viel bekommst du zurück?"
+    aufgaben:
+      - artikel:
+          - {name: "Eis", preis: 3}
+        frage: "Du bezahlst mit 5€. Wie viel Rückgeld?"
+      - artikel:
+          - {name: "Saft", preis: 4}
+          - {name: "Keks", preis: 2}
+        frage: "Du bezahlst mit 10€. Wie viel Rückgeld?"
+      - artikel:
+          - {name: "Ball", preis: 7}
+        frage: "Du bezahlst mit 10€. Wie viel Rückgeld?"
+    loesungen: [2, 4, 3]

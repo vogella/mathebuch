@@ -1,0 +1,41 @@
+kapitel:
+  titel: "Wer bin ich? – Zahlenrätsel"
+  untertitel: "Finde die geheimnisvolle Zahl!"
+  emoji: "🔍"
+  farbe: "purple"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: zahlenraetsel
+    titel: "A  Wer bin ich?"
+    beschreibung: "Lies die Hinweise und finde die gesuchte Zahl!"
+    hinweis_boxen:
+      - titel: "Gerade Zahlen sind:"
+        text: "0, 2, 4, 6, 8, 10, 12, …"
+      - titel: "Ungerade Zahlen sind:"
+        text: "1, 3, 5, 7, 9, 11, 13, …"
+      - titel: "Tipp"
+        text: "Stell dir vor, du verteilst Bonbons an zwei Personen: Geht es genau auf → gerade. Bleibt eins übrig → ungerade."
+    aufgaben:
+      - hinweise:
+          - "Ich bin größer als 7."
+          - "Ich bin kleiner als 10."
+          - "Ich bin gerade."
+      - hinweise:
+          - "Ich bin kleiner als 6."
+          - "Ich bin größer als 3."
+          - "Ich bin ungerade."
+      - hinweise:
+          - "Ich bin größer als 10."
+          - "Ich bin kleiner als 15."
+          - "Wenn du mich halbierst, bekommst du 6."
+      - hinweise:
+          - "Ich bin die Summe von 3 und 4."
+          - "Ich bin ungerade."
+          - "Ich bin kleiner als 8."
+      - hinweise:
+          - "Ich bin größer als 15."
+          - "Ich bin kleiner als 20."
+          - "Ich bin gerade."
+          - "Mein Nachbar davor ist 17."
+    loesungen: [8, 5, 12, 7, 18]

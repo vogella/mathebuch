@@ -1,0 +1,18 @@
+kapitel:
+  titel: "Kalender-Rätsel"
+  untertitel: "Rechne mit Tagen!"
+  emoji: "📅"
+  farbe: "orange"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: kalender_raetsel
+    titel: "A  Welcher Tag ist es?"
+    beschreibung: "Lies die Aufgabe und rechne aus!"
+    aufgaben:
+      - frage: "Heute ist der 3. In 5 Tagen hat Lisa Geburtstag. Welcher Tag ist das?"
+      - frage: "Heute ist der 10. Vor 4 Tagen war Schulfest. Welcher Tag war das?"
+      - frage: "Heute ist der 7. In 6 Tagen kommt Oma zu Besuch. Welcher Tag ist das?"
+      - frage: "Heute ist der 15. Vor 8 Tagen hat es geschneit. Welcher Tag war das?"
+      - frage: "Heute ist der 2. In 9 Tagen ist Wandertag. Welcher Tag ist das?"
+    loesungen: [8, 6, 13, 7, 11]

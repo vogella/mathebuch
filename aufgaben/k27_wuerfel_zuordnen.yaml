@@ -1,0 +1,23 @@
+kapitel:
+  titel: "Würfel zuordnen"
+  untertitel: "Verbinde die Zahl mit dem passenden Würfel!"
+  emoji: "🎲"
+  farbe: "blau"
+  zahlenraum: 6
+
+abschnitte:
+  - typ: wuerfel_zuordnen
+    titel: "A  Welcher Würfel passt?"
+    beschreibung: "Verbinde jede Zahl links mit dem passenden Würfelbild rechts!"
+    aufgaben: [3, 1, 5, 2, 6, 4]
+
+  - typ: wuerfel_zuordnen
+    titel: "B  Zwei Würfel – Welche Summe?"
+    beschreibung: "Verbinde die Zahl links mit den zwei Würfeln, die zusammen diese Zahl ergeben!"
+    doppel: true
+    aufgaben:
+      - [2, 3]
+      - [4, 1]
+      - [1, 6]
+      - [3, 3]
+      - [5, 2]
