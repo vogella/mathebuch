@@ -1,5 +1,5 @@
 kapitel:
-  titel: "So funktioniert's! (6)"
+  titel: "So funktioniert's!"
   untertitel: "Magisches Quadrat und Textaufgaben."
   emoji: "📖"
   farbe: "blau"
@@ -8,7 +8,7 @@ kapitel:
 
 abschnitte:
   - typ: magisches_quadrat
-    titel: "Magisches Quadrat – Aufgabe & Lösung"
+    titel: "Magisches Quadrat"
     beschreibung: "Setze die Zahlen so ein, dass jede Reihe und Spalte zusammen addiert die gleiche Summe ergibt. Bei den Übungen sind bestimmte Felder schon vorgegeben."
     zielsumme: 15
     werte: [2, null, null, null, 5, null, null, null, 8]
