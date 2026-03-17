@@ -1,0 +1,34 @@
+kapitel:
+  titel: "Würfel bis 5"
+  untertitel: "Zähle die Augen zusammen!"
+  emoji: "🎲"
+  farbe: "blau"
+  zahlenraum: 5
+
+abschnitte:
+  - typ: würfelzählen
+    titel: "A  Würfel ablesen"
+    beschreibung: "Wie viele Augen zeigt der Würfel? Schreibe die Zahl!"
+    aufgaben:
+      - [3]
+      - [1]
+      - [5]
+      - [2]
+      - [4]
+      - [1]
+      - [3]
+      - [5]
+      - [4]
+      - [2]
+
+  - typ: würfelzählen
+    titel: "B  Zwei Würfel – Plus bis 5"
+    beschreibung: "Wie viele Augen sind es zusammen?"
+    aufgaben:
+      - [1, 1]
+      - [2, 1]
+      - [1, 3]
+      - [2, 2]
+      - [1, 4]
+      - [3, 2]
+      - [2, 3]

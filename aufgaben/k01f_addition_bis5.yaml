@@ -1,0 +1,42 @@
+kapitel:
+  titel: "Rechnen bis 5"
+  untertitel: "Erste Aufgaben im kleinen Zahlenraum!"
+  emoji: "✋"
+  farbe: "gruen"
+  zahlenraum: 5
+
+abschnitte:
+  - typ: lückenaufgaben
+    titel: "A  Plus bis 5"
+    beschreibung: "Rechne aus!"
+    aufgaben:
+      - [1, "+", 1, null]
+      - [2, "+", 1, null]
+      - [1, "+", 2, null]
+      - [3, "+", 1, null]
+      - [2, "+", 2, null]
+      - [1, "+", 3, null]
+      - [2, "+", 3, null]
+      - [1, "+", 4, null]
+      - [4, "+", 1, null]
+      - [3, "+", 2, null]
+
+  - typ: zahlenhaus
+    titel: "B  Zahlenhaus bis 5"
+    beschreibung: "Finde alle Zahlenpaare, die zusammen die Dachzahl ergeben!"
+    dachzahlen: [3, 4, 5]
+
+  - typ: lückenaufgaben
+    titel: "C  Minus bis 5"
+    beschreibung: "Rechne aus!"
+    aufgaben:
+      - [2, "-", 1, null]
+      - [3, "-", 1, null]
+      - [3, "-", 2, null]
+      - [4, "-", 1, null]
+      - [4, "-", 2, null]
+      - [4, "-", 3, null]
+      - [5, "-", 1, null]
+      - [5, "-", 2, null]
+      - [5, "-", 3, null]
+      - [5, "-", 4, null]
