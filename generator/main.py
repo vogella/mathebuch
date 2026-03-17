@@ -140,10 +140,21 @@ def _toc_section_for_zahlenraum(zr):
         return 20
 
 
-def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
-    """Inhaltsverzeichnis auf einer Seite. seiten_nummern ist eine Liste mit
-    der Startseitennummer pro Kapitel."""
+def _toc_new_page(c):
+    """Start a new TOC continuation page with background and subtitle."""
+    c.showPage()
     draw_page_bg(c)
+    c.setFillColor(FARBEN["grau"])
+    c.setFont("Helvetica-Bold", 12)
+    c.drawCentredString(W / 2, H - 2.0 * cm, "Inhaltsverzeichnis (Fortsetzung)")
+    return H - 3.5 * cm
+
+
+def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
+    """Inhaltsverzeichnis mit automatischem Seitenumbruch.
+    Gibt die Anzahl der verwendeten Seiten zurück."""
+    draw_page_bg(c)
+    toc_pages = 1
 
     # Header
     c.setFillColor(FARBEN["orange"])
@@ -155,6 +166,7 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
 
     y = H - 5.0 * cm
     line_h = 0.65 * cm
+    min_y = 2.5 * cm
 
     erkl_header_shown = False
     erkl_seen = set()  # Avoid duplicate entries in TOC
@@ -170,13 +182,13 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
         ist_erklaerung = kap.get("erklaerungsseite", False)
         zahlenraum = kap.get("zahlenraum", 20)
 
-        if y < 2.5 * cm:
-            break
-
         # Erklärungsseiten: Überschrift + einzelne Aufgabentypen auflisten
         if ist_erklaerung:
             if not erkl_header_shown:
                 y -= 0.15 * cm
+                if y < min_y:
+                    y = _toc_new_page(c)
+                    toc_pages += 1
                 y = _draw_toc_section_header(c, y, "So funktioniert's!", line_h)
                 erkl_header_shown = True
 
@@ -194,8 +206,9 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
                 if ab_titel in erkl_seen:
                     continue
                 erkl_seen.add(ab_titel)
-                if y < 2.5 * cm:
-                    break
+                if y < min_y:
+                    y = _toc_new_page(c)
+                    toc_pages += 1
 
                 c.setFillColor(FARBEN["grau"])
                 c.setFont("Helvetica", 9)
@@ -230,12 +243,14 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
             current_section = section
             section_titles = {5: "Rechnen bis 5", 10: "Rechnen bis 10", 20: "Rechnen bis 20"}
             y -= 0.15 * cm  # extra gap before section header
-            if y < 2.5 * cm:
-                break
+            if y < min_y:
+                y = _toc_new_page(c)
+                toc_pages += 1
             y = _draw_toc_section_header(c, y, section_titles[section], line_h)
 
-        if y < 2.5 * cm:
-            break
+        if y < min_y:
+            y = _toc_new_page(c)
+            toc_pages += 1
 
         # Emoji
         c.setFillColor(FARBEN[farb_key])
@@ -268,6 +283,8 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
         c.drawRightString(W - 2 * cm, y, str(seite_nr))
 
         y -= line_h
+
+    return toc_pages
 
 
 
@@ -376,9 +393,6 @@ def main():
         data = lade_kapitel(yaml_file)
         alle_kapitel.append((os.path.basename(yaml_file), data))
 
-    # Seiten-Offset: Titelseite + Inhaltsverzeichnis = 2 Seiten
-    seiten_offset = 3  # Kapitel starten ab Seite 3
-
     # ── Pass 1: Probe-Rendering um Seitenzahlen pro Kapitel zu ermitteln ──
     import io
     probe_buf = io.BytesIO()
@@ -388,7 +402,20 @@ def main():
         n_pages = render_kapitel(probe_c, data, 1)  # Seitennummer egal
         probe_c.showPage()
         seiten_pro_kapitel.append(n_pages)
+
+    # Probe-TOC um Seitenanzahl des Inhaltsverzeichnisses zu ermitteln
+    # Vorläufige Seitennummern mit geschätztem Offset berechnen
+    est_offset = 3
+    est_seiten_nummern = []
+    s = est_offset
+    for n in seiten_pro_kapitel:
+        est_seiten_nummern.append(s)
+        s += n
+    toc_pages = render_inhaltsverzeichnis(probe_c, alle_kapitel, est_seiten_nummern)
     del probe_c, probe_buf
+
+    # Seiten-Offset: Titelseite (1) + Inhaltsverzeichnis (toc_pages)
+    seiten_offset = 1 + toc_pages + 1  # +1 weil Seitenzählung bei 1 beginnt
 
     # Seitennummern berechnen
     seiten_nummern = []
