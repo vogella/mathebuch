@@ -302,7 +302,11 @@ def render_kapitel(c, kapitel_data, seitennummer):
             c.showPage()
         draw_page_bg(c)
         draw_header(c, titel, untertitel, emoji, farbe)
-        y = H - 5.5*cm
+        if not ist_erklaerung:
+            draw_name_date(c)
+            y = H - 7.0*cm
+        else:
+            y = H - 5.5*cm
         pages += 1
         seitennr_aktuell = seitennummer + pages - 1
 
