@@ -10,9 +10,9 @@ abschnitte:
     titel: "A  Finde den Weg!"
     beschreibung: "Welche Zahlen musst du plus rechnen, um auf das Ziel zu kommen? Verbinde je eine Zahl pro Spalte über die Linien."
     aufgaben:
-      - spalten: [[1, 3], [4, 2], [5, 1]]
+      - spalten: [[1, 3], [0, 4], [4, 7]]
         zielsumme: 8
-      - spalten: [[2, 5], [3, 1], [4, 6]]
+      - spalten: [[2, 5], [1, 6], [3, 9]]
         zielsumme: 12
-      - spalten: [[3, 1, 4], [2, 5, 3], [6, 1, 4]]
+      - spalten: [[3, 7, 12], [2, 5, 8], [1, 4, 9]]
         zielsumme: 10
