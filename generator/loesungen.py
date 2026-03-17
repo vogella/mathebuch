@@ -362,15 +362,24 @@ def _solve_zahlenkreis(abschnitt):
     results = []
     for aufg in abschnitt["aufgaben"]:
         n = len(aufg)
-        start = aufg[0]
-        if start == 0:
-            full = list(range(n))
-        elif start == 5:
-            full = [5, 4, 3, 2, 1, 0]
+        # Find where 0 or 5 is
+        start_idx = -1
+        start_val = -1
+        for i, v in enumerate(aufg):
+            if v == 0 or v == 5:
+                start_idx = i
+                start_val = v
+                break
+        
+        if start_val == 0:
+            # Ascending from 0
+            full = [(i - start_idx) % n for i in range(n)]
+        elif start_val == 5:
+            # Descending from 5
+            full = [(start_val - (i - start_idx)) % n for i in range(n)]
         else:
-            # Simple fallback: assume +1
-            s = start if start is not None else 0
-            full = [(s + i) for i in range(n)]
+            # Fallback
+            full = [0] * n
         
         missing = []
         for i in range(n):
