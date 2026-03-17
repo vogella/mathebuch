@@ -30,7 +30,9 @@ from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_verdoppeln_halbieren,
                            draw_zahlenstrahl, draw_punktefeld,
                            draw_zahlen_ordnen, draw_vervielfachen,
-                           draw_textaufgaben)
+                           draw_rechenweg_labyrinth, draw_zahlenraetsel,
+                           draw_einkaufen, draw_kalender_raetsel,
+                           draw_textaufgaben, draw_wuerfel_zuordnen)
 
 W, H = A4
 
@@ -55,7 +57,12 @@ TYPEN = {
     "punktefeld":         draw_punktefeld,
     "zahlen_ordnen":      draw_zahlen_ordnen,
     "vervielfachen":      draw_vervielfachen,
+    "rechenweg_labyrinth": draw_rechenweg_labyrinth,
+    "zahlenraetsel":      draw_zahlenraetsel,
+    "einkaufen":          draw_einkaufen,
+    "kalender_raetsel":   draw_kalender_raetsel,
     "textaufgaben":       draw_textaufgaben,
+    "wuerfel_zuordnen":   draw_wuerfel_zuordnen,
 }
 
 TRENNLINIE_Y = H - 15.5   # Y-Position der Trennlinie zwischen Abschnitten
@@ -109,8 +116,30 @@ def render_titelseite(c):
     c.setDash()  # Reset dash
 
 
-def render_inhaltsverzeichnis(c, alle_kapitel, seiten_offset):
-    """Inhaltsverzeichnis auf einer Seite."""
+def _draw_toc_section_header(c, y, text, line_h):
+    """Draws a colored section header in the TOC."""
+    c.setFillColor(FARBEN["blau"])
+    c.roundRect(1.8 * cm, y - 0.15 * cm, W - 3.6 * cm, line_h,
+                radius=6, fill=1, stroke=0)
+    c.setFillColor(white)
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(2.3 * cm, y, text)
+    return y - line_h - 0.15 * cm
+
+
+def _toc_section_for_zahlenraum(zr):
+    """Returns section key for grouping: 5, 10, or 20."""
+    if zr <= 5:
+        return 5
+    elif zr <= 10:
+        return 10
+    else:
+        return 20
+
+
+def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
+    """Inhaltsverzeichnis auf einer Seite. seiten_nummern ist eine Liste mit
+    der Startseitennummer pro Kapitel."""
     draw_page_bg(c)
 
     # Header
@@ -122,42 +151,117 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_offset):
     c.drawCentredString(W / 2, H - 2.5 * cm, "Inhaltsverzeichnis")
 
     y = H - 5.0 * cm
-    line_h = 0.75 * cm
+    line_h = 0.65 * cm
 
-    for seite_nr, (dateiname, kap_data) in enumerate(alle_kapitel, start=seiten_offset):
+    erkl_header_shown = False
+    erkl_seen = set()  # Avoid duplicate entries in TOC
+    current_section = None
+    skip_types = {"erklaerung"}  # Skip "Willkommen!" etc.
+
+    for idx, (dateiname, kap_data) in enumerate(alle_kapitel):
+        seite_nr = seiten_nummern[idx]
         kap = kap_data["kapitel"]
         titel = kap["titel"]
         emoji = kap.get("emoji", "")
         farb_key = kap.get("farbe", "blau")
+        ist_erklaerung = kap.get("erklaerungsseite", False)
+        zahlenraum = kap.get("zahlenraum", 20)
+
+        if y < 2.5 * cm:
+            break
+
+        # Erklärungsseiten: Überschrift + einzelne Aufgabentypen auflisten
+        if ist_erklaerung:
+            if not erkl_header_shown:
+                y -= 0.15 * cm
+                y = _draw_toc_section_header(c, y, "So funktioniert's!", line_h)
+                erkl_header_shown = True
+
+            # Aufgabentypen dieser Erklärungsseite auflisten
+            abschnitte = kap_data.get("abschnitte", [])
+            for abschnitt in abschnitte:
+                typ = abschnitt.get("typ", "")
+                if typ in skip_types:
+                    continue
+                ab_titel = abschnitt.get("titel", typ)
+                # Remove "– Aufgabe", "– Lösung" suffixes for cleaner TOC
+                for suffix in [" – Aufgabe", " – Lösung", " – Aufgabe & Lösung"]:
+                    ab_titel = ab_titel.replace(suffix, "")
+                # Skip duplicates (e.g. Aufgabe + Lösung for same type)
+                if ab_titel in erkl_seen:
+                    continue
+                erkl_seen.add(ab_titel)
+                if y < 2.5 * cm:
+                    break
+
+                c.setFillColor(FARBEN["grau"])
+                c.setFont("Helvetica", 9)
+                c.drawString(2.5 * cm, y, "📖")
+                c.setFillColor(FARBEN["dunkel"])
+                c.drawString(3.5 * cm, y, ab_titel)
+
+                # Gepunktete Linie
+                titel_w = c.stringWidth(ab_titel, "Helvetica", 9)
+                dot_start = 3.5 * cm + titel_w + 0.3 * cm
+                dot_end = W - 3.5 * cm
+                if dot_end > dot_start:
+                    c.setFillColor(FARBEN["hellgrau"])
+                    c.setFont("Helvetica", 8)
+                    dot_w = c.stringWidth(" .", "Helvetica", 8)
+                    if dot_w > 0:
+                        num_dots = int((dot_end - dot_start) / dot_w)
+                        dots = " ." * num_dots
+                    else:
+                        dots = ""
+                    c.drawString(dot_start, y, dots)
+
+                c.setFillColor(FARBEN["grau"])
+                c.setFont("Helvetica", 9)
+                c.drawRightString(W - 2 * cm, y, str(seite_nr))
+                y -= line_h * 0.85
+            continue
+
+        # Section header based on zahlenraum
+        section = _toc_section_for_zahlenraum(zahlenraum)
+        if section != current_section:
+            current_section = section
+            section_titles = {5: "Rechnen bis 5", 10: "Rechnen bis 10", 20: "Rechnen bis 20"}
+            y -= 0.15 * cm  # extra gap before section header
+            if y < 2.5 * cm:
+                break
+            y = _draw_toc_section_header(c, y, section_titles[section], line_h)
 
         if y < 2.5 * cm:
             break
 
         # Emoji
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 12)
-        c.drawString(2 * cm, y, emoji)
+        c.setFont("Helvetica-Bold", 11)
+        c.drawString(2.3 * cm, y, emoji)
 
         # Titel
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica", 11)
-        c.drawString(3.2 * cm, y, titel)
+        c.setFont("Helvetica", 10)
+        c.drawString(3.5 * cm, y, titel)
 
         # Gepunktete Linie
-        titel_w = c.stringWidth(titel, "Helvetica", 11)
-        dot_start = 3.2 * cm + titel_w + 0.3 * cm
+        titel_w = c.stringWidth(titel, "Helvetica", 10)
+        dot_start = 3.5 * cm + titel_w + 0.3 * cm
         dot_end = W - 3.5 * cm
         if dot_end > dot_start:
             c.setFillColor(FARBEN["hellgrau"])
             c.setFont("Helvetica", 8)
-            dots = ""
-            while c.stringWidth(dots + " .", "Helvetica", 8) < (dot_end - dot_start):
-                dots += " ."
+            dot_w = c.stringWidth(" .", "Helvetica", 8)
+            if dot_w > 0:
+                num_dots = int((dot_end - dot_start) / dot_w)
+                dots = " ." * num_dots
+            else:
+                dots = ""
             c.drawString(dot_start, y, dots)
 
         # Seitennummer
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 11)
+        c.setFont("Helvetica-Bold", 10)
         c.drawRightString(W - 2 * cm, y, str(seite_nr))
 
         y -= line_h
@@ -176,19 +280,36 @@ def zeichne_trennlinie(c, y):
     c.line(1.5*cm, y, W - 1.5*cm, y)
 
 
+MIN_Y = 2.5 * cm   # Untere Seitengrenze
+
+
 def render_kapitel(c, kapitel_data, seitennummer):
-    """Rendert ein Kapitel auf eine PDF-Seite."""
+    """Rendert ein Kapitel – bei Überlauf automatisch auf neue Seiten.
+    Gibt die Anzahl genutzter Seiten zurück."""
     kap  = kapitel_data["kapitel"]
     farbe = kap.get("farbe", "blau")
     ist_erklaerung = kap.get("erklaerungsseite", False)
+    titel = kap["titel"]
+    untertitel = kap["untertitel"]
+    emoji = kap["emoji"]
 
-    draw_page_bg(c)
-    draw_header(c, kap["titel"], kap["untertitel"], kap["emoji"], farbe)
-    if not ist_erklaerung:
-        draw_name_date(c)
+    pages = 0
 
-    # Startposition: ohne Name/Datum-Felder mehr Platz
-    y = H - 5.5*cm if ist_erklaerung else H - 7.0*cm
+    def neue_seite():
+        nonlocal y, pages, seitennr_aktuell
+        if pages > 0:
+            draw_page_number(c, seitennr_aktuell, show_stars=not ist_erklaerung)
+            c.showPage()
+        draw_page_bg(c)
+        draw_header(c, titel, untertitel, emoji, farbe)
+        y = H - 5.5*cm
+        pages += 1
+        seitennr_aktuell = seitennummer + pages - 1
+
+    y = 0
+    seitennr_aktuell = seitennummer
+    neue_seite()
+
     abschnitte = kapitel_data.get("abschnitte", [])
 
     for i, abschnitt in enumerate(abschnitte):
@@ -198,14 +319,24 @@ def render_kapitel(c, kapitel_data, seitennummer):
             print(f"  Warnung: Unbekannter Typ '{typ}', wird übersprungen.", file=sys.stderr)
             continue
 
-        # Trennlinie zwischen Abschnitten (nicht vor dem ersten)
-        if i > 0:
+        # Prüfe ob noch genug Platz ist (mindestens 4cm für einen Abschnitt)
+        if y < MIN_Y + 4*cm and i > 0:
+            neue_seite()
+
+        # Trennlinie zwischen Abschnitten (nicht vor dem ersten auf der Seite)
+        if i > 0 and y < H - 6*cm:
             zeichne_trennlinie(c, y + 0.5*cm)
             y -= 1.2*cm
 
         y = fn(c, abschnitt, farbe, y)
 
-    draw_page_number(c, seitennummer, show_stars=not ist_erklaerung)
+        # Falls der Abschnitt unter die Seitengrenze gezeichnet hat,
+        # merken wir uns das – der nächste Abschnitt kommt auf eine neue Seite
+        if y < MIN_Y:
+            pass  # Nächster Durchlauf prüft und bricht um
+
+    draw_page_number(c, seitennr_aktuell, show_stars=not ist_erklaerung)
+    return pages
 
 
 def main():
@@ -232,8 +363,6 @@ def main():
     for f in yaml_files:
         print(f"  • {os.path.basename(f)}")
 
-    c = canvas.Canvas(output_path, pagesize=A4)
-
     # Alle Kapitel vorladen
     alle_kapitel = []
     for yaml_file in yaml_files:
@@ -243,6 +372,27 @@ def main():
     # Seiten-Offset: Titelseite + Inhaltsverzeichnis = 2 Seiten
     seiten_offset = 3  # Kapitel starten ab Seite 3
 
+    # ── Pass 1: Probe-Rendering um Seitenzahlen pro Kapitel zu ermitteln ──
+    import io
+    probe_buf = io.BytesIO()
+    probe_c = canvas.Canvas(probe_buf, pagesize=A4)
+    seiten_pro_kapitel = []
+    for i, (dateiname, data) in enumerate(alle_kapitel):
+        n_pages = render_kapitel(probe_c, data, 1)  # Seitennummer egal
+        probe_c.showPage()
+        seiten_pro_kapitel.append(n_pages)
+    del probe_c, probe_buf
+
+    # Seitennummern berechnen
+    seiten_nummern = []
+    aktuelle_seite = seiten_offset
+    for n in seiten_pro_kapitel:
+        seiten_nummern.append(aktuelle_seite)
+        aktuelle_seite += n
+
+    # ── Pass 2: Finales PDF mit korrekten Seitennummern ──
+    c = canvas.Canvas(output_path, pagesize=A4)
+
     # Titelseite
     print("  Rendere Titelseite ...")
     render_titelseite(c)
@@ -250,19 +400,18 @@ def main():
 
     # Inhaltsverzeichnis
     print("  Rendere Inhaltsverzeichnis ...")
-    render_inhaltsverzeichnis(c, alle_kapitel, seiten_offset)
+    render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern)
     c.showPage()
 
     # Kapitel
     for i, (dateiname, data) in enumerate(alle_kapitel):
-        seite = seiten_offset + i
-        print(f"  Rendere Seite {seite}: {dateiname} ...")
-        render_kapitel(c, data, seite)
+        print(f"  Rendere Seite {seiten_nummern[i]}: {dateiname} ...")
+        render_kapitel(c, data, seiten_nummern[i])
         c.showPage()
 
     # Lösungsseiten am Ende
     from loesungen import render_loesungsseiten
-    loes_start = seiten_offset + len(alle_kapitel)
+    loes_start = aktuelle_seite
     print("  Rendere Lösungsseiten ...")
     n_loes = render_loesungsseiten(c, alle_kapitel, loes_start)
     if n_loes > 0:

@@ -17,19 +17,22 @@ def _draw_beschreibung(c, abschnitt, start_y):
     c.setFillColor(FARBEN["dunkel"])
     c.setFont("Helvetica", 10)
     max_w = W - 4*cm
-    # Word-wrap
-    words = beschreibung.split()
+    # Word-wrap with explicit \n support
     lines = []
-    line = ""
-    for w in words:
-        test = (line + " " + w).strip()
-        if c.stringWidth(test, "Helvetica", 10) > max_w:
+    for paragraph in beschreibung.split("\n"):
+        words = paragraph.split()
+        line = ""
+        for w in words:
+            test = (line + " " + w).strip()
+            if c.stringWidth(test, "Helvetica", 10) > max_w:
+                lines.append(line)
+                line = w
+            else:
+                line = test
+        if line:
             lines.append(line)
-            line = w
-        else:
-            line = test
-    if line:
-        lines.append(line)
+        elif not words:
+            lines.append("")
     for i, l in enumerate(lines):
         c.drawString(2*cm, start_y - 0.9*cm - i * 0.45*cm, l)
     return 0.45*cm * len(lines) + 0.25*cm
@@ -743,12 +746,13 @@ def draw_nachbarzahlen(c, abschnitt, farb_key, start_y):
                 c.setFont("Helvetica-Bold", 18)
                 c.drawCentredString(bx + box_w/2, y0 - box_h/2 - 0.2*cm, str(loes[j]))
 
-        # Arrows between boxes
+        # Lines between boxes
         c.setStrokeColor(FARBEN["hellgrau"])
         c.setLineWidth(2)
         for j in range(2):
-            ax = x0 + (j + 1) * box_w + j * gap + gap/2
-            c.line(ax, y0 - box_h/2, ax + gap, y0 - box_h/2)
+            line_start = x0 + (j + 1) * box_w + j * gap
+            line_end = line_start + gap
+            c.line(line_start, y0 - box_h/2, line_end, y0 - box_h/2)
 
     total_rows = (len(aufgaben) + cols - 1) // cols
     return row_y - total_rows * row_h - 0.3*cm
@@ -764,9 +768,12 @@ def draw_zahlzerlegung(c, abschnitt, farb_key, start_y):
     aufgaben = abschnitt["aufgaben"]  # list of [zahl, teil1, teil2], None = blank
     cols = 3
     col_w = (W - 3*cm) / cols
-    row_h = 2.8*cm
-    circle_r = 0.55*cm
-    row_y = start_y - 1.5*cm - y_off
+    circle_r = 0.5*cm
+    vert_gap = 1.5*cm  # vertical distance between top and bottom circles
+    row_h = vert_gap + 2 * circle_r + 0.6*cm
+    row_y = start_y - 1.2*cm - y_off
+
+    zerlegung_labels = abschnitt.get("zerlegung_labels", [])
 
     for idx, aufg in enumerate(aufgaben):
         zahl, t1, t2 = aufg
@@ -774,6 +781,12 @@ def draw_zahlzerlegung(c, abschnitt, farb_key, start_y):
         row = idx // cols
         cx = 1.5*cm + col * col_w + col_w / 2
         y0 = row_y - row * row_h
+
+        # Optional label above (e.g. "Aufgabe", "Lösung")
+        if idx < len(zerlegung_labels):
+            c.setFillColor(FARBEN["grau"])
+            c.setFont("Helvetica-Bold", 9)
+            c.drawCentredString(cx, y0 + circle_r + 0.3*cm, zerlegung_labels[idx])
 
         # Top circle (the number)
         c.setFillColor(FARBEN[farb_key])
@@ -785,33 +798,65 @@ def draw_zahlzerlegung(c, abschnitt, farb_key, start_y):
         # Lines down to two parts
         left_cx = cx - 1.0*cm
         right_cx = cx + 1.0*cm
-        part_y = y0 - 1.8*cm
+        part_y = y0 - vert_gap
         c.setStrokeColor(FARBEN["hellgrau"])
         c.setLineWidth(2)
         c.line(cx, y0 - circle_r, left_cx, part_y + circle_r)
         c.line(cx, y0 - circle_r, right_cx, part_y + circle_r)
 
+        # Detect if this is a "Lösung" item (show answers in green)
+        is_loesung = (idx < len(zerlegung_labels)
+                      and zerlegung_labels[idx] == "Lösung")
+
         # Left part
         is_blank_l = t1 is None
-        c.setFillColor(FARBEN["antwort"] if is_blank_l else FARBEN[farb_key])
-        c.setStrokeColor(FARBEN[farb_key] if is_blank_l else HexColor("#00000000"))
-        c.setLineWidth(1.5)
-        c.circle(left_cx, part_y, circle_r, fill=1, stroke=1 if is_blank_l else 0)
-        c.setFillColor(FARBEN["blau"] if is_blank_l else white)
-        c.setFont("Helvetica-Bold", 16)
-        c.drawCentredString(left_cx, part_y - 0.2*cm,
-                            str(t1) if t1 is not None else "?")
+        if is_blank_l:
+            # Empty answer circle
+            c.setFillColor(FARBEN["antwort"])
+            c.setStrokeColor(FARBEN[farb_key])
+            c.setLineWidth(1.5)
+            c.circle(left_cx, part_y, circle_r, fill=1, stroke=1)
+        elif is_loesung:
+            # Solution: same background as blank, green text
+            c.setFillColor(FARBEN["antwort"])
+            c.setStrokeColor(FARBEN[farb_key])
+            c.setLineWidth(1.5)
+            c.circle(left_cx, part_y, circle_r, fill=1, stroke=1)
+            c.setFillColor(FARBEN["gruen"])
+            c.setFont("Helvetica-Bold", 16)
+            c.drawCentredString(left_cx, part_y - 0.2*cm, str(t1))
+        else:
+            # Given value
+            c.setFillColor(FARBEN[farb_key])
+            c.circle(left_cx, part_y, circle_r, fill=1, stroke=0)
+            c.setFillColor(white)
+            c.setFont("Helvetica-Bold", 16)
+            c.drawCentredString(left_cx, part_y - 0.2*cm, str(t1))
 
         # Right part
         is_blank_r = t2 is None
-        c.setFillColor(FARBEN["antwort"] if is_blank_r else FARBEN[farb_key])
-        c.setStrokeColor(FARBEN[farb_key] if is_blank_r else HexColor("#00000000"))
-        c.setLineWidth(1.5)
-        c.circle(right_cx, part_y, circle_r, fill=1, stroke=1 if is_blank_r else 0)
-        c.setFillColor(FARBEN["blau"] if is_blank_r else white)
-        c.setFont("Helvetica-Bold", 16)
-        c.drawCentredString(right_cx, part_y - 0.2*cm,
-                            str(t2) if t2 is not None else "?")
+        if is_blank_r:
+            # Empty answer circle
+            c.setFillColor(FARBEN["antwort"])
+            c.setStrokeColor(FARBEN[farb_key])
+            c.setLineWidth(1.5)
+            c.circle(right_cx, part_y, circle_r, fill=1, stroke=1)
+        elif is_loesung:
+            # Solution: same background as blank, green text
+            c.setFillColor(FARBEN["antwort"])
+            c.setStrokeColor(FARBEN[farb_key])
+            c.setLineWidth(1.5)
+            c.circle(right_cx, part_y, circle_r, fill=1, stroke=1)
+            c.setFillColor(FARBEN["gruen"])
+            c.setFont("Helvetica-Bold", 16)
+            c.drawCentredString(right_cx, part_y - 0.2*cm, str(t2))
+        else:
+            # Given value
+            c.setFillColor(FARBEN[farb_key])
+            c.circle(right_cx, part_y, circle_r, fill=1, stroke=0)
+            c.setFillColor(white)
+            c.setFont("Helvetica-Bold", 16)
+            c.drawCentredString(right_cx, part_y - 0.2*cm, str(t2))
 
     total_rows = (len(aufgaben) + cols - 1) // cols
     return row_y - total_rows * row_h - 0.3*cm
@@ -1049,11 +1094,24 @@ def draw_punktefeld(c, abschnitt, farb_key, start_y):
     row_h = rows_frame * cell + 2.0*cm
     row_y = start_y - 1.5*cm - y_off
 
+    # muster mode: dots are scattered, not sequential
+    muster = abschnitt.get("muster", False)
+
     for idx, anzahl in enumerate(aufgaben):
         col = idx % grid_cols
         row = idx // grid_cols
         x0 = 1.5*cm + col * grid_col_w + 0.3*cm
         y0 = row_y - row * row_h
+
+        # Determine which positions are filled
+        if muster:
+            import random as _rnd
+            _rnd.seed(anzahl * 100 + idx * 7 + felder)
+            positions = list(range(felder))
+            _rnd.shuffle(positions)
+            filled = set(positions[:anzahl])
+        else:
+            filled = set(range(anzahl))
 
         # Draw the frame grid
         for r in range(rows_frame):
@@ -1068,8 +1126,8 @@ def draw_punktefeld(c, abschnitt, farb_key, start_y):
                 c.setFillColor(white)
                 c.circle(cx, cy, dot_r, fill=1, stroke=1)
 
-                # Fill if within count
-                if dot_idx < anzahl:
+                # Fill if in filled set
+                if dot_idx in filled:
                     c.setFillColor(FARBEN[farb_key])
                     c.circle(cx, cy, dot_r, fill=1, stroke=0)
 
@@ -1156,70 +1214,350 @@ def draw_zahlen_ordnen(c, abschnitt, farb_key, start_y):
 
 def draw_vervielfachen(c, abschnitt, farb_key, start_y):
     """How many times must you add a number to itself to reach a target?
-    Shows two lines per task: addition line and multiplication line."""
+    Single line per task: zahl + [___________] = ziel  also  zahl × [___] = ziel"""
     draw_section_label(c, abschnitt["titel"], farb_key, start_y)
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of [zahl, ziel]
     loesungen = abschnitt.get("loesungen", [])
-    row_h = 2.8*cm
+    row_h = 1.5*cm
     row_y = start_y - 1.5*cm - y_off
 
     for idx, aufg in enumerate(aufgaben):
         zahl, ziel = aufg
         loes = loesungen[idx] if idx < len(loesungen) else None
-        x = 1.8*cm
+        x = 1.5*cm
         y = row_y - idx * row_h
 
-        # ── Line 1: addition ──  zahl + [___________] = ziel
-        y1 = y
+        # ── Addition part: zahl + [___________] = ziel ──
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica-Bold", 18)
-        c.drawCentredString(x + 0.5*cm, y1, str(zahl))
+        c.setFont("Helvetica-Bold", 16)
+        c.drawCentredString(x + 0.4*cm, y, str(zahl))
 
         c.setFillColor(FARBEN[farb_key])
-        c.drawCentredString(x + 1.3*cm, y1, "+")
+        c.drawCentredString(x + 1.1*cm, y, "+")
 
-        # Long box for writing repeated addition (e.g. "2 + 2 + 2")
-        plus_box_w = 6.5*cm
-        draw_answer_box(c, x + 1.8*cm, y1 - 0.3*cm, w=plus_box_w, h=1.0*cm)
+        plus_box_w = 4.0*cm
+        draw_answer_box(c, x + 1.5*cm, y - 0.3*cm, w=plus_box_w, h=0.9*cm)
         if loes is not None:
-            # Show the repeated addition in green
             addition_text = (" + ".join([str(zahl)] * (loes - 1)))
             c.setFillColor(FARBEN["gruen"])
-            c.setFont("Helvetica-Bold", 13)
-            c.drawCentredString(x + 1.8*cm + plus_box_w / 2,
-                                y1 - 0.05*cm, addition_text)
+            c.setFont("Helvetica-Bold", 11)
+            c.drawCentredString(x + 1.5*cm + plus_box_w / 2,
+                                y - 0.05*cm, addition_text)
 
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 18)
-        eq_x = x + 1.8*cm + plus_box_w + 0.4*cm
-        c.drawCentredString(eq_x, y1, "=")
+        c.setFont("Helvetica-Bold", 16)
+        eq1_x = x + 1.5*cm + plus_box_w + 0.3*cm
+        c.drawCentredString(eq1_x, y, "=")
 
         c.setFillColor(FARBEN["dunkel"])
-        c.drawCentredString(eq_x + 1.0*cm, y1, str(ziel))
+        c.drawCentredString(eq1_x + 0.8*cm, y, str(ziel))
 
-        # ── Line 2: multiplication ──  zahl × [___] = ziel
-        y2 = y - 1.3*cm
+        # ── "also" connector ──
+        also_x = eq1_x + 1.8*cm
+        c.setFillColor(FARBEN["grau"])
+        c.setFont("Helvetica", 12)
+        c.drawCentredString(also_x, y, "also")
+
+        # ── Multiplication part: zahl × [___] = ziel ──
+        mul_x = also_x + 1.2*cm
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica-Bold", 18)
-        c.drawCentredString(x + 0.5*cm, y2, str(zahl))
+        c.setFont("Helvetica-Bold", 16)
+        c.drawCentredString(mul_x, y, str(zahl))
 
         c.setFillColor(FARBEN[farb_key])
-        c.drawCentredString(x + 1.3*cm, y2, "×")
+        c.drawCentredString(mul_x + 0.7*cm, y, "×")
 
+        mul_box_x = mul_x + 1.1*cm
         if loes is not None:
-            _draw_filled_answer_box(c, x + 1.8*cm, y2 - 0.3*cm, loes,
-                                    w=1.3*cm, h=1.0*cm)
+            _draw_filled_answer_box(c, mul_box_x, y - 0.3*cm, loes,
+                                    w=1.2*cm, h=0.9*cm)
         else:
-            draw_answer_box(c, x + 1.8*cm, y2 - 0.3*cm, w=1.3*cm, h=1.0*cm)
+            draw_answer_box(c, mul_box_x, y - 0.3*cm, w=1.2*cm, h=0.9*cm)
 
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 18)
-        c.drawCentredString(x + 3.5*cm, y2, "=")
+        c.setFont("Helvetica-Bold", 16)
+        c.drawCentredString(mul_box_x + 1.5*cm, y, "=")
 
         c.setFillColor(FARBEN["dunkel"])
-        c.drawCentredString(x + 4.3*cm, y2, str(ziel))
+        c.drawCentredString(mul_box_x + 2.3*cm, y, str(ziel))
+
+    return row_y - len(aufgaben) * row_h - 0.3*cm
+
+
+# ── Rechenweg-Labyrinth ──────────────────────────────────
+
+def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
+    """Grid-based path puzzle: pick one number per column, find the path
+    that sums to the target."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]
+    loesungen = abschnitt.get("loesungen", [])
+    row_y = start_y - 1.5*cm - y_off
+    node_r = 0.5*cm
+    node_colors = [FARBEN["blau"], FARBEN["gruen"], FARBEN["orange"],
+                   FARBEN["pink"], FARBEN["purple"]]
+
+    for ai, aufg in enumerate(aufgaben):
+        spalten = aufg["spalten"]  # list of lists
+        zielsumme = aufg["zielsumme"]
+        loes = loesungen[ai] if ai < len(loesungen) else None
+        num_cols = len(spalten)
+        num_rows = max(len(s) for s in spalten)
+
+        grid_h = num_rows * 1.6*cm
+        grid_top = row_y
+        col_spacing = (W - 6*cm) / max(num_cols - 1, 1)
+
+        # "Start" label
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont("Helvetica-Bold", 10)
+        c.drawCentredString(1.8*cm, grid_top - grid_h / 2 + 0.1*cm, "Start")
+
+        for ci, spalte in enumerate(spalten):
+            col_x = 3*cm + ci * col_spacing
+            col_color = node_colors[ci % len(node_colors)]
+            for ri, val in enumerate(spalte):
+                cy = grid_top - (ri + 0.5) * (grid_h / len(spalte))
+                # Node circle
+                c.setFillColor(col_color)
+                c.circle(col_x, cy, node_r, fill=1, stroke=0)
+                c.setFillColor(white)
+                c.setFont("Helvetica-Bold", 14)
+                c.drawCentredString(col_x, cy - 0.15*cm, str(val))
+
+            # Arrows to next column
+            if ci < num_cols - 1:
+                next_spalte = spalten[ci + 1]
+                next_x = 3*cm + (ci + 1) * col_spacing
+                for ri in range(len(spalte)):
+                    sy = grid_top - (ri + 0.5) * (grid_h / len(spalte))
+                    for nri in range(len(next_spalte)):
+                        ny = grid_top - (nri + 0.5) * (grid_h / len(next_spalte))
+                        c.setStrokeColor(FARBEN["hellgrau"])
+                        c.setLineWidth(1)
+                        c.line(col_x + node_r, sy, next_x - node_r, ny)
+
+        # Target sum label (no answer box)
+        target_x = 3*cm + (num_cols - 1) * col_spacing + 2*cm
+        target_y = grid_top - grid_h / 2
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont("Helvetica-Bold", 14)
+        c.drawCentredString(target_x, target_y + 0.5*cm, "Ziel:")
+        c.drawCentredString(target_x, target_y - 0.2*cm, str(zielsumme))
+
+        row_y = grid_top - grid_h - 0.8*cm
+
+    return row_y - 0.3*cm
+
+
+# ── Zahlenrätsel (Wer bin ich?) ─────────────────────────
+
+def _draw_hinweis_boxen(c, boxen, farb_key, start_y):
+    """Draws colored hint boxes. First row side by side, remaining full width below."""
+    if not boxen:
+        return 0
+    colors = [FARBEN.get("blau"), FARBEN.get("gruen"), FARBEN.get("orange"),
+              FARBEN.get("pink"), FARBEN.get("purple")]
+
+    # First row: up to 2 boxes side by side
+    first_row = boxen[:2]
+    rest = boxen[2:]
+    n = len(first_row)
+    box_w = (W - 3.5*cm) / n
+    box_h = 1.4*cm
+    y = start_y - box_h
+    total_h = box_h + 0.2*cm
+
+    for i, box in enumerate(first_row):
+        x = 1.8*cm + i * (box_w + 0.15*cm)
+        bg = colors[i % len(colors)]
+        c.setFillColor(bg)
+        c.roundRect(x, y, box_w - 0.15*cm, box_h, radius=6, fill=1, stroke=0)
+        c.setFillColor(white)
+        c.setFont("Helvetica-Bold", 9)
+        c.drawString(x + 0.3*cm, y + box_h - 0.4*cm, box["titel"])
+        c.setFont("Helvetica", 8)
+        c.drawString(x + 0.3*cm, y + box_h - 0.85*cm, box["text"])
+
+    # Remaining boxes: full width below
+    for j, box in enumerate(rest):
+        full_w = W - 3.6*cm
+        row_h = 1.4*cm
+        ry = y - (j + 1) * (row_h + 0.15*cm)
+        bg = colors[(j + n) % len(colors)]
+        c.setFillColor(bg)
+        c.roundRect(1.8*cm, ry, full_w, row_h, radius=6, fill=1, stroke=0)
+        c.setFillColor(white)
+        c.setFont("Helvetica-Bold", 9)
+        c.drawString(2.1*cm, ry + row_h - 0.4*cm, box["titel"])
+        # Text with word wrap
+        c.setFont("Helvetica", 8)
+        text = box["text"]
+        max_w = full_w - 0.8*cm
+        words = text.split()
+        lines, line = [], ""
+        for w in words:
+            test = (line + " " + w).strip()
+            if c.stringWidth(test, "Helvetica", 8) > max_w:
+                lines.append(line)
+                line = w
+            else:
+                line = test
+        if line:
+            lines.append(line)
+        for li, l in enumerate(lines):
+            c.drawString(2.1*cm, ry + row_h - 0.85*cm - li * 0.35*cm, l)
+        total_h += row_h + 0.15*cm
+
+    return total_h
+
+
+def draw_zahlenraetsel(c, abschnitt, farb_key, start_y):
+    """Number riddles with text clues and an answer box."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    # Optional hint boxes
+    hinweis_boxen = abschnitt.get("hinweis_boxen", [])
+    if hinweis_boxen:
+        hb_h = _draw_hinweis_boxen(c, hinweis_boxen, farb_key, start_y - 1.0*cm - y_off)
+        y_off += hb_h
+
+    aufgaben = abschnitt["aufgaben"]  # list of {hinweise: [...], loesung: int}
+    loesungen = abschnitt.get("loesungen", [])
+    row_y = start_y - 1.5*cm - y_off
+    row_h = 2.5*cm
+
+    for idx, aufg in enumerate(aufgaben):
+        hinweise = aufg["hinweise"]
+        loes = loesungen[idx] if idx < len(loesungen) else None
+        y = row_y - idx * row_h
+
+        # Number label
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(1.8*cm, y, f"{idx + 1}.")
+
+        # Clue lines
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont("Helvetica", 11)
+        for li, hinweis in enumerate(hinweise):
+            c.drawString(2.8*cm, y - li * 0.5*cm, f"• {hinweis}")
+
+        # Answer box on the right side
+        box_x = W - 4.5*cm
+        box_cy = y - (len(hinweise) - 1) * 0.25*cm
+        c.setFillColor(FARBEN["grau"])
+        c.setFont("Helvetica-Bold", 11)
+        c.drawCentredString(box_x + 0.75*cm, box_cy + 1.0*cm, "Ich bin:")
+        draw_answer_box(c, box_x, box_cy - 0.3*cm, w=1.5*cm, h=1.0*cm)
+
+    return row_y - len(aufgaben) * row_h - 0.3*cm
+
+
+# ── Einkaufen ───────────────────────────────────────────
+
+def draw_einkaufen(c, abschnitt, farb_key, start_y):
+    """Shopping exercises: calculate total price or change."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]
+    loesungen = abschnitt.get("loesungen", [])
+    row_y = start_y - 1.5*cm - y_off
+    row_h = 2.8*cm
+
+    for idx, aufg in enumerate(aufgaben):
+        artikel = aufg["artikel"]  # list of {name, preis}
+        frage = aufg.get("frage", "")
+        loes = loesungen[idx] if idx < len(loesungen) else None
+        y = row_y - idx * row_h
+
+        # Number
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(1.8*cm, y, f"{idx + 1}.")
+
+        # Price tags
+        tag_x = 2.8*cm
+        for art in artikel:
+            name = art["name"]
+            preis = art["preis"]
+            # Draw a price tag
+            tag_w = c.stringWidth(f"{name} {preis}€", "Helvetica-Bold", 11) + 0.8*cm
+            c.setFillColor(FARBEN["yellow"])
+            c.roundRect(tag_x, y - 0.3*cm, tag_w, 0.9*cm, radius=5, fill=1, stroke=0)
+            c.setFillColor(FARBEN["dunkel"])
+            c.setFont("Helvetica-Bold", 11)
+            c.drawString(tag_x + 0.3*cm, y - 0.05*cm, f"{name} {preis}€")
+            tag_x += tag_w + 0.4*cm
+
+        # Question
+        q_y = y - 1.0*cm
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont("Helvetica", 10)
+        c.drawString(2.8*cm, q_y, frage)
+
+        # Answer box
+        c.setFillColor(FARBEN["grau"])
+        c.setFont("Helvetica", 9)
+        c.drawString(2.8*cm, q_y - 0.7*cm, "Antwort:")
+        draw_answer_box(c, 5*cm, q_y - 1.0*cm, w=1.8*cm, h=0.9*cm)
+
+    return row_y - len(aufgaben) * row_h - 0.3*cm
+
+
+# ── Kalender-Rätsel ─────────────────────────────────────
+
+def draw_kalender_raetsel(c, abschnitt, farb_key, start_y):
+    """Calendar/date puzzles with text and answer box."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]  # list of {text/frage}
+    loesungen = abschnitt.get("loesungen", [])
+    row_y = start_y - 1.5*cm - y_off
+    row_h = 2.2*cm
+
+    for idx, aufg in enumerate(aufgaben):
+        text = aufg.get("text") or aufg.get("frage", "")
+        loes = loesungen[idx] if idx < len(loesungen) else None
+        y = row_y - idx * row_h
+
+        # Number
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(1.8*cm, y, f"{idx + 1}.")
+
+        # Text with word wrap
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont("Helvetica", 11)
+        max_w = W - 5*cm
+        words = text.split()
+        lines = []
+        line = ""
+        for w in words:
+            test = (line + " " + w).strip()
+            if c.stringWidth(test, "Helvetica", 11) > max_w:
+                lines.append(line)
+                line = w
+            else:
+                line = test
+        if line:
+            lines.append(line)
+        for li, l in enumerate(lines):
+            c.drawString(2.8*cm, y - li * 0.45*cm, l)
+
+        # Answer box (no solution shown, more spacing)
+        box_y = y - len(lines) * 0.45*cm - 0.7*cm
+        c.setFillColor(FARBEN["grau"])
+        c.setFont("Helvetica", 9)
+        c.drawString(2.8*cm, box_y + 0.3*cm, "Antwort:")
+        draw_answer_box(c, 5*cm, box_y, w=2.5*cm, h=0.9*cm)
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
 
@@ -1284,3 +1622,79 @@ def draw_textaufgaben(c, abschnitt, farb_key, start_y):
         y = bottom - 0.5*cm
 
     return y
+
+
+# ── Würfel zuordnen ──────────────────────────────────────
+
+def draw_wuerfel_zuordnen(c, abschnitt, farb_key, start_y):
+    """Connect numbers on the left with matching dice on the right.
+    For 'doppel' mode, two dice per row (sum must match the number)."""
+    import random as _rnd
+
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]  # list of ints (single) or [a, b] (double)
+    doppel = abschnitt.get("doppel", False)
+    loesungen = abschnitt.get("loesungen", [])
+
+    n = len(aufgaben)
+    row_h = 1.8*cm
+    base_y = start_y - 1.5*cm - y_off
+
+    # Left side: numbers; Right side: dice (shuffled order)
+    # Build pairs: index -> dice value(s)
+    items = []
+    for aufg in aufgaben:
+        if doppel:
+            items.append(tuple(aufg))  # (a, b)
+        else:
+            items.append((aufg,))
+
+    # Shuffle right side for the exercise
+    shuffled_indices = list(range(n))
+    # Use a fixed seed based on content for reproducibility
+    seed = sum(sum(t) for t in items)
+    _rnd.seed(seed)
+    _rnd.shuffle(shuffled_indices)
+
+    left_x = 2.5*cm
+    right_x = W - 5.5*cm if doppel else W - 4*cm
+    dice_size = 1.3*cm
+
+    # Draw left side: numbers
+    for i in range(n):
+        y = base_y - i * row_h
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont("Helvetica-Bold", 20)
+        if doppel:
+            num = items[i][0] + items[i][1]
+        else:
+            num = items[i][0]
+        c.drawCentredString(left_x, y - dice_size * 0.4, str(num))
+
+    # Draw right side: dice (shuffled)
+    for i in range(n):
+        si = shuffled_indices[i]
+        y = base_y - i * row_h
+        if doppel:
+            a, b = items[si]
+            _draw_würfel(c, right_x, y - dice_size, a, dice_size)
+            _draw_würfel(c, right_x + dice_size + 0.3*cm, y - dice_size, b, dice_size)
+        else:
+            val = items[si][0]
+            _draw_würfel(c, right_x, y - dice_size, val, dice_size)
+
+    # Draw solution lines if loesungen present
+    if loesungen:
+        c.setStrokeColor(FARBEN["gruen"])
+        c.setLineWidth(1.5)
+        for i in range(n):
+            # Find where item i ended up on right side
+            right_pos = shuffled_indices.index(i)
+            ly = base_y - i * row_h - dice_size * 0.3
+            ry = base_y - right_pos * row_h - dice_size * 0.3
+            c.line(left_x + 1.0*cm + 3, ly,
+                   (right_x - 0.3*cm) - 3, ry)
+
+    return base_y - n * row_h - 0.3*cm
