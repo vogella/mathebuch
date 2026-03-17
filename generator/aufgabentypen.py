@@ -198,14 +198,9 @@ def draw_zahlenhaus(c, abschnitt, farb_key, start_y):
     draw_section_label(c, abschnitt["titel"], farb_key, start_y)
 
     # Optional description and hint text
-    beschreibung = abschnitt.get("beschreibung", "")
+    y_offset = _draw_beschreibung(c, abschnitt, start_y)
+
     hinweis = abschnitt.get("hinweis", "")
-    y_offset = 0
-    if beschreibung:
-        c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica", 10)
-        c.drawString(2*cm, start_y - 0.9*cm, beschreibung)
-        y_offset += 0.6*cm
     if hinweis:
         c.setFillColor(FARBEN["grau"])
         c.setFont("Helvetica-Oblique", 9)
@@ -804,7 +799,8 @@ def draw_zahlzerlegung(c, abschnitt, farb_key, start_y):
     circle_r = 0.5*cm
     vert_gap = 1.5*cm  # vertical distance between top and bottom circles
     row_h = vert_gap + 2 * circle_r + 0.6*cm
-    row_y = start_y - 1.2*cm - y_off
+    beschreibung_extra = 0.4*cm if y_off > 0 else 0
+    row_y = start_y - 1.2*cm - y_off - beschreibung_extra
 
     zerlegung_labels = abschnitt.get("zerlegung_labels", [])
 
@@ -850,7 +846,9 @@ def draw_zahlzerlegung(c, abschnitt, farb_key, start_y):
                              t2, t2 is None, is_loesung, farb_key)
 
     total_rows = (len(aufgaben) + cols - 1) // cols
-    return row_y - total_rows * row_h - 0.3*cm
+    # Note: We omit the typical -0.3*cm padding here to prevent premature 
+    # page breaks if Zahlzerlegung is the last item on a page.
+    return row_y - total_rows * row_h
 
 
 # ── Kettenaufgaben ────────────────────────────────────────
