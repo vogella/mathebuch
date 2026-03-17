@@ -91,13 +91,13 @@ def _get_chapter_section(kap_data):
 
 
 def _berechne_trennseiten(alle_kapitel):
-    """Returns set of chapter indices where a separator page should be inserted BEFORE."""
-    positionen = set()
+    """Returns dict of chapter indices -> section where a separator page should be inserted BEFORE."""
+    positionen = {}
     prev_section = None
     for i, (_, data) in enumerate(alle_kapitel):
         section = _get_chapter_section(data)
         if prev_section is not None and section != prev_section and section in TRENNSEITEN_INFO:
-            positionen.add(i)
+            positionen[i] = section
         prev_section = section
     return positionen
 
@@ -492,7 +492,7 @@ def main():
     # Kapitel (mit Trennseiten zwischen Hauptabschnitten)
     for i, (dateiname, data) in enumerate(alle_kapitel):
         if i in trennseiten_pos:
-            section = _get_chapter_section(data)
+            section = trennseiten_pos[i]
             print(f"  Rendere Trennseite: {TRENNSEITEN_INFO[section]['titel']} ...")
             render_trennseite(c, section)
             c.showPage()
