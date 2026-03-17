@@ -1,0 +1,26 @@
+kapitel:
+  titel: "Punkte zählen – Muster"
+  untertitel: "Die Punkte sind durcheinander – zähle genau!"
+  emoji: "🔵"
+  farbe: "blau"
+  zahlenraum: 10
+
+abschnitte:
+  - typ: punktefeld
+    titel: "A  Zähle die dunklen Punkte!"
+    beschreibung: "Die Punkte sind verstreut. Wie viele sind es?"
+    felder: 10
+    muster: true
+    aufgaben:
+      - 4
+      - 7
+      - 2
+      - 6
+      - 8
+      - 3
+      - 5
+      - 9
+      - 1
+      - 6
+      - 3
+      - 8

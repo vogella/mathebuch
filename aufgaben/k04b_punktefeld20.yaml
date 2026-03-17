@@ -1,0 +1,21 @@
+kapitel:
+  titel: "Punktefeld bis 20"
+  untertitel: "Zähle die Punkte im Zwanzigerfeld!"
+  emoji: "⚫"
+  farbe: "gruen"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: punktefeld
+    titel: "A  Wie viele Punkte siehst du?"
+    felder: 20
+    aufgaben:
+      - 12
+      - 7
+      - 15
+      - 19
+      - 11
+      - 16
+      - 3
+      - 14
+      - 18
