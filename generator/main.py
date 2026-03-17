@@ -313,6 +313,13 @@ def render_kapitel(c, kapitel_data, seitennummer):
     seitennr_aktuell = seitennummer
     neue_seite()
 
+    # Hinweistext auf Erklärungsseiten
+    if ist_erklaerung:
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont("Helvetica", 11)
+        c.drawString(2*cm, y, "Hier siehst du, wie die Aufgaben gelöst werden.")
+        y -= 1.0*cm
+
     abschnitte = kapitel_data.get("abschnitte", [])
 
     for i, abschnitt in enumerate(abschnitte):
