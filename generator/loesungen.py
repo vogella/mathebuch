@@ -343,6 +343,21 @@ def _solve_textaufgaben(abschnitt):
     return []
 
 
+def _solve_schatzsuche(abschnitt):
+    results = []
+    for aufg in abschnitt["aufgaben"]:
+        start = aufg["start"]
+        val = start
+        intermediates = []
+        for s in aufg["schritte"]:
+            op = s[0]
+            num = int(s[1:])
+            val = val + num if op == "+" else val - num
+            intermediates.append(str(val))
+        results.append(",".join(intermediates))
+    return results
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -368,6 +383,8 @@ SOLVER = {
     "zahlenraetsel": _solve_textaufgaben,
     "einkaufen": _solve_textaufgaben,
     "kalender_raetsel": _solve_textaufgaben,
+    "schatzsuche": _solve_schatzsuche,
+    "labyrinth_flucht": _solve_schatzsuche,
 }
 
 # Types to skip (explanation, visual-only)

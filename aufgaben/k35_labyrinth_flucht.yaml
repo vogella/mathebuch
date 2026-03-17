@@ -1,0 +1,29 @@
+kapitel:
+  titel: "Flucht aus dem Labyrinth"
+  untertitel: "Finde den Ausgang!"
+  emoji: "🏃"
+  farbe: "purple"
+  zahlenraum: 10
+
+abschnitte:
+  - typ: labyrinth_flucht
+    titel: "A  Finde den Ausgang!"
+    beschreibung: "Du bist im Labyrinth gefangen! Starte mit der Zahl und rechne bei jedem Schritt weiter. Schreibe die Ergebnisse in die leeren Kreise. Welche Zahl hast du am Ausgang?"
+    aufgaben:
+      - start: 4
+        schritte: ["+3", "-2", "+5", "-1"]
+      - start: 9
+        schritte: ["-3", "-2", "+4", "+1"]
+      - start: 6
+        schritte: ["-4", "+3", "+2", "-1"]
+
+  - typ: labyrinth_flucht
+    titel: "B  Schnell hinaus!"
+    beschreibung: "Rechne dich durch das Labyrinth zum Ausgang!"
+    aufgaben:
+      - start: 10
+        schritte: ["-5", "+3", "-2", "+4"]
+      - start: 1
+        schritte: ["+6", "-3", "+2", "-1"]
+      - start: 7
+        schritte: ["-4", "+5", "-3", "+2"]

@@ -32,7 +32,8 @@ from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_zahlen_ordnen, draw_vervielfachen,
                            draw_rechenweg_labyrinth, draw_zahlenraetsel,
                            draw_einkaufen, draw_kalender_raetsel,
-                           draw_textaufgaben, draw_wuerfel_zuordnen)
+                           draw_textaufgaben, draw_wuerfel_zuordnen,
+                           draw_schatzsuche, draw_labyrinth_flucht)
 
 W, H = A4
 
@@ -63,6 +64,8 @@ TYPEN = {
     "kalender_raetsel":   draw_kalender_raetsel,
     "textaufgaben":       draw_textaufgaben,
     "wuerfel_zuordnen":   draw_wuerfel_zuordnen,
+    "schatzsuche":        draw_schatzsuche,
+    "labyrinth_flucht":   draw_labyrinth_flucht,
 }
 
 TRENNLINIE_Y = H - 15.5   # Y-Position der Trennlinie zwischen Abschnitten

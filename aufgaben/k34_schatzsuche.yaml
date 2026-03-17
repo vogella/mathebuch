@@ -1,0 +1,29 @@
+kapitel:
+  titel: "Schatzsuche"
+  untertitel: "Folge dem Weg zum Schatz!"
+  emoji: "💎"
+  farbe: "orange"
+  zahlenraum: 10
+
+abschnitte:
+  - typ: schatzsuche
+    titel: "A  Finde den Schatz!"
+    beschreibung: "Starte mit der Zahl und rechne bei jedem Schritt weiter. Schreibe die Ergebnisse in die leeren Kreise. Welche Zahl erreichst du beim Schatz?"
+    aufgaben:
+      - start: 2
+        schritte: ["+3", "+1", "-2", "+4"]
+      - start: 5
+        schritte: ["-2", "+4", "-1", "+3"]
+      - start: 1
+        schritte: ["+4", "-3", "+5", "-2"]
+
+  - typ: schatzsuche
+    titel: "B  Noch mehr Schätze!"
+    beschreibung: "Folge dem Weg und rechne!"
+    aufgaben:
+      - start: 7
+        schritte: ["-3", "+2", "-1", "+5"]
+      - start: 3
+        schritte: ["+2", "+3", "-4", "+1"]
+      - start: 8
+        schritte: ["-2", "-3", "+5", "+1"]
