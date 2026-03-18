@@ -1,6 +1,6 @@
 kapitel:
   titel: "So funktioniert's!"
-  untertitel: "Verdoppeln & Halbieren, Rechenraupe"
+  untertitel: "Verdoppeln & Halbieren, Rechenraupe, Rechenmauer, Vervielfachen"
   emoji: "📖"
   farbe: "orange"
   zahlenraum: 20
@@ -26,4 +26,23 @@ abschnitte:
     start: 2
     schritte: ["+3", "+1", "+4"]
     loesungen: [5, 6, 10]
+
+  - typ: rechenmauer
+    titel: "Rechenmauer"
+    beschreibung: "Jeder Stein ist die Summe der zwei Steine direkt darunter. Rechne von unten nach oben!"
+    mauern:
+      - - [2, 3, 1]
+        - [null, null]
+        - [null]
+      - - [2, 3, 1]
+        - [5, 4]
+        - [9]
+    mauer_labels: ["Aufgabe", "Lösung"]
+
+  - typ: vervielfachen
+    titel: "Vervielfachen"
+    beschreibung: "Wie oft musst du die Zahl mit sich selbst addieren, um auf das Ergebnis zu kommen? Zum Beispiel: 2 + 2 + 2 = 6, also passt die 2 dreimal in die 6."
+    aufgaben:
+      - [2, 6]
+    loesungen: [3]
 
