@@ -390,10 +390,7 @@ def _solve_zahlenkreis(abschnitt):
 
 
 def _solve_dungeon_flucht(abschnitt):
-    results = []
-    for aufg in abschnitt["aufgaben"]:
-        results.append(str(aufg["antwort"]))
-    return results
+    return [str(aufg["antwort"]) for aufg in abschnitt["aufgaben"]]
 
 
 # ── Solver-Registry ───────────────────────────────────────

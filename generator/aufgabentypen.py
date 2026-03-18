@@ -1979,17 +1979,12 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
 
                 # Cell background
                 if val == antwort:
-                    c.setFillColor(HexColor("#E8F4FF"))
+                    c.setFillColor(FARBEN["antwort"])
                 else:
                     c.setFillColor(white)
                 c.setStrokeColor(FARBEN["hellgrau"])
                 c.setLineWidth(1)
                 c.rect(x0, y0, cell, cell, fill=1, stroke=1)
-
-                # Cell border for path cells (subtle hint in exercise)
-                c.setStrokeColor(FARBEN["hellgrau"])
-                c.setLineWidth(1)
-                c.rect(x0, y0, cell, cell, fill=0, stroke=1)
 
                 # Number
                 c.setFillColor(FARBEN["dunkel"])
