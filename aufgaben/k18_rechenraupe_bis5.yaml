@@ -7,31 +7,31 @@ kapitel:
 
 abschnitte:
   - typ: rechenraupe
-    titel: "A  Rechenraupe – Rechne weiter!"
+    titel: "A"
     start: 1
     schritte: ["+2", "+1", "+1"]
 
   - typ: rechenraupe
-    titel: "B  Rechenraupe – Rechne weiter!"
+    titel: "B"
     start: 2
     schritte: ["+1", "+2", "-1"]
 
   - typ: rechenraupe
-    titel: "C  Rechenraupe – Rechne weiter!"
+    titel: "C"
     start: 3
     schritte: ["+2", "-1", "+1"]
 
   - typ: rechenraupe
-    titel: "D  Rechenraupe – Rechne weiter!"
+    titel: "D"
     start: 5
     schritte: ["-2", "-1", "+2"]
 
   - typ: rechenraupe
-    titel: "E  Rechenraupe – Rechne weiter!"
+    titel: "E"
     start: 1
     schritte: ["+3", "-2", "+3"]
 
   - typ: rechenraupe
-    titel: "F  Rechenraupe – Rechne weiter!"
+    titel: "F"
     start: 4
     schritte: ["-1", "-2", "+3"]
