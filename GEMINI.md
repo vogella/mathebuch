@@ -17,7 +17,7 @@ A professional Python tool for generating high-quality, printable PDF math workb
     - Manages global state: page backgrounds, chapter separators (Trennseiten), and TOC grouping by "Zahlenraum" (5, 10, 20).
 
 2.  **Exercise Rendering (`generator/aufgabentypen.py`):**
-    - Contains ~20 `draw_<type>` functions (e.g., `draw_lückenaufgaben`, `draw_rechenmauer`, `draw_magisches_quadrat`).
+    - Contains over 25 `draw_<type>` functions (e.g., `draw_lückenaufgaben`, `draw_rechenmauer`, `draw_magisches_quadrat`).
     - Each function calculates its own Y-offset and handles element positioning within a section.
 
 3.  **Visual Primitives (`generator/layout.py`):**
