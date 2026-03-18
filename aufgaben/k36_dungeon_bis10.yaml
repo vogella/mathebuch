@@ -1,0 +1,58 @@
+kapitel:
+  titel: "Dungeon-Flucht bis 10"
+  untertitel: "Rechne und finde den Weg!"
+  emoji: "🏰"
+  farbe: "blau"
+  zahlenraum: 10
+
+abschnitte:
+  - typ: dungeon_flucht
+    titel: "A  Entkomme dem Dungeon!"
+    beschreibung: "Löse die Aufgabe. Folge dann den Feldern mit der Lösung vom Eingang zum Ausgang!"
+    aufgaben:
+      - aufgabe: "3 + 4"
+        antwort: 7
+        eingang: 2
+        ausgang: 3
+        grid:
+          - [3, 5, 7, 2, 9]
+          - [8, 1, 7, 4, 6]
+          - [4, 6, 7, 7, 3]
+          - [9, 2, 5, 7, 1]
+          - [3, 8, 4, 7, 6]
+
+      - aufgabe: "10 − 4"
+        antwort: 6
+        eingang: 1
+        ausgang: 2
+        grid:
+          - [3, 6, 8, 2, 5]
+          - [7, 6, 6, 4, 1]
+          - [9, 3, 6, 8, 4]
+          - [2, 5, 6, 1, 7]
+          - [8, 4, 6, 9, 3]
+
+  - typ: dungeon_flucht
+    titel: "B  Noch tiefer im Dungeon!"
+    aufgaben:
+      - aufgabe: "5 + 3"
+        antwort: 8
+        eingang: 0
+        ausgang: 4
+        grid:
+          - [8, 3, 5, 2, 7]
+          - [8, 8, 1, 9, 4]
+          - [3, 6, 8, 5, 1]
+          - [7, 2, 8, 8, 9]
+          - [4, 1, 6, 3, 8]
+
+      - aufgabe: "9 − 6"
+        antwort: 3
+        eingang: 3
+        ausgang: 1
+        grid:
+          - [7, 5, 8, 3, 2]
+          - [4, 9, 3, 3, 6]
+          - [1, 8, 3, 7, 5]
+          - [6, 3, 3, 2, 9]
+          - [4, 3, 8, 1, 7]

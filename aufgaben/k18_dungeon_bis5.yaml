@@ -1,0 +1,54 @@
+kapitel:
+  titel: "Entkomme dem Dungeon!"
+  untertitel: "Finde den Weg durch das Zahlenfeld!"
+  emoji: "🏰"
+  farbe: "gruen"
+  zahlenraum: 5
+
+abschnitte:
+  - typ: dungeon_flucht
+    titel: "A  Finde den Ausgang!"
+    beschreibung: "Löse die Aufgabe. Folge dann den Feldern mit der Lösung vom Eingang zum Ausgang!"
+    aufgaben:
+      - aufgabe: "1 + 2"
+        antwort: 3
+        eingang: 1
+        ausgang: 2
+        grid:
+          - [1, 3, 2, 4]
+          - [4, 3, 1, 2]
+          - [2, 3, 3, 1]
+          - [1, 4, 3, 4]
+
+      - aufgabe: "5 − 1"
+        antwort: 4
+        eingang: 0
+        ausgang: 3
+        grid:
+          - [4, 2, 1, 3]
+          - [4, 4, 3, 2]
+          - [1, 3, 4, 1]
+          - [2, 1, 3, 4]
+
+  - typ: dungeon_flucht
+    titel: "B  Noch ein Dungeon!"
+    aufgaben:
+      - aufgabe: "3 + 2"
+        antwort: 5
+        eingang: 2
+        ausgang: 1
+        grid:
+          - [3, 2, 5, 1]
+          - [4, 5, 5, 2]
+          - [1, 5, 3, 4]
+          - [3, 5, 2, 1]
+
+      - aufgabe: "2 − 1"
+        antwort: 1
+        eingang: 3
+        ausgang: 0
+        grid:
+          - [3, 4, 2, 1]
+          - [2, 4, 1, 1]
+          - [3, 1, 1, 4]
+          - [1, 3, 2, 5]

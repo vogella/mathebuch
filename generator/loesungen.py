@@ -389,6 +389,13 @@ def _solve_zahlenkreis(abschnitt):
     return results
 
 
+def _solve_dungeon_flucht(abschnitt):
+    results = []
+    for aufg in abschnitt["aufgaben"]:
+        results.append(str(aufg["antwort"]))
+    return results
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -417,6 +424,7 @@ SOLVER = {
     "schatzsuche": _solve_schatzsuche,
     "labyrinth_flucht": _solve_schatzsuche,
     "zahlenkreis": _solve_zahlenkreis,
+    "dungeon_flucht": _solve_dungeon_flucht,
 }
 
 # Types to skip (explanation, visual-only)
