@@ -1919,3 +1919,91 @@ def draw_zahlenkreis(c, abschnitt, farb_key, start_y):
                 
     total_rows = (len(aufgaben) + cols - 1) // cols
     return row_y - total_rows * row_h + 1.5*cm
+
+
+# ── Dungeon-Flucht ───────────────────────────────────────────
+
+def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
+    """Draws a number grid where the student solves a task, then traces
+    cells containing the answer from entrance to exit."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt.get("aufgaben", [])
+    loes = abschnitt.get("loesungen")
+    cy = start_y - 1.5*cm - y_off
+
+    for a_idx, aufg in enumerate(aufgaben):
+        grid = aufg["grid"]
+        aufgabe_text = aufg["aufgabe"]
+        antwort = aufg["antwort"]
+        rows = len(grid)
+        cols = len(grid[0])
+
+        cell = 1.2 * cm
+        grid_w = cols * cell
+        grid_h = rows * cell
+        # Center the grid horizontally, with space for labels
+        gx = (W - grid_w) / 2
+        gy = cy - grid_h
+
+        # Draw task text
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont("Helvetica-Bold", 11)
+        c.drawString(2 * cm, cy + 0.1 * cm, f"Rechne: {aufgabe_text} = ?")
+
+        # Draw answer box next to task
+        task_text_w = c.stringWidth(f"Rechne: {aufgabe_text} = ?", "Helvetica-Bold", 11)
+        draw_answer_box(c, 2.3 * cm + task_text_w, cy - 0.15 * cm, w=1.2 * cm, h=0.8 * cm)
+        if loes and a_idx < len(loes):
+            c.setFillColor(FARBEN["gruen"])
+            c.setFont("Helvetica-Bold", 12)
+            c.drawCentredString(2.3 * cm + task_text_w + 0.6 * cm,
+                                cy + 0.05 * cm, str(loes[a_idx]))
+
+        cy -= 0.7 * cm  # space below task text
+        gy = cy - grid_h
+
+        # Entrance arrow
+        entrance_col = aufg.get("eingang", 0)
+        ex = gx + entrance_col * cell + cell / 2
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont("Helvetica-Bold", 9)
+        c.drawCentredString(ex, cy + 0.35 * cm, "▼ Eingang")
+
+        # Draw grid
+        for ri, row in enumerate(grid):
+            for ci, val in enumerate(row):
+                x0 = gx + ci * cell
+                y0 = cy - ri * cell - cell
+
+                # Cell background
+                if val == antwort:
+                    c.setFillColor(HexColor("#E8F4FF"))
+                else:
+                    c.setFillColor(white)
+                c.setStrokeColor(FARBEN["hellgrau"])
+                c.setLineWidth(1)
+                c.rect(x0, y0, cell, cell, fill=1, stroke=1)
+
+                # Cell border for path cells (subtle hint in exercise)
+                c.setStrokeColor(FARBEN["hellgrau"])
+                c.setLineWidth(1)
+                c.rect(x0, y0, cell, cell, fill=0, stroke=1)
+
+                # Number
+                c.setFillColor(FARBEN["dunkel"])
+                c.setFont("Helvetica-Bold", 13)
+                c.drawCentredString(x0 + cell / 2, y0 + cell / 2 - 0.15 * cm,
+                                    str(val))
+
+        # Exit arrow
+        exit_col = aufg.get("ausgang", cols - 1)
+        ax = gx + exit_col * cell + cell / 2
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont("Helvetica-Bold", 9)
+        c.drawCentredString(ax, gy - 0.35 * cm, "Ausgang ▼")
+
+        cy = gy - 0.9 * cm
+
+    return cy
