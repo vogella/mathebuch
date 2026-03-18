@@ -1,0 +1,20 @@
+kapitel:
+  titel: "Textaufgaben bis 5"
+  untertitel: "Lies genau und rechne!"
+  emoji: "📝"
+  farbe: "blau"
+  zahlenraum: 5
+
+abschnitte:
+  - typ: textaufgaben
+    titel: "A  Sachaufgaben"
+    aufgaben:
+      - text: "2 Ritter haben jeweils 2 Pferde. Wie viele Pferde haben sie zusammen?"
+        hinweis: "Tipp: Zusammenzählen!"
+      - text: "Oma trinkt zweimal am Tag 2 Tassen Kaffee. Wie viele Tassen trinkt sie insgesamt?"
+      - text: "Im Korb liegen 3 Äpfel. Mama legt noch 2 dazu. Wie viele Äpfel sind es jetzt?"
+      - text: "Ein Hund hat 4 Beine. Eine Katze läuft weg. Wie viele Beine hat der Hund noch?"
+        hinweis: "Tipp: Der Hund verliert keine Beine!"
+      - text: "Paul hat 5 Bonbons. Er isst 2 davon auf. Wie viele Bonbons hat er noch?"
+      - text: "Im Nest sitzen 3 Vögel. Dann fliegt 1 weg. Wie viele Vögel sitzen noch im Nest?"
+    loesungen: [4, 4, 5, 4, 3, 2]
