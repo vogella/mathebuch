@@ -1,0 +1,48 @@
+kapitel:
+  titel: "Vorwort"
+  untertitel: "Ein paar Worte zum Start"
+  emoji: "💛"
+  farbe: "orange"
+  zahlenraum: 20
+  erklaerungsseite: true
+
+abschnitte:
+  - typ: erklaerung
+    titel: "Liebe Eltern,"
+    zeilen:
+      - "dieses Buch begleitet Ihr Kind beim Entdecken der Welt der Zahlen."
+      - "Es ist so aufgebaut, dass Ihr Kind selbstständig damit arbeiten kann."
+      - ""
+      - "Die Aufgaben sind in drei Bereiche unterteilt:"
+      - "**Rechnen bis 5 – der sanfte Einstieg**"
+      - "**Rechnen bis 10 – hier wächst das Können**"
+      - "**Rechnen bis 20 – für kleine Rechenmeister**"
+      - ""
+      - "Jeder Bereich beginnt mit Erklärungsseiten, die zeigen,"
+      - "wie die verschiedenen Aufgabentypen funktionieren."
+      - "Die grünen Zahlen in den Beispielen zeigen die Lösung."
+      - ""
+      - "Am Ende des Buches finden Sie alle Lösungen zum Überprüfen."
+      - ""
+      - "##Ein paar Tipps:"
+      - "Lassen Sie Ihr Kind in seinem eigenen Tempo arbeiten."
+      - "Nicht alle Aufgaben müssen auf einmal gelöst werden."
+      - "Loben Sie den Fortschritt – jede gelöste Aufgabe zählt!"
+      - "Wenn eine Aufgabe schwerfällt, helfen die Erklärungsseiten."
+
+  - typ: erklaerung
+    titel: "Und jetzt zu dir!"
+    zeilen:
+      - "Hallo, schön, dass du da bist!"
+      - ""
+      - "In diesem Buch warten viele spannende Aufgaben auf dich:"
+      - "Rechenmauern, Zahlenhäuser, Schatzkarten und noch viel mehr!"
+      - ""
+      - "Auf jeder Seite kannst du dir Sterne verdienen."
+      - "Male sie aus, wenn du die Aufgaben geschafft hast!"
+      - ""
+      - "Trau dich – du kannst das!"
+      - "Und wenn etwas knifflig ist, schau einfach"
+      - "bei den Erklärungsseiten am Anfang nach."
+      - ""
+      - "**Viel Spaß beim Rechnen!**"
