@@ -1876,7 +1876,7 @@ def draw_zahlenkreis(c, abschnitt, farb_key, start_y):
         c.setLineWidth(1.5)
         for i in range(num_nodes):
             a1 = math.radians(90 - i * (360/num_nodes))
-            a2 = math.radians(90 - (i+1) * (360/num_nodes))
+            a2 = math.radians(90 - ((i+1) % num_nodes) * (360/num_nodes))
             x1 = cx + radius_kreis * math.cos(a1)
             y1 = cy + radius_kreis * math.sin(a1)
             x2 = cx + radius_kreis * math.cos(a2)
@@ -1891,23 +1891,25 @@ def draw_zahlenkreis(c, abschnitt, farb_key, start_y):
                        x2 - nx * node_r, y2 - ny * node_r)
 
         # Draw nodes
+        loes_idx = 0
         for i in range(num_nodes):
             angle = math.radians(90 - i * (360/num_nodes))
             nx = cx + radius_kreis * math.cos(angle)
             ny = cy + radius_kreis * math.sin(angle)
-            
+
             val = aufg[i]
             is_blank = val is None
-            
+
             if is_blank:
                 c.setFillColor(FARBEN["antwort"])
                 c.setStrokeColor(FARBEN[farb_key])
                 c.setLineWidth(1.5)
                 c.circle(nx, ny, node_r, fill=1, stroke=1)
-                if task_loes and i < len(task_loes):
+                if task_loes and loes_idx < len(task_loes):
                      c.setFillColor(FARBEN["gruen"])
                      c.setFont("Helvetica-Bold", 14)
-                     c.drawCentredString(nx, ny - 0.15*cm, str(task_loes[i]))
+                     c.drawCentredString(nx, ny - 0.15*cm, str(task_loes[loes_idx]))
+                     loes_idx += 1
             else:
                 c.setFillColor(FARBEN[farb_key])
                 c.circle(nx, ny, node_r, fill=1, stroke=0)
