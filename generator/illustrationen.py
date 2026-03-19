@@ -17,6 +17,11 @@ from layout import FARBEN, RAND_FARBEN
 
 W, H = A4
 
+# ── Konfigurations-Konstanten ───────────────────────────────────────
+THUMB_ROTATION_ANGLE = 30
+STAR_INNER_RADIUS_FACTOR = 0.45
+CORNER_DECORATION_LINE_WIDTH = 1.5
+
 
 # ── Euli, das Eulen-Maskottchen ──────────────────────────────────────
 
@@ -26,8 +31,8 @@ def draw_euli(c, cx, cy, size=1.0):
     cx, cy = Mittelpunkt; size = Skalierungsfaktor (1.0 ≈ 3cm hoch).
     """
     s = size
-    body_color = HexColor("#8B6914")
-    belly_color = HexColor("#F5DEB3")
+    body_color = FARBEN["euli_body"]
+    belly_color = FARBEN["euli_belly"]
     eye_white = white
     pupil_color = FARBEN["dunkel"]
     beak_color = FARBEN["orange"]
@@ -102,7 +107,7 @@ def draw_euli(c, cx, cy, size=1.0):
             c.circle(fx + toe_dx * cm * s, fy, 0.07 * cm * s, fill=1, stroke=0)
 
     # Flügel (kleine Bögen an den Seiten)
-    c.setFillColor(HexColor("#7A5C10"))
+    c.setFillColor(FARBEN["euli_wing"])
     for side in [-1, 1]:
         wing_x = cx + side * bw * 0.85
         wing_cy = cy - 0.3 * cm * s
@@ -155,8 +160,8 @@ def draw_hand(c, cx, cy, num_fingers=5, size=1.0):
     num_fingers: 1-5 Finger, die gezeigt werden.
     """
     s = size
-    skin = HexColor("#FDBCB4")
-    outline = HexColor("#D4967E")
+    skin = FARBEN["hand_skin"]
+    outline = FARBEN["hand_outline"]
 
     c.saveState()
     c.setFillColor(skin)
@@ -192,7 +197,7 @@ def draw_hand(c, cx, cy, num_fingers=5, size=1.0):
         ty = cy + 0.1 * cm * s
         c.saveState()
         c.translate(tx, ty)
-        c.rotate(30)
+        c.rotate(THUMB_ROTATION_ANGLE)
         c.roundRect(-thumb_w / 2, 0, thumb_w, thumb_h,
                     radius=2 * s, fill=1, stroke=1)
         c.restoreState()
@@ -243,7 +248,7 @@ def _draw_star(c, cx, cy, r, color):
     p = c.beginPath()
     for i in range(10):
         angle = math.radians(90 + i * 36)
-        radius = r if i % 2 == 0 else r * 0.45
+        radius = r if i % 2 == 0 else r * STAR_INNER_RADIUS_FACTOR
         x = cx + radius * math.cos(angle)
         y = cy + radius * math.sin(angle)
         if i == 0:
@@ -261,7 +266,7 @@ def draw_mini_pokal(c, cx, cy, size=1.0):
     """Zeichnet einen kleinen Pokal neben dem Sterne-Bereich."""
     s = size
     gold = FARBEN["yellow"]
-    gold_dark = HexColor("#E6B800")
+    gold_dark = FARBEN["gold_dark"]
 
     c.saveState()
 
@@ -317,7 +322,7 @@ def draw_eckverzierungen(c, farb_key="blau"):
 
     c.saveState()
     c.setStrokeColor(color)
-    c.setLineWidth(1.5)
+    c.setLineWidth(CORNER_DECORATION_LINE_WIDTH)
 
     r = 1.2 * cm
     inset = 0.6 * cm
