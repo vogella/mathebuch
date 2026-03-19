@@ -1,0 +1,47 @@
+kapitel:
+  titel: "Ergänze bis 20"
+  untertitel: "Was fehlt bis 20?"
+  emoji: "🎯"
+  farbe: "blau"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: lückenaufgaben
+    titel: "A  Was fehlt bis 20?"
+    aufgaben:
+      - [11, "+", null, 20]
+      - [12, "+", null, 20]
+      - [13, "+", null, 20]
+      - [14, "+", null, 20]
+      - [15, "+", null, 20]
+      - [16, "+", null, 20]
+      - [17, "+", null, 20]
+      - [18, "+", null, 20]
+      - [19, "+", null, 20]
+
+  - typ: lückenaufgaben
+    titel: "B  Andersherum – was steht vorne?"
+    aufgaben:
+      - [null, "+", 9, 20]
+      - [null, "+", 7, 20]
+      - [null, "+", 5, 20]
+      - [null, "+", 3, 20]
+      - [null, "+", 1, 20]
+      - [null, "+", 8, 20]
+      - [null, "+", 4, 20]
+      - [null, "+", 6, 20]
+      - [null, "+", 2, 20]
+
+  - typ: lückenaufgaben
+    titel: "C  Gemischt – Ergänze bis 20!"
+    aufgaben:
+      - [13, "+", null, 20]
+      - [null, "+", 4, 20]
+      - [16, "+", null, 20]
+      - [null, "+", 12, 20]
+      - [19, "+", null, 20]
+      - [null, "+", 7, 20]
+      - [15, "+", null, 20]
+      - [null, "+", 11, 20]
+      - [18, "+", null, 20]
+      - [null, "+", 6, 20]
