@@ -272,7 +272,7 @@ def _draw_toc_section_header(c, y, text, line_h):
     c.roundRect(1.8 * cm, y - 0.15 * cm, W - 3.6 * cm, line_h,
                 radius=6, fill=1, stroke=0)
     c.setFillColor(white)
-    c.setFont(FONT_BOLD, 12)
+    c.setFont(FONT_BOLD, 11)
     c.drawString(2.3 * cm, y, text)
     return y - line_h - 0.15 * cm
 
@@ -329,7 +329,7 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
     c.drawCentredString(W / 2, H - 2.5 * cm, "Inhaltsverzeichnis")
 
     y = H - 5.0 * cm
-    line_h = 0.8 * cm
+    line_h = 0.55 * cm
     min_y = 2.5 * cm
 
     current_section = None
@@ -388,13 +388,14 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
 
         # Titel
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont(FONT_BOLD, 11)
+        c.setFont(FONT, 9)
         c.drawString(3.5 * cm, y, entry["titel"])
 
-        _draw_toc_dots(c, y, entry["titel"], FONT_BOLD, 11)
+        _draw_toc_dots(c, y, entry["titel"], FONT, 9)
 
         # Seitennummer
         c.setFillColor(FARBEN[entry["farbe"]])
+        c.setFont(FONT_BOLD, 9)
         c.drawRightString(W - 2 * cm, y, str(entry["seite"]))
 
         y -= line_h
