@@ -35,3 +35,10 @@ abschnitte:
         lücken: 4
       - start: [19, 17, 15]
         lücken: 4
+
+  - typ: gerade_ungerade
+    titel: "D  Gerechte Verteilung"
+    beschreibung: "Kann man die Zahl gerecht in Paare teilen? Kreuze an (X = ja, leer = nein)."
+    modus: paare
+    aufgaben:
+      - zahlen: [4, 7, 6, 9, 10, 3, 8, 5]
