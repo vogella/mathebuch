@@ -54,6 +54,11 @@ abschnitte:
     aufgaben: [...]       # Structure varies by type
 ```
 
+## Branching Workflow
+
+- All new development must be done in a new branch based on `origin/main`.
+- Before creating the branch, always fetch the latest information from the remote (`git fetch origin`).
+
 ## Key Conventions
 
 - All user-facing text is in **German** (titles, descriptions, labels). Always write German content in YAML and UI strings.
