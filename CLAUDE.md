@@ -56,8 +56,8 @@ abschnitte:
 
 ## Branching Workflow
 
-- All new development must be done in a new branch based on `origin/main`.
-- Before creating the branch, always fetch the latest information from the remote (`git fetch origin`).
+- Fetch the latest remote state before creating a branch: `git fetch origin`
+- Create your new branch based on `origin/main`: `git checkout -b <branch-name> origin/main`
 
 ## Common Task Shortcuts
 
