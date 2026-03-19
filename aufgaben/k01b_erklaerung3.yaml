@@ -9,7 +9,7 @@ kapitel:
 abschnitte:
   - typ: verdoppeln_halbieren
     titel: "Verdoppeln & Halbieren"
-    beschreibung: "Beim Verdoppeln rechnest du die Zahl plus sich selbst. Beim Halbieren teilst du die Zahl durch 2. Im Beispiel für das Halbieren von 10 suchst du die Zahl, die mit sich selbst addiert 10 ergibt."
+    beschreibung: "Rechne plus sich selbst (doppelt) oder teile gerecht auf (halb)."
     aufgaben:
       - [4, "doppelt"]
       - [10, "halb"]
@@ -17,7 +17,7 @@ abschnitte:
 
   - typ: rechenraupe
     titel: "Rechenraupe"
-    beschreibung: "Rechne Schritt für Schritt von links nach rechts. Jeder Kreis zeigt eine Rechnung oder ein Ergebnis. Ein leerer Kreis ist blau und ist das Ergebnis."
+    beschreibung: "Rechne von links nach rechts immer weiter."
     start: 2
     schritte: ["+3", "+1", "+4"]
 
@@ -29,7 +29,7 @@ abschnitte:
 
   - typ: rechenmauer
     titel: "Rechenmauer"
-    beschreibung: "Jeder Stein ist die Summe der zwei Steine direkt darunter. Rechne von unten nach oben!"
+    beschreibung: "Zwei Steine nebeneinander ergeben den Stein darüber."
     mauern:
       - - [2, 3, 1]
         - [null, null]
@@ -41,8 +41,7 @@ abschnitte:
 
   - typ: vervielfachen
     titel: "Vervielfachen"
-    beschreibung: "Wie oft musst du die Zahl mit sich selbst addieren, um auf das Ergebnis zu kommen? Zum Beispiel: 2 + 2 + 2 = 6, also passt die 2 dreimal in die 6."
+    beschreibung: "Wie oft passt die Zahl in das Ergebnis?"
     aufgaben:
       - [2, 6]
     loesungen: [3]
-
