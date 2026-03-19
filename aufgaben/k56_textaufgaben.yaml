@@ -17,3 +17,37 @@ abschnitte:
       - text: "Auf dem Spielplatz sind 7 Mädchen und 5 Jungen. Wie viele Kinder spielen insgesamt?"
       - text: "Lisa sammelt 9 Kastanien. 4 davon verliert sie auf dem Weg. Wie viele Kastanien hat sie noch?"
     loesungen: [7, 5, 9, 4, 12, 5]
+
+  - typ: textaufgaben
+    titel: "B  Im Supermarkt"
+    beschreibung: "Rechne aus!"
+    aufgaben:
+      - text: "Im Korb liegen 5 rote Äpfel und 6 grüne Äpfel. Wie viele Äpfel sind es zusammen?"
+        antwort: 11
+      - text: "Tim hat 10 Euro. Er kauft ein Eis für 2 Euro. Wie viel Geld hat er noch?"
+        antwort: 8
+      - text: "In einer Packung sind 12 Eier. 3 Eier sind kaputt. Wie viele sind noch ganz?"
+        antwort: 9
+      - text: "Ein Lutscher kostet 1 Euro. Wie viel kosten 5 Lutscher?"
+        antwort: 5
+      - text: "Mama kauft 7 Birnen. 4 davon sind schon reif. Wie viele sind noch nicht reif?"
+        antwort: 3
+      - text: "Ein Brot kostet 3 Euro. Wie viel kosten 2 Brote?"
+        antwort: 6
+
+  - typ: textaufgaben
+    titel: "C  Im Spielzeugladen"
+    beschreibung: "Lies und rechne!"
+    aufgaben:
+      - text: "Ein Ball kostet 5 Euro. Ein Auto kostet 8 Euro. Wie viel kosten beide zusammen?"
+        antwort: 13
+      - text: "Leo hat 20 Euro. Er kauft ein Buch für 12 Euro. Wie viel Geld hat er noch?"
+        antwort: 8
+      - text: "Es gibt 14 rote Autos und 6 grüne Autos. Wie viele Autos sind das insgesamt?"
+        antwort: 20
+      - text: "Mia hat 15 Sticker. Sie schenkt 7 Sticker ihrer Freundin. Wie viele Sticker behält Mia?"
+        antwort: 8
+      - text: "Ein Puzzle hat 18 Teile. Tim hat schon 9 Teile gelegt. Wie viele fehlen noch?"
+        antwort: 9
+      - text: "Annas Puppe kostet 11 Euro. Sie hat 15 Euro. Wie viel Geld bleibt übrig?"
+        antwort: 4

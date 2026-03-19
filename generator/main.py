@@ -37,7 +37,8 @@ from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_textaufgaben, draw_wuerfel_zuordnen,
                            draw_schatzsuche, draw_labyrinth_flucht,
                            draw_zahlenkreis, draw_dungeon_flucht,
-                           draw_zehneruebergang, draw_gerade_ungerade)
+                           draw_zehneruebergang, draw_gerade_ungerade,
+                           draw_rechenquadrat_2x2, draw_muster_fortsetzen)
 
 W, H = A4
 
@@ -74,6 +75,8 @@ TYPEN = {
     "dungeon_flucht":     draw_dungeon_flucht,
     "zehneruebergang":    draw_zehneruebergang,
     "gerade_ungerade":    draw_gerade_ungerade,
+    "rechenquadrat_2x2":  draw_rechenquadrat_2x2,
+    "muster_fortsetzen":  draw_muster_fortsetzen,
 }
 
 TRENNLINIE_Y = H - 15.5   # Y-Position der Trennlinie zwischen Abschnitten
@@ -87,6 +90,32 @@ TRENNSEITEN_INFO = {
     20: {"titel": "Rechnen bis 20", "farbe": "orange",  "emoji": "🚀",
          "untertitel": "Du bist schon ein Rechen-Profi!"},
 }
+
+# TOC Grouping definition
+CHAPTER_GROUPS = [
+    ("Willkommen & Grundlagen", ["k00", "k01"]),
+    ("Zahlen bis 5",            ["k10", "k11"]),
+    ("Plus und Minus bis 5",    ["k12", "k13", "k16"]),
+    ("Rätsel & Spiele bis 5",   ["k14", "k15", "k18", "k19"]),
+    ("Zahlen bis 10",           ["k22", "k23", "k26", "k28", "k37", "k38"]),
+    ("Rechnen bis 10",          ["k20", "k24", "k25", "k30", "k31", "k32"]),
+    ("Entdeckungen bis 10",     ["k27", "k33", "k34", "k35", "k36", "k39"]),
+    ("Geometrie & Muster",      ["k15b", "k29", "k29b", "k44", "k52d", "k57b"]),
+    ("Zahlen bis 20",           ["k40", "k41", "k42", "k43", "k50"]),
+    ("Rechnen bis 20",          ["k45", "k46", "k51", "k52", "k54", "k63"]),
+    ("Sachrechnen & Alltag",    ["k56", "k59", "k60"]),
+    ("Knobel-Aufgaben",         ["k53", "k55", "k57", "k58"]),
+    ("Dungeon-Abenteuer",       ["k18_dungeon", "k36_dungeon", "k61", "k62"])
+]
+
+
+def _get_group_for_chapter(filename):
+    fname = os.path.basename(filename)
+    for group_name, prefixes in CHAPTER_GROUPS:
+        for p in prefixes:
+            if fname.startswith(p):
+                return group_name
+    return None
 
 
 def _get_chapter_section(kap_data):
@@ -285,7 +314,7 @@ def _draw_toc_dots(c, y, text, font_name, font_size):
 
 
 def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
-    """Inhaltsverzeichnis mit automatischem Seitenumbruch.
+    """Inhaltsverzeichnis mit automatischem Seitenumbruch und Gruppierung.
     Gibt die Anzahl der verwendeten Seiten zurück."""
     draw_page_bg(c)
     toc_pages = 1
@@ -299,92 +328,73 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
     c.drawCentredString(W / 2, H - 2.5 * cm, "Inhaltsverzeichnis")
 
     y = H - 5.0 * cm
-    line_h = 0.65 * cm
+    line_h = 0.8 * cm
     min_y = 2.5 * cm
 
-    erkl_header_shown = False
-    erkl_seen = set()  # Avoid duplicate entries in TOC
     current_section = None
-    skip_types = {"erklaerung"}  # Skip "Willkommen!" etc.
+    seen_groups = set()
 
+    # Pass 1: Collect grouped entries
+    grouped_entries = []
     for idx, (dateiname, kap_data) in enumerate(alle_kapitel):
         seite_nr = seiten_nummern[idx]
         kap = kap_data["kapitel"]
-        titel = kap["titel"]
-        emoji = kap.get("emoji", "")
-        farb_key = kap.get("farbe", "blau")
-        ist_erklaerung = kap.get("erklaerungsseite", False)
-        zahlenraum = kap.get("zahlenraum", 20)
+        ist_erkl = kap.get("erklaerungsseite", False)
+        
+        if ist_erkl:
+            group_name = "💡 So funktioniert's!"
+        else:
+            group_name = _get_group_for_chapter(dateiname)
+            if not group_name:
+                zr = kap.get("zahlenraum", 20)
+                group_name = f"Rechnen bis {zr}"
+        
+        if group_name not in seen_groups:
+            seen_groups.add(group_name)
+            grouped_entries.append({
+                "titel": group_name,
+                "seite": seite_nr,
+                "emoji": kap.get("emoji", "⭐"),
+                "farbe": kap.get("farbe", "blau"),
+                "zahlenraum": kap.get("zahlenraum", 20),
+                "ist_erkl": ist_erkl
+            })
 
-        # Erklärungsseiten: Überschrift + einzelne Aufgabentypen auflisten
-        if ist_erklaerung:
-            if not erkl_header_shown:
+    # Pass 2: Render
+    for entry in grouped_entries:
+        if y < min_y:
+            y = _toc_new_page(c)
+            toc_pages += 1
+
+        # Section header based on zahlenraum
+        if not entry["ist_erkl"]:
+            section = _toc_section_for_zahlenraum(entry["zahlenraum"])
+            if section != current_section:
+                current_section = section
+                section_titles = {5: "Zahlenraum bis 5", 10: "Zahlenraum bis 10", 20: "Zahlenraum bis 20"}
                 y -= 0.15 * cm
                 if y < min_y:
                     y = _toc_new_page(c)
                     toc_pages += 1
-                y = _draw_toc_section_header(c, y, "So funktioniert's!", line_h)
-                erkl_header_shown = True
-
-            # Aufgabentypen dieser Erklärungsseite auflisten
-            abschnitte = kap_data.get("abschnitte", [])
-            for abschnitt in abschnitte:
-                typ = abschnitt.get("typ", "")
-                if typ in skip_types:
-                    continue
-                ab_titel = abschnitt.get("titel", typ)
-                # Remove "– Aufgabe", "– Lösung" suffixes for cleaner TOC
-                for suffix in [" – Aufgabe", " – Lösung", " – Aufgabe & Lösung"]:
-                    ab_titel = ab_titel.replace(suffix, "")
-                # Skip duplicates (e.g. Aufgabe + Lösung for same type)
-                if ab_titel in erkl_seen:
-                    continue
-                erkl_seen.add(ab_titel)
-                if y < min_y:
-                    y = _toc_new_page(c)
-                    toc_pages += 1
-
-                draw_emoji(c, "📖", 2.8 * cm, y + 0.15 * cm, 0.45 * cm)
-                c.setFillColor(FARBEN["dunkel"])
-                c.drawString(3.5 * cm, y, ab_titel)
-
-                _draw_toc_dots(c, y, ab_titel, FONT, 9)
-
-                c.setFillColor(FARBEN["grau"])
-                c.setFont(FONT, 9)
-                c.drawRightString(W - 2 * cm, y, str(seite_nr))
-                y -= line_h * 0.85
-            continue
-
-        # Section header based on zahlenraum
-        section = _toc_section_for_zahlenraum(zahlenraum)
-        if section != current_section:
-            current_section = section
-            section_titles = {5: "Rechnen bis 5", 10: "Rechnen bis 10", 20: "Rechnen bis 20"}
-            y -= 0.15 * cm  # extra gap before section header
-            if y < min_y:
-                y = _toc_new_page(c)
-                toc_pages += 1
-            y = _draw_toc_section_header(c, y, section_titles[section], line_h)
+                y = _draw_toc_section_header(c, y, section_titles[section], line_h)
 
         if y < min_y:
             y = _toc_new_page(c)
             toc_pages += 1
 
         # Emoji
-        draw_emoji(c, emoji, 2.6 * cm, y + 0.15 * cm, 0.5 * cm)
+        draw_emoji(c, entry["emoji"], 2.6 * cm, y + 0.15 * cm, 0.5 * cm)
 
         # Titel
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont(FONT, 10)
-        c.drawString(3.5 * cm, y, titel)
+        c.setFont(FONT_BOLD, 11)
+        c.drawString(3.5 * cm, y, entry["titel"])
 
-        _draw_toc_dots(c, y, titel, FONT, 10)
+        _draw_toc_dots(c, y, entry["titel"], FONT_BOLD, 11)
 
         # Seitennummer
-        c.setFillColor(FARBEN[farb_key])
-        c.setFont(FONT_BOLD, 10)
-        c.drawRightString(W - 2 * cm, y, str(seite_nr))
+        c.setFillColor(FARBEN[entry["farbe"]])
+        c.drawRightString(W - 2 * cm, y, str(entry["seite"]))
 
         y -= line_h
 
