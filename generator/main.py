@@ -394,6 +394,82 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
     return toc_pages
 
 
+def render_geschafft_seite(c, seite_nr):
+    """Rendert eine 'Geschafft!'-Abschlussseite vor den Lösungen."""
+    draw_page_bg(c)
+
+    # Großer bunter Titel
+    c.setFillColor(FARBEN["pink"])
+    c.roundRect(2 * cm, H - 6 * cm, W - 4 * cm, 3.5 * cm, radius=15, fill=1, stroke=0)
+    c.setFillColor(white)
+    c.setFont("Helvetica-Bold", 40)
+    c.drawCentredString(W / 2, H - 4.2 * cm, "GESCHAFFT!")
+    c.setFont("Helvetica-Bold", 20)
+    c.drawCentredString(W / 2, H - 5.3 * cm, "Du bist ein Mathe-Profi!")
+
+    # Sterne / Konfetti-Deko
+    import random
+    _rnd = random.Random(42)
+    for _ in range(30):
+        c.setFillColor(RAND_FARBEN[_rnd.randint(0, len(RAND_FARBEN)-1)])
+        sz = _rnd.uniform(0.1, 0.4) * cm
+        cx = _rnd.uniform(1 * cm, W - 1 * cm)
+        cy = _rnd.uniform(1 * cm, H - 7 * cm)
+        c.circle(cx, cy, sz, fill=1, stroke=0)
+
+    # Urkunde-Bereich
+    u_y = H - 10 * cm
+    c.setFillColor(FARBEN["dunkel"])
+    c.setFont("Helvetica-Bold", 18)
+    c.drawCentredString(W / 2, u_y, "Herzlichen Glückwunsch!")
+    
+    c.setFont("Helvetica", 14)
+    msg = "Du hast alle Aufgaben in diesem Buch erfolgreich gelöst."
+    c.drawCentredString(W / 2, u_y - 1.2 * cm, msg)
+
+    # Namensfeld für die Urkunde
+    box_w = 12 * cm
+    box_h = 1.5 * cm
+    bx = (W - box_w) / 2
+    by = u_y - 4 * cm
+    c.setStrokeColor(FARBEN["orange"])
+    c.setLineWidth(2)
+    c.roundRect(bx, by, box_w, box_h, radius=10, fill=0, stroke=1)
+    
+    c.setFillColor(FARBEN["grau"])
+    c.setFont("Helvetica", 10)
+    c.drawString(bx + 0.3 * cm, by + box_h + 0.2 * cm, "Name des Mathe-Profis:")
+    c.drawString(bx + 0.3 * cm, by - 0.5 * cm, "Datum")
+    c.line(bx, by - 0.1 * cm, bx + 4 * cm, by - 0.1 * cm)
+
+    # Platz für ein Bild oder Sticker
+    c.setDash(3, 3)
+    c.setStrokeColor(FARBEN["hellgrau"])
+    c.roundRect(bx + box_w - 4 * cm, by - 3 * cm, 3.5 * cm, 3.5 * cm, radius=5, fill=0, stroke=1)
+    c.setDash()
+    c.setFont("Helvetica", 8)
+    c.drawCentredString(bx + box_w - 2.25 * cm, by - 1.5 * cm, "Hier ist Platz für")
+    c.drawCentredString(bx + box_w - 2.25 * cm, by - 1.9 * cm, "einen tollen Sticker!")
+
+    # Feedback-Bereich
+    f_y = by - 6 * cm
+    c.setFillColor(FARBEN["dunkel"])
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(2.5 * cm, f_y, "Wie fühlst du dich jetzt?")
+    
+    emojis = ["😊", "🤩", "💪", "😴"]
+    labels = ["Stolz", "Super", "Stark", "Müde"]
+    for i, (emo, lbl) in enumerate(zip(emojis, labels)):
+        ex = 3 * cm + i * 4 * cm
+        c.setFont("Helvetica", 30)
+        c.drawCentredString(ex, f_y - 1.5 * cm, emo)
+        c.setStrokeColor(FARBEN["hellgrau"])
+        c.circle(ex, f_y - 1.3 * cm, 0.8 * cm, fill=0, stroke=1)
+        c.setFillColor(FARBEN["grau"])
+        c.setFont("Helvetica", 10)
+        c.drawCentredString(ex, f_y - 2.5 * cm, lbl)
+
+    draw_page_number(c, seite_nr, show_stars=False)
 
 
 def lade_kapitel(pfad):
@@ -511,7 +587,7 @@ def main():
 
     # Probe-TOC um Seitenanzahl des Inhaltsverzeichnisses zu ermitteln
     # Vorläufige Seitennummern mit geschätztem Offset berechnen
-    est_offset = 3
+    est_offset = 4  # Titelseite (1) + Inhaltsverzeichnis (~2) + Geschafft! (1)
     est_seiten_nummern = []
     s = est_offset
     for i, n in enumerate(seiten_pro_kapitel):
@@ -558,6 +634,13 @@ def main():
         print(f"  Rendere Seite {seiten_nummern[i]}: {dateiname} ...")
         render_kapitel(c, data, seiten_nummern[i])
         c.showPage()
+
+    # "Geschafft!" Abschlussseite
+    geschafft_seite_nr = aktuelle_seite
+    print(f"  Rendere Geschafft!-Seite (S. {geschafft_seite_nr}) ...")
+    render_geschafft_seite(c, geschafft_seite_nr)
+    c.showPage()
+    aktuelle_seite += 1
 
     # Lösungsseiten am Ende
     from loesungen import render_loesungsseiten
