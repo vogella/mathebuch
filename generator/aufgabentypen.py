@@ -2137,3 +2137,124 @@ def draw_zehneruebergang(c, abschnitt, farb_key, start_y):
             draw_answer_box(c, x, y - 0.25 * cm, w=box_w, h=box_h)
 
     return row_y - len(aufgaben) * row_h - 0.5 * cm
+
+
+# ── Gerade und Ungerade Zahlen ──────────────────────────
+
+def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
+    """Sort and color even/odd numbers."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+    
+    modus = abschnitt.get("modus", "sortieren") # sortieren, malen, muster
+    aufgaben = abschnitt.get("aufgaben", [])
+    loesungen = abschnitt.get("loesungen", [])
+    row_y = start_y - 1.2*cm - y_off
+    
+    if modus == "sortieren":
+        # Sort given numbers into two boxes: "Gerade" and "Ungerade"
+        box_w = (W - 5*cm) / 2
+        box_h = 2.5*cm
+        
+        for ai, aufg in enumerate(aufgaben):
+            if row_y < 4*cm:
+                return row_y
+                
+            zahlen = aufg["zahlen"]
+            loes = loesungen[ai] if ai < len(loesungen) else None
+            
+            # Draw original numbers in a row
+            c.setFont("Helvetica-Bold", 14)
+            c.setFillColor(FARBEN["dunkel"])
+            num_str = "  ".join(map(str, zahlen))
+            c.drawCentredString(W/2, row_y, num_str)
+            row_y -= 0.8*cm
+            
+            # Draw the two boxes
+            bx_gerade = 2*cm
+            bx_ungerade = W/2 + 0.5*cm
+            
+            # Gerade Box
+            c.setStrokeColor(FARBEN["blau"])
+            c.roundRect(bx_gerade, row_y - box_h, box_w, box_h, radius=8, fill=0, stroke=1)
+            c.setFillColor(FARBEN["blau"])
+            c.setFont("Helvetica-Bold", 10)
+            c.drawString(bx_gerade + 0.3*cm, row_y - 0.4*cm, "Gerade")
+            
+            # Ungerade Box
+            c.setStrokeColor(FARBEN["pink"])
+            c.roundRect(bx_ungerade, row_y - box_h, box_w, box_h, radius=8, fill=0, stroke=1)
+            c.setFillColor(FARBEN["pink"])
+            c.setFont("Helvetica-Bold", 10)
+            c.drawString(bx_ungerade + 0.3*cm, row_y - 0.4*cm, "Ungerade")
+            
+            if loes:
+                c.setFont("Helvetica-Bold", 14)
+                c.setFillColor(FARBEN["gruen"])
+                c.drawCentredString(bx_gerade + box_w/2, row_y - 1.5*cm, ", ".join(map(str, loes[0])))
+                c.drawCentredString(bx_ungerade + box_w/2, row_y - 1.5*cm, ", ".join(map(str, loes[1])))
+            
+            row_y -= box_h + 0.8*cm
+            
+    elif modus == "malen":
+        # Color even blue and odd pink
+        node_r = 0.6*cm
+        spacing = 1.5*cm
+        
+        for ai, aufg in enumerate(aufgaben):
+            zahlen = aufg["zahlen"]
+            loes = loesungen[ai] if ai < len(loesungen) else None # list of colors
+            
+            c.setFont("Helvetica-Bold", 10)
+            c.setFillColor(FARBEN["grau"])
+            c.drawString(2*cm, row_y + 0.5*cm, "Gerade = blau, Ungerade = pink")
+            
+            for i, z in enumerate(zahlen):
+                cx = 2.5*cm + i * spacing
+                c.setStrokeColor(FARBEN["hellgrau"])
+                c.setLineWidth(1)
+                
+                fill_col = FARBEN["antwort"]
+                if loes and i < len(loes):
+                    fill_col = FARBEN["blau"] if loes[i] == "G" else FARBEN["pink"]
+                
+                c.setFillColor(fill_col)
+                c.circle(cx, row_y, node_r, fill=1, stroke=1)
+                
+                c.setFillColor(FARBEN["dunkel"] if fill_col == FARBEN["antwort"] else white)
+                c.setFont("Helvetica-Bold", 14)
+                c.drawCentredString(cx, row_y - 0.15*cm, str(z))
+                
+            row_y -= 2*cm
+
+    elif modus == "muster":
+        # Complete pattern: 2, 4, 6, ...
+        for ai, aufg in enumerate(aufgaben):
+            start_zahlen = aufg["start"]
+            n_blanks = aufg["lücken"]
+            loes = loesungen[ai] if ai < len(loesungen) else None
+            
+            x = 2*cm
+            box_w = 1.2*cm
+            box_h = 1.0*cm
+            
+            # Draw start numbers
+            c.setFont("Helvetica-Bold", 16)
+            for z in start_zahlen:
+                c.setFillColor(FARBEN[farb_key])
+                c.roundRect(x, row_y - 0.5*cm, box_w, box_h, radius=4, fill=1, stroke=0)
+                c.setFillColor(white)
+                c.drawCentredString(x + box_w/2, row_y - 0.15*cm, str(z))
+                x += box_w + 0.3*cm
+            
+            # Draw blanks
+            for i in range(n_blanks):
+                if loes and i < len(loes):
+                    _draw_filled_answer_box(c, x, row_y - 0.5*cm, loes[i], w=box_w, h=box_h)
+                else:
+                    draw_answer_box(c, x, row_y - 0.5*cm, w=box_w, h=box_h)
+                x += box_w + 0.3*cm
+                
+            row_y -= 1.8*cm
+
+    return row_y

@@ -35,7 +35,7 @@ from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_textaufgaben, draw_wuerfel_zuordnen,
                            draw_schatzsuche, draw_labyrinth_flucht,
                            draw_zahlenkreis, draw_dungeon_flucht,
-                           draw_zehneruebergang)
+                           draw_zehneruebergang, draw_gerade_ungerade)
 
 W, H = A4
 
@@ -71,6 +71,7 @@ TYPEN = {
     "zahlenkreis":        draw_zahlenkreis,
     "dungeon_flucht":     draw_dungeon_flucht,
     "zehneruebergang":    draw_zehneruebergang,
+    "gerade_ungerade":    draw_gerade_ungerade,
 }
 
 TRENNLINIE_Y = H - 15.5   # Y-Position der Trennlinie zwischen Abschnitten
