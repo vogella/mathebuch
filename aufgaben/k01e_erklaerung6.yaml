@@ -1,6 +1,6 @@
 kapitel:
   titel: "So funktioniert's!"
-  untertitel: "Magisches Quadrat, Textaufgaben"
+  untertitel: "Magisches Quadrat, Textaufgaben, Rechen-Labyrinth"
   emoji: "📖"
   farbe: "blau"
   zahlenraum: 20
@@ -16,6 +16,17 @@ abschnitte:
       label_links: "Aufgabe"
       label_rechts: "Lösung"
       werte: [2, 7, 6, 9, 5, 1, 4, 3, 8]
+
+  - typ: rechenweg_labyrinth
+    titel: "Rechen-Labyrinth"
+    beschreibung: "Wähle in jeder Spalte genau EINE Zahl. Zusammen müssen sie das Ziel ergeben."
+    aufgaben:
+      - zielsumme: 10
+        spalten:
+          - [3, 5]
+          - [2, 7]
+    loesungen:
+      - [3, 7]
 
   - typ: erklaerung
     titel: "Textaufgaben"

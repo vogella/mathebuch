@@ -1374,6 +1374,13 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
                 continue
             col_x = 3*cm + ci * col_spacing
             col_color = node_colors[ci % len(node_colors)]
+            
+            # Column instruction (only for first column)
+            if ci == 0:
+                c.setFillColor(FARBEN["grau"])
+                c.setFont("Helvetica-Bold", 8)
+                c.drawCentredString(col_x, grid_top + 0.3*cm, "Wähle EINE Zahl pro Spalte!")
+
             for ri, val in enumerate(spalte):
                 cy = grid_top - (ri + 0.5) * (grid_h / len(spalte))
                 # Node circle
@@ -1385,15 +1392,16 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
 
             # Arrows to next column
             if ci < num_cols - 1:
-                next_spalte = spalten[ci + 1]
                 next_x = 3*cm + (ci + 1) * col_spacing
-                for ri in range(len(spalte)):
-                    sy = grid_top - (ri + 0.5) * (grid_h / len(spalte))
-                    for nri in range(len(next_spalte)):
-                        ny = grid_top - (nri + 0.5) * (grid_h / len(next_spalte))
-                        c.setStrokeColor(FARBEN["hellgrau"])
-                        c.setLineWidth(1)
-                        c.line(col_x + node_r, sy, next_x - node_r, ny)
+                c.setStrokeColor(FARBEN["hellgrau"])
+                c.setLineWidth(1.5)
+                # Instead of mesh, draw centered arrows between columns
+                # to indicate general flow
+                arrow_y = grid_top - grid_h / 2
+                c.line(col_x + node_r + 0.1*cm, arrow_y, next_x - node_r - 0.1*cm, arrow_y)
+                # Arrow head
+                c.line(next_x - node_r - 0.3*cm, arrow_y + 0.15*cm, next_x - node_r - 0.1*cm, arrow_y)
+                c.line(next_x - node_r - 0.3*cm, arrow_y - 0.15*cm, next_x - node_r - 0.1*cm, arrow_y)
 
         # Target sum label (no answer box)
         target_x = 3*cm + (num_cols - 1) * col_spacing + 2*cm
