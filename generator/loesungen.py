@@ -405,7 +405,7 @@ def _solve_zehneruebergang(abschnitt):
             step1 = a - 10       # how much to subtract to reach 10
             step2 = b - step1    # remainder after reaching 10
             total = a - b
-        results.append(f"{step1},{step2},{total}")
+        results.append([step1, step2, total])
     return results
 
 
@@ -533,7 +533,16 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
                 draw_page_number(c, start_seite + pages - 1, show_stars=False)
                 new_page()
             prefix = f"{short_label}: " if short_label else ""
-            text = prefix + " · ".join(antworten)
+            
+            # Format answers: join nested lists with commas
+            formatted_antworten = []
+            for a in antworten:
+                if isinstance(a, (list, tuple)):
+                    formatted_antworten.append(",".join(map(str, a)))
+                else:
+                    formatted_antworten.append(str(a))
+            
+            text = prefix + " · ".join(formatted_antworten)
             # Truncate if too wide
             c.setFont(font_name, font_size)
             while c.stringWidth(text, font_name, font_size) > max_text_w and len(text) > 20:
