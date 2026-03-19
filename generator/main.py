@@ -19,8 +19,9 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.lib.colors import white
-from layout import (draw_page_bg, draw_header,
-                    draw_page_number, FARBEN, RAND_FARBEN)
+from layout import (draw_page_bg, draw_header, draw_emoji,
+                    draw_page_number, FARBEN, RAND_FARBEN,
+                    FONT, FONT_BOLD, FONT_ITALIC)
 from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_zahlenhaus, draw_rechenraupe,
                            draw_magisches_dreieck, draw_magische_dreiecke,
@@ -121,9 +122,7 @@ def render_trennseite(c, section):
     c.circle(W / 2, center_y, 3 * cm, fill=1, stroke=0)
 
     # Emoji im Kreis
-    c.setFillColor(white)
-    c.setFont("Helvetica-Bold", 48)
-    c.drawCentredString(W / 2, center_y - 0.5 * cm, info["emoji"])
+    draw_emoji(c, info["emoji"], W / 2, center_y, 2.5 * cm)
 
     # Titel
     titel_y = center_y - 5 * cm
@@ -131,12 +130,12 @@ def render_trennseite(c, section):
     c.roundRect(2 * cm, titel_y - 0.5 * cm, W - 4 * cm, 2.2 * cm,
                 radius=15, fill=1, stroke=0)
     c.setFillColor(white)
-    c.setFont("Helvetica-Bold", 30)
+    c.setFont(FONT_BOLD, 30)
     c.drawCentredString(W / 2, titel_y + 0.2 * cm, info["titel"])
 
     # Untertitel
     c.setFillColor(FARBEN["dunkel"])
-    c.setFont("Helvetica", 16)
+    c.setFont(FONT, 16)
     c.drawCentredString(W / 2, titel_y - 2 * cm, info["untertitel"])
 
     # Deko-Punkte
@@ -157,9 +156,9 @@ def render_titelseite(c):
     c.setFillColor(FARBEN["blau"])
     c.roundRect(2 * cm, y_top, W - 4 * cm, 3 * cm, radius=15, fill=1, stroke=0)
     c.setFillColor(white)
-    c.setFont("Helvetica-Bold", 30)
+    c.setFont(FONT_BOLD, 30)
     c.drawCentredString(W / 2, y_top + 1.8 * cm, "Mein Mathebuch")
-    c.setFont("Helvetica", 16)
+    c.setFont(FONT, 16)
     c.drawCentredString(W / 2, y_top + 0.6 * cm, "Klasse 1 – Rechnen macht Spaß!")
 
     # Bunte Deko-Kreise
@@ -172,7 +171,7 @@ def render_titelseite(c):
     # Namensfeld
     name_y = y_top - 3.5 * cm
     c.setFillColor(FARBEN["dunkel"])
-    c.setFont("Helvetica-Bold", 14)
+    c.setFont(FONT_BOLD, 14)
     c.drawString(2.5 * cm, name_y + 0.2 * cm, "Dieses Buch gehört:")
     c.setStrokeColor(FARBEN["blau"])
     c.setFillColor(white)
@@ -189,9 +188,9 @@ def render_titelseite(c):
     for i, (label, farbe) in enumerate(zip(felder, feld_farben)):
         fy = felder_y - i * (field_h + field_gap)
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica-Bold", 12)
+        c.setFont(FONT_BOLD, 12)
         c.drawString(2.5 * cm, fy + 0.2 * cm, label)
-        label_w = c.stringWidth(label, "Helvetica-Bold", 12)
+        label_w = c.stringWidth(label, FONT_BOLD, 12)
         box_x = 2.5 * cm + label_w + 0.4 * cm
         box_w = W - 5 * cm - label_w - 0.4 * cm
         c.setStrokeColor(farbe)
@@ -203,7 +202,7 @@ def render_titelseite(c):
     # Malblock: "Male dich selbst!" (reduzierte Größe ~8cm)
     mal_y = felder_y - len(felder) * (field_h + field_gap) - 1.0 * cm
     c.setFillColor(FARBEN["dunkel"])
-    c.setFont("Helvetica-Bold", 14)
+    c.setFont(FONT_BOLD, 14)
     c.drawString(2.5 * cm, mal_y + 0.2 * cm, "Male dich selbst:")
     # Rahmen zum Malen (8×6cm)
     box_h = 6 * cm
@@ -220,7 +219,7 @@ def render_titelseite(c):
     # Dekorative Mathe-Symbole um den Malblock
     math_symbols = ["+", "−", "×", "=", "1", "2", "3", "4", "5"]
     symbol_colors = RAND_FARBEN
-    c.setFont("Helvetica-Bold", 18)
+    c.setFont(FONT_BOLD, 18)
 
     # Symbole links und rechts vom Malblock
     side_configs = [
@@ -243,7 +242,7 @@ def _draw_toc_section_header(c, y, text, line_h):
     c.roundRect(1.8 * cm, y - 0.15 * cm, W - 3.6 * cm, line_h,
                 radius=6, fill=1, stroke=0)
     c.setFillColor(white)
-    c.setFont("Helvetica-Bold", 12)
+    c.setFont(FONT_BOLD, 12)
     c.drawString(2.3 * cm, y, text)
     return y - line_h - 0.15 * cm
 
@@ -263,7 +262,7 @@ def _toc_new_page(c):
     c.showPage()
     draw_page_bg(c)
     c.setFillColor(FARBEN["grau"])
-    c.setFont("Helvetica-Bold", 12)
+    c.setFont(FONT_BOLD, 12)
     c.drawCentredString(W / 2, H - 2.0 * cm, "Inhaltsverzeichnis (Fortsetzung)")
     return H - 3.5 * cm
 
@@ -275,8 +274,8 @@ def _draw_toc_dots(c, y, text, font_name, font_size):
     dot_end = W - 3.5 * cm
     if dot_end > dot_start:
         c.setFillColor(FARBEN["hellgrau"])
-        c.setFont("Helvetica", 8)
-        dot_w = c.stringWidth(" .", "Helvetica", 8)
+        c.setFont(FONT, 8)
+        dot_w = c.stringWidth(" .", FONT, 8)
         if dot_w > 0:
             num_dots = int((dot_end - dot_start) / dot_w)
             dots = " ." * num_dots
@@ -296,7 +295,7 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
     c.roundRect(1.5 * cm, H - 3.5 * cm, W - 3 * cm, 2.2 * cm,
                 radius=12, fill=1, stroke=0)
     c.setFillColor(white)
-    c.setFont("Helvetica-Bold", 20)
+    c.setFont(FONT_BOLD, 20)
     c.drawCentredString(W / 2, H - 2.5 * cm, "Inhaltsverzeichnis")
 
     y = H - 5.0 * cm
@@ -345,16 +344,14 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
                     y = _toc_new_page(c)
                     toc_pages += 1
 
-                c.setFillColor(FARBEN["grau"])
-                c.setFont("Helvetica", 9)
-                c.drawString(2.5 * cm, y, "📖")
+                draw_emoji(c, "📖", 2.8 * cm, y + 0.15 * cm, 0.45 * cm)
                 c.setFillColor(FARBEN["dunkel"])
                 c.drawString(3.5 * cm, y, ab_titel)
 
-                _draw_toc_dots(c, y, ab_titel, "Helvetica", 9)
+                _draw_toc_dots(c, y, ab_titel, FONT, 9)
 
                 c.setFillColor(FARBEN["grau"])
-                c.setFont("Helvetica", 9)
+                c.setFont(FONT, 9)
                 c.drawRightString(W - 2 * cm, y, str(seite_nr))
                 y -= line_h * 0.85
             continue
@@ -375,20 +372,18 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
             toc_pages += 1
 
         # Emoji
-        c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 11)
-        c.drawString(2.3 * cm, y, emoji)
+        draw_emoji(c, emoji, 2.6 * cm, y + 0.15 * cm, 0.5 * cm)
 
         # Titel
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica", 10)
+        c.setFont(FONT, 10)
         c.drawString(3.5 * cm, y, titel)
 
-        _draw_toc_dots(c, y, titel, "Helvetica", 10)
+        _draw_toc_dots(c, y, titel, FONT, 10)
 
         # Seitennummer
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 10)
+        c.setFont(FONT_BOLD, 10)
         c.drawRightString(W - 2 * cm, y, str(seite_nr))
 
         y -= line_h
@@ -404,9 +399,9 @@ def render_geschafft_seite(c, seite_nr):
     c.setFillColor(FARBEN["pink"])
     c.roundRect(2 * cm, H - 6 * cm, W - 4 * cm, 3.5 * cm, radius=15, fill=1, stroke=0)
     c.setFillColor(white)
-    c.setFont("Helvetica-Bold", 40)
+    c.setFont(FONT_BOLD, 40)
     c.drawCentredString(W / 2, H - 4.2 * cm, "GESCHAFFT!")
-    c.setFont("Helvetica-Bold", 20)
+    c.setFont(FONT_BOLD, 20)
     c.drawCentredString(W / 2, H - 5.3 * cm, "Du bist ein Mathe-Profi!")
 
     # Sterne / Konfetti-Deko
@@ -422,10 +417,10 @@ def render_geschafft_seite(c, seite_nr):
     # Urkunde-Bereich
     u_y = H - 10 * cm
     c.setFillColor(FARBEN["dunkel"])
-    c.setFont("Helvetica-Bold", 18)
+    c.setFont(FONT_BOLD, 18)
     c.drawCentredString(W / 2, u_y, "Herzlichen Glückwunsch!")
     
-    c.setFont("Helvetica", 14)
+    c.setFont(FONT, 14)
     msg = "Du hast alle Aufgaben in diesem Buch erfolgreich gelöst."
     c.drawCentredString(W / 2, u_y - 1.2 * cm, msg)
 
@@ -439,7 +434,7 @@ def render_geschafft_seite(c, seite_nr):
     c.roundRect(bx, by, box_w, box_h, radius=10, fill=0, stroke=1)
     
     c.setFillColor(FARBEN["grau"])
-    c.setFont("Helvetica", 10)
+    c.setFont(FONT, 10)
     c.drawString(bx + 0.3 * cm, by + box_h + 0.2 * cm, "Name des Mathe-Profis:")
     c.drawString(bx + 0.3 * cm, by - 0.5 * cm, "Datum")
     c.line(bx, by - 0.1 * cm, bx + 4 * cm, by - 0.1 * cm)
@@ -449,26 +444,25 @@ def render_geschafft_seite(c, seite_nr):
     c.setStrokeColor(FARBEN["hellgrau"])
     c.roundRect(bx + box_w - 4 * cm, by - 3 * cm, 3.5 * cm, 3.5 * cm, radius=5, fill=0, stroke=1)
     c.setDash()
-    c.setFont("Helvetica", 8)
+    c.setFont(FONT, 8)
     c.drawCentredString(bx + box_w - 2.25 * cm, by - 1.5 * cm, "Hier ist Platz für")
     c.drawCentredString(bx + box_w - 2.25 * cm, by - 1.9 * cm, "einen tollen Sticker!")
 
     # Feedback-Bereich
     f_y = by - 6 * cm
     c.setFillColor(FARBEN["dunkel"])
-    c.setFont("Helvetica-Bold", 14)
+    c.setFont(FONT_BOLD, 14)
     c.drawString(2.5 * cm, f_y, "Wie fühlst du dich jetzt?")
     
     emojis = ["😊", "🤩", "💪", "😴"]
     labels = ["Stolz", "Super", "Stark", "Müde"]
     for i, (emo, lbl) in enumerate(zip(emojis, labels)):
         ex = 3 * cm + i * 4 * cm
-        c.setFont("Helvetica", 30)
-        c.drawCentredString(ex, f_y - 1.5 * cm, emo)
         c.setStrokeColor(FARBEN["hellgrau"])
         c.circle(ex, f_y - 1.3 * cm, 0.8 * cm, fill=0, stroke=1)
+        draw_emoji(c, emo, ex, f_y - 1.3 * cm, 1.2 * cm)
         c.setFillColor(FARBEN["grau"])
-        c.setFont("Helvetica", 10)
+        c.setFont(FONT, 10)
         c.drawCentredString(ex, f_y - 2.5 * cm, lbl)
 
     draw_page_number(c, seite_nr, show_stars=False)

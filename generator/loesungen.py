@@ -9,7 +9,7 @@ from itertools import permutations
 from reportlab.lib.colors import HexColor, white
 from reportlab.lib.units import cm
 from reportlab.lib.pagesizes import A4
-from layout import FARBEN, draw_page_bg, draw_page_number
+from layout import FARBEN, draw_page_bg, draw_page_number, FONT, FONT_BOLD
 
 W, H = A4
 
@@ -530,8 +530,8 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
 
     # Render
     pages = 0
-    font_name = "Helvetica"
-    font_bold = "Helvetica-Bold"
+    font_name = FONT
+    font_bold = FONT_BOLD
     
     # Styling constants
     FONT_SIZE = 9

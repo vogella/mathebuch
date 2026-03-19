@@ -6,7 +6,7 @@ import math
 from reportlab.lib.colors import HexColor, white
 from reportlab.lib.units import cm
 from reportlab.lib.pagesizes import A4
-from layout import FARBEN, draw_answer_box, draw_section_label
+from layout import FARBEN, draw_answer_box, draw_section_label, FONT, FONT_BOLD, FONT_ITALIC
 
 W, H = A4
 
@@ -41,13 +41,13 @@ def _draw_zerlegung_part(c, cx, cy, circle_r, val, is_blank, is_loesung, farb_ke
         c.setLineWidth(1.5)
         c.circle(cx, cy, circle_r, fill=1, stroke=1)
         c.setFillColor(FARBEN["gruen"])
-        c.setFont("Helvetica-Bold", 16)
+        c.setFont(FONT_BOLD, 16)
         c.drawCentredString(cx, cy - 0.2*cm, str(val))
     else:
         c.setFillColor(FARBEN[farb_key])
         c.circle(cx, cy, circle_r, fill=1, stroke=0)
         c.setFillColor(white)
-        c.setFont("Helvetica-Bold", 16)
+        c.setFont(FONT_BOLD, 16)
         c.drawCentredString(cx, cy - 0.2*cm, str(val))
 
 
@@ -57,12 +57,12 @@ def _draw_beschreibung(c, abschnitt, start_y):
     if not beschreibung:
         return 0
     c.setFillColor(FARBEN["dunkel"])
-    c.setFont("Helvetica", 10)
+    c.setFont(FONT, 10)
     max_w = W - 4*cm
     # Word-wrap with explicit \n support
     lines = []
     for paragraph in beschreibung.split("\n"):
-        wrapped = _wrap_text(c, paragraph, "Helvetica", 10, max_w)
+        wrapped = _wrap_text(c, paragraph, FONT, 10, max_w)
         if wrapped:
             lines.extend(wrapped)
         else:
@@ -85,18 +85,18 @@ def draw_erklaerung(c, abschnitt, farb_key, start_y):
         if zeile.startswith("##"):
             # Sub-heading
             c.setFillColor(FARBEN[farb_key])
-            c.setFont("Helvetica-Bold", 12)
+            c.setFont(FONT_BOLD, 12)
             c.drawString(2*cm, y, zeile[2:].strip())
             y -= 0.7*cm
         elif zeile.startswith("**"):
             # Bold example line
             c.setFillColor(FARBEN["dunkel"])
-            c.setFont("Helvetica-Bold", 11)
+            c.setFont(FONT_BOLD, 11)
             c.drawString(2.5*cm, y, zeile.strip().strip('*').strip())
             y -= 0.6*cm
         else:
             c.setFillColor(FARBEN["dunkel"])
-            c.setFont("Helvetica", 10)
+            c.setFont(FONT, 10)
             c.drawString(2.5*cm, y, zeile)
             y -= 0.55*cm
 
@@ -136,7 +136,7 @@ def _draw_filled_answer_box(c, x, y, text, w=1.6*cm, h=1.1*cm):
     """Answer box with a solution value shown inside."""
     draw_answer_box(c, x, y, w, h)
     c.setFillColor(FARBEN["gruen"])
-    c.setFont("Helvetica-Bold", 16)
+    c.setFont(FONT_BOLD, 16)
     c.drawCentredString(x + w/2, y + h/2 - 0.2*cm, str(text))
 
 
@@ -145,7 +145,7 @@ def _draw_aufgabe_row(c, x, y, aufg, farb_key, loesung=None):
     op_col = FARBEN[farb_key]
     dunkel = FARBEN["dunkel"]
 
-    c.setFont("Helvetica-Bold", 20)
+    c.setFont(FONT_BOLD, 20)
     x0 = x
 
     # a
@@ -204,7 +204,7 @@ def draw_zahlenhaus(c, abschnitt, farb_key, start_y):
     hinweis = abschnitt.get("hinweis", "")
     if hinweis:
         c.setFillColor(FARBEN["grau"])
-        c.setFont("Helvetica-Oblique", 9)
+        c.setFont(FONT_ITALIC, 9)
         c.drawString(2*cm, start_y - 0.9*cm - y_offset, hinweis)
         y_offset += 0.6*cm
 
@@ -213,7 +213,7 @@ def draw_zahlenhaus(c, abschnitt, farb_key, start_y):
     if verboten:
         vx = 2*cm
         vy = start_y - 0.9*cm - y_offset
-        c.setFont("Helvetica-Bold", 11)
+        c.setFont(FONT_BOLD, 11)
         c.setFillColor(FARBEN["dunkel"])
         c.drawString(vx, vy, "Diese Zahlen darfst du NICHT benutzen:")
         vx_start = vx + 7.5*cm
@@ -229,7 +229,7 @@ def draw_zahlenhaus(c, abschnitt, farb_key, start_y):
             
             # Number
             c.setFillColor(FARBEN["dunkel"])
-            c.setFont("Helvetica-Bold", 14)
+            c.setFont(FONT_BOLD, 14)
             c.drawCentredString(center_x, center_y - 0.2*cm, str(vz))
 
             # Red X on top
@@ -265,7 +265,7 @@ def _draw_ein_zahlenhaus(c, cx, ty, roof_num, loesung=None):
     path.close()
     c.drawPath(path, fill=1, stroke=0)
     c.setFillColor(white)
-    c.setFont("Helvetica-Bold", 18)
+    c.setFont(FONT_BOLD, 18)
     c.drawCentredString(cx, ty - roof_size * 0.65, str(roof_num))
     # Felder
     box_w = 1.3*cm
@@ -280,7 +280,7 @@ def _draw_ein_zahlenhaus(c, cx, ty, roof_num, loesung=None):
         c.roundRect(bx + j * box_w, by, box_w, box_h, radius=4, fill=1, stroke=1)
         if loesung is not None:
             c.setFillColor(FARBEN["gruen"])
-            c.setFont("Helvetica-Bold", 16)
+            c.setFont(FONT_BOLD, 16)
             c.drawCentredString(bx + j * box_w + box_w/2, by + box_h/2 - 0.2*cm,
                                 str(loesung[j]))
 
@@ -324,7 +324,7 @@ def draw_rechenraupe(c, abschnitt, farb_key, start_y):
         c.circle(cx, cy, r, fill=1, stroke=1 if is_answer else 0)
         if not is_answer:
             c.setFillColor(white)
-            c.setFont("Helvetica-Bold", 13 if len(seg) <= 2 else 11)
+            c.setFont(FONT_BOLD, 13 if len(seg) <= 2 else 11)
             c.drawCentredString(cx, cy - 0.2*cm, seg)
 
 
@@ -366,7 +366,7 @@ def _draw_ein_dreieck(c, tx, ty, r_tri, werte, node_r=0.6*cm):
         c.setLineWidth(1.5)
         c.circle(px, py, node_r, fill=1, stroke=1 if is_blank else 0)
         c.setFillColor(white if not is_blank else FARBEN["blau"])
-        c.setFont("Helvetica-Bold", font_size)
+        c.setFont(FONT_BOLD, font_size)
         label = str(val) if val is not None else "?"
         c.drawCentredString(px, py - 0.15*cm, label)
 
@@ -379,10 +379,10 @@ def _draw_tipp_box(c, x, y, tipp_zeilen):
     c.setLineWidth(1.5)
     c.roundRect(x, y - box_h/2, 6*cm, box_h, radius=8, fill=1, stroke=1)
     c.setFillColor(FARBEN["dunkel"])
-    c.setFont("Helvetica-Bold", 11)
+    c.setFont(FONT_BOLD, 11)
     top_y = y + box_h/2 - 1*cm
     c.drawString(x + 0.5*cm, top_y, "💡 Tipp:")
-    c.setFont("Helvetica", 10)
+    c.setFont(FONT, 10)
     for j, line in enumerate(tipp_zeilen):
         c.drawString(x + 0.5*cm, top_y - (j+1)*0.65*cm, line)
 
@@ -394,7 +394,7 @@ def draw_magisches_dreieck(c, abschnitt, farb_key, start_y):
     hinweis_text = abschnitt.get("hinweis", "")
     if hinweis_text:
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica", 10)
+        c.setFont(FONT, 10)
         c.drawString(2*cm, start_y - 0.9*cm - y_off, hinweis_text)
         y_off += 0.6*cm
 
@@ -430,7 +430,7 @@ def draw_magische_dreiecke(c, abschnitt, farb_key, start_y):
         # Label above triangle
         label = dreieck.get("label", f"Summe = {zielsumme}")
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 11)
+        c.setFont(FONT_BOLD, 11)
         c.drawCentredString(tx, ty + r_tri * 1.1 + 0.7*cm, label)
 
     return ty - r_tri - 2*cm
@@ -458,13 +458,13 @@ def _draw_ein_quadrat(c, gx, gy, werte, zielsumme, farb_key, cell=1.8*cm, label=
         c.setLineWidth(1.5)
         c.roundRect(cx, cy, cell, cell, radius=5, fill=1, stroke=1)
         c.setFillColor(white if not is_blank else FARBEN["blau"])
-        c.setFont("Helvetica-Bold", 18)
+        c.setFont(FONT_BOLD, 18)
         lbl = str(val) if val is not None else "?"
         c.drawCentredString(cx + cell/2, cy + cell/2 - 0.2*cm, lbl)
 
     # Sum indicators on the right and bottom
     c.setFillColor(FARBEN["dunkel"])
-    c.setFont("Helvetica-Bold", 12)
+    c.setFont(FONT_BOLD, 12)
     for row in range(3):
         cy = gy + (2 - row) * cell + cell/2
         c.drawString(gx + grid_w + 0.3*cm, cy - 0.15*cm, f"→ {zielsumme}")
@@ -476,7 +476,7 @@ def _draw_ein_quadrat(c, gx, gy, werte, zielsumme, farb_key, cell=1.8*cm, label=
     # Optional label above
     if label:
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 11)
+        c.setFont(FONT_BOLD, 11)
         c.drawCentredString(gx + grid_w / 2, gy + 3 * cell + 0.3*cm, label)
 
 
@@ -585,7 +585,7 @@ def draw_würfelzählen(c, abschnitt, farb_key, start_y):
                 # Operator between dice
                 op_char = task_ops[di - 1] if di - 1 < len(task_ops) else default_op
                 c.setFillColor(FARBEN[farb_key])
-                c.setFont("Helvetica-Bold", 18)
+                c.setFont(FONT_BOLD, 18)
                 c.drawCentredString(cx + 0.4*cm, y0 - dice_size * 0.6, op_char)
                 cx += 0.8*cm
             _draw_würfel(c, cx, y0 - dice_size, wert, dice_size)
@@ -593,7 +593,7 @@ def draw_würfelzählen(c, abschnitt, farb_key, start_y):
 
         # Equals sign and answer box
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 18)
+        c.setFont(FONT_BOLD, 18)
         c.drawCentredString(cx + 0.5*cm, y0 - dice_size * 0.6, "=")
         loesungen = abschnitt.get("loesungen", [])
         if idx < len(loesungen):
@@ -686,7 +686,7 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
             # Optional label above the wall
             if mi < len(mauer_labels):
                 c.setFillColor(FARBEN[farb_key])
-                c.setFont("Helvetica-Bold", 11)
+                c.setFont(FONT_BOLD, 11)
                 c.drawCentredString(base_cx, base_y + num_rows * brick_h + 0.3*cm,
                                     mauer_labels[mi])
 
@@ -721,7 +721,7 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
                             c.setFillColor(FARBEN["gruen"])
                         else:
                             c.setFillColor(white)
-                        c.setFont("Helvetica-Bold", 16)
+                        c.setFont(FONT_BOLD, 16)
                         c.drawCentredString(bx + brick_w/2, ry + brick_h/2 - 0.2*cm, str(val))
 
             # Remember this wall as reference for the next (Lösung) wall
@@ -754,7 +754,7 @@ def draw_vergleiche(c, abschnitt, farb_key, start_y):
     def _draw_vergleich_row(x, y, aufg, loes=None):
         links, rechts = aufg
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica-Bold", 18)
+        c.setFont(FONT_BOLD, 18)
         c.drawRightString(x + 2.5*cm, y, str(links))
         # Circle for >, < or =
         circle_x = x + 3.3*cm
@@ -764,10 +764,10 @@ def draw_vergleiche(c, abschnitt, farb_key, start_y):
         c.circle(circle_x, y + 0.2*cm, 0.5*cm, fill=1, stroke=1)
         if loes is not None:
             c.setFillColor(FARBEN["gruen"])
-            c.setFont("Helvetica-Bold", 18)
+            c.setFont(FONT_BOLD, 18)
             c.drawCentredString(circle_x, y + 0.02*cm, str(loes))
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica-Bold", 18)
+        c.setFont(FONT_BOLD, 18)
         c.drawString(x + 4.1*cm, y, str(rechts))
 
     for i, aufg in enumerate(col1):
@@ -818,12 +818,12 @@ def draw_nachbarzahlen(c, abschnitt, farb_key, start_y):
             c.roundRect(bx, y0 - box_h, box_w, box_h, radius=5, fill=1, stroke=1)
             if val is not None:
                 c.setFillColor(white)
-                c.setFont("Helvetica-Bold", 18)
+                c.setFont(FONT_BOLD, 18)
                 c.drawCentredString(bx + box_w/2, y0 - box_h/2 - 0.2*cm, str(val))
             elif loes is not None and j < len(loes) and loes[j] is not None:
                 # Show solution in green
                 c.setFillColor(FARBEN["gruen"])
-                c.setFont("Helvetica-Bold", 18)
+                c.setFont(FONT_BOLD, 18)
                 c.drawCentredString(bx + box_w/2, y0 - box_h/2 - 0.2*cm, str(loes[j]))
 
         # Lines between boxes
@@ -866,14 +866,14 @@ def draw_zahlzerlegung(c, abschnitt, farb_key, start_y):
         # Optional label above (e.g. "Aufgabe", "Lösung")
         if idx < len(zerlegung_labels):
             c.setFillColor(FARBEN["grau"])
-            c.setFont("Helvetica-Bold", 9)
+            c.setFont(FONT_BOLD, 9)
             c.drawCentredString(cx, y0 + circle_r + 0.3*cm, zerlegung_labels[idx])
 
         # Top circle (the number)
         c.setFillColor(FARBEN[farb_key])
         c.circle(cx, y0, circle_r, fill=1, stroke=0)
         c.setFillColor(white)
-        c.setFont("Helvetica-Bold", 16)
+        c.setFont(FONT_BOLD, 16)
         c.drawCentredString(cx, y0 - 0.2*cm, str(zahl))
 
         # Lines down to two parts
@@ -928,16 +928,16 @@ def draw_kettenaufgaben(c, abschnitt, farb_key, start_y):
         
         # Number the exercise
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 12)
+        c.setFont(FONT_BOLD, 12)
         c.drawString(x0, y + 0.05*cm, f"{idx + 1}.")
 
         # The chain expression
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica-Bold", 18)
+        c.setFont(FONT_BOLD, 18)
         c.drawString(x0 + 1.0*cm, y, kette)
 
         # = and answer box
-        text_w = c.stringWidth(kette, "Helvetica-Bold", 18)
+        text_w = c.stringWidth(kette, FONT_BOLD, 18)
         eq_x = x0 + 1.0*cm + text_w + 0.5*cm
         c.setFillColor(FARBEN[farb_key])
         c.drawString(eq_x, y, "=")
@@ -969,7 +969,7 @@ def draw_tauschaufgaben(c, abschnitt, farb_key, start_y):
         y = row_y - idx * row_h
         summe = loesungen[idx] if idx < len(loesungen) else None
 
-        c.setFont("Helvetica-Bold", 18)
+        c.setFont(FONT_BOLD, 18)
 
         # Left side: a + b = ___
         x = 1.8*cm
@@ -1029,7 +1029,7 @@ def draw_verdoppeln_halbieren(c, abschnitt, farb_key, start_y):
         x = 1.8*cm + col * col_w
         y = row_y - row * row_h
 
-        c.setFont("Helvetica-Bold", 18)
+        c.setFont(FONT_BOLD, 18)
 
         if typ == "doppelt":
             c.setFillColor(FARBEN["dunkel"])
@@ -1048,9 +1048,9 @@ def draw_verdoppeln_halbieren(c, abschnitt, farb_key, start_y):
         else:  # halb
             c.setFillColor(FARBEN["dunkel"])
             c.drawString(x, y, str(zahl))
-            text_w = c.stringWidth(str(zahl), "Helvetica-Bold", 18)
+            text_w = c.stringWidth(str(zahl), FONT_BOLD, 18)
             c.setFillColor(FARBEN[farb_key])
-            c.setFont("Helvetica-Bold", 18)
+            c.setFont(FONT_BOLD, 18)
             c.drawString(x + text_w + 0.3*cm, y, "÷ 2 =")
             if loes is not None:
                 _draw_filled_answer_box(c, x + text_w + 2.5*cm, y - 0.25*cm,
@@ -1114,11 +1114,11 @@ def draw_zahlenstrahl(c, abschnitt, farb_key, start_y):
                 # Show solution if available
                 if i < len(strahl_loes) and strahl_loes[i] is not None:
                     c.setFillColor(FARBEN["gruen"])
-                    c.setFont("Helvetica-Bold", 12)
+                    c.setFont(FONT_BOLD, 12)
                     c.drawCentredString(tx, y - 0.75*cm, str(strahl_loes[i]))
             else:
                 c.setFillColor(FARBEN["dunkel"])
-                c.setFont("Helvetica-Bold", 12)
+                c.setFont(FONT_BOLD, 12)
                 c.drawCentredString(tx, y - 0.8*cm, str(val))
 
     return row_y - len(strahlen) * row_h - 0.3*cm
@@ -1189,7 +1189,7 @@ def draw_punktefeld(c, abschnitt, farb_key, start_y):
             draw_answer_box(c, x0 + 0.5*cm, frame_bottom - 1.0*cm,
                             w=1.3*cm, h=0.9*cm)
         c.setFillColor(FARBEN["grau"])
-        c.setFont("Helvetica", 9)
+        c.setFont(FONT, 9)
         c.drawString(x0 + 2.0*cm, frame_bottom - 0.6*cm, "Punkte")
 
     total_rows = (len(aufgaben) + grid_cols - 1) // grid_cols
@@ -1217,7 +1217,7 @@ def draw_zahlen_ordnen(c, abschnitt, farb_key, start_y):
 
         # Show the unsorted numbers in colored circles
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 12)
+        c.setFont(FONT_BOLD, 12)
         c.drawString(1.8*cm, y + 0.05*cm, f"{idx + 1}.")
 
         x = 2.8*cm
@@ -1225,7 +1225,7 @@ def draw_zahlen_ordnen(c, abschnitt, farb_key, start_y):
             c.setFillColor(FARBEN[farb_key])
             c.circle(x + 0.5*cm, y + 0.1*cm, 0.45*cm, fill=1, stroke=0)
             c.setFillColor(white)
-            c.setFont("Helvetica-Bold", 14)
+            c.setFont(FONT_BOLD, 14)
             c.drawCentredString(x + 0.5*cm, y - 0.08*cm, str(z))
             x += 1.2*cm
 
@@ -1247,11 +1247,11 @@ def draw_zahlen_ordnen(c, abschnitt, farb_key, start_y):
             # Show solution in green if available
             if loes is not None and i < len(loes):
                 c.setFillColor(FARBEN["gruen"])
-                c.setFont("Helvetica-Bold", 16)
+                c.setFont(FONT_BOLD, 16)
                 c.drawCentredString(bx + box_w/2, y - 0.05*cm, str(loes[i]))
             if i < count - 1:
                 c.setFillColor(FARBEN["dunkel"])
-                c.setFont("Helvetica-Bold", 16)
+                c.setFont(FONT_BOLD, 16)
                 c.drawCentredString(bx + box_w + 0.25*cm, y - 0.05*cm, "<")
             bx += box_w + 0.5*cm
 
@@ -1279,7 +1279,7 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
 
         # ── Addition part: zahl + [___________] = ziel ──
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica-Bold", 16)
+        c.setFont(FONT_BOLD, 16)
         c.drawCentredString(x + 0.4*cm, y, str(zahl))
 
         c.setFillColor(FARBEN[farb_key])
@@ -1290,12 +1290,12 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
         if loes is not None:
             addition_text = (" + ".join([str(zahl)] * (loes - 1)))
             c.setFillColor(FARBEN["gruen"])
-            c.setFont("Helvetica-Bold", 11)
+            c.setFont(FONT_BOLD, 11)
             c.drawCentredString(x + 1.5*cm + plus_box_w / 2,
                                 y - 0.05*cm, addition_text)
 
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 16)
+        c.setFont(FONT_BOLD, 16)
         eq1_x = x + 1.5*cm + plus_box_w + 0.3*cm
         c.drawCentredString(eq1_x, y, "=")
 
@@ -1305,13 +1305,13 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
         # ── "also" connector ──
         also_x = eq1_x + 1.8*cm
         c.setFillColor(FARBEN["grau"])
-        c.setFont("Helvetica", 12)
+        c.setFont(FONT, 12)
         c.drawCentredString(also_x, y, "also")
 
         # ── Multiplication part: zahl × [___] = ziel ──
         mul_x = also_x + 1.2*cm
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica-Bold", 16)
+        c.setFont(FONT_BOLD, 16)
         c.drawCentredString(mul_x, y, str(zahl))
 
         c.setFillColor(FARBEN[farb_key])
@@ -1325,7 +1325,7 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
             draw_answer_box(c, mul_box_x, y - 0.3*cm, w=1.2*cm, h=0.9*cm)
 
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 16)
+        c.setFont(FONT_BOLD, 16)
         c.drawCentredString(mul_box_x + 1.5*cm, y, "=")
 
         c.setFillColor(FARBEN["dunkel"])
@@ -1366,7 +1366,7 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
 
         # "Start" label
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 10)
+        c.setFont(FONT_BOLD, 10)
         c.drawCentredString(1.8*cm, grid_top - grid_h / 2 + 0.1*cm, "Start")
 
         for ci, spalte in enumerate(spalten):
@@ -1378,7 +1378,7 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
             # Column instruction (only for first column)
             if ci == 0:
                 c.setFillColor(FARBEN["grau"])
-                c.setFont("Helvetica-Bold", 8)
+                c.setFont(FONT_BOLD, 8)
                 c.drawCentredString(col_x, grid_top + 0.3*cm, "Wähle EINE Zahl pro Spalte!")
 
             for ri, val in enumerate(spalte):
@@ -1387,7 +1387,7 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
                 c.setFillColor(col_color)
                 c.circle(col_x, cy, node_r, fill=1, stroke=0)
                 c.setFillColor(white)
-                c.setFont("Helvetica-Bold", 14)
+                c.setFont(FONT_BOLD, 14)
                 c.drawCentredString(col_x, cy - 0.15*cm, str(val))
 
             # Plus sign between columns
@@ -1396,7 +1396,7 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
                 mid_x = (col_x + next_x) / 2
                 mid_y = grid_top - grid_h / 2
                 c.setFillColor(FARBEN["grau"])
-                c.setFont("Helvetica-Bold", 18)
+                c.setFont(FONT_BOLD, 18)
                 c.drawCentredString(mid_x, mid_y - 0.15*cm, "+")
 
         # Target sum label (no answer box)
@@ -1404,7 +1404,7 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
         target_y = grid_top - grid_h / 2
         
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 12)
+        c.setFont(FONT_BOLD, 12)
         c.drawCentredString(target_x, target_y + 0.7*cm, "Ziel 🎯")
         
         # Draw a circle around the target sum
@@ -1412,7 +1412,7 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
         c.setLineWidth(1.5)
         c.circle(target_x, target_y, 0.6*cm, fill=0, stroke=1)
         
-        c.setFont("Helvetica-Bold", 18)
+        c.setFont(FONT_BOLD, 18)
         c.drawCentredString(target_x, target_y - 0.2*cm, str(zielsumme))
 
         row_y = grid_top - grid_h - 0.8*cm
@@ -1516,10 +1516,10 @@ def _draw_maze_path(c, abschnitt, farb_key, start_y, modus="schatz"):
                     c.setFillColor(FARBEN[farb_key])
                     c.circle(cx, cy, node_r, fill=1, stroke=0)
                     c.setFillColor(white)
-                    c.setFont("Helvetica-Bold", 14)
+                    c.setFont(FONT_BOLD, 14)
                     c.drawCentredString(cx, cy - 0.18*cm, str(start_val))
                     c.setFillColor(FARBEN[farb_key])
-                    c.setFont("Helvetica-Bold", 8)
+                    c.setFont(FONT_BOLD, 8)
                     c.drawCentredString(cx, cy + node_r + 0.15*cm, start_label)
                 elif node_idx % 2 == 1:
                     # Operation node
@@ -1528,7 +1528,7 @@ def _draw_maze_path(c, abschnitt, farb_key, start_y, modus="schatz"):
                     c.setFillColor(col)
                     c.circle(cx, cy, node_r * 0.85, fill=1, stroke=0)
                     c.setFillColor(white)
-                    c.setFont("Helvetica-Bold", 13)
+                    c.setFont(FONT_BOLD, 13)
                     c.drawCentredString(cx, cy - 0.18*cm, schritte[step_i])
                 else:
                     # Answer node
@@ -1541,7 +1541,7 @@ def _draw_maze_path(c, abschnitt, farb_key, start_y, modus="schatz"):
                         c.setStrokeColor(end_stroke)
                         c.setLineWidth(2.5)
                         c.circle(cx, cy, node_r, fill=1, stroke=1)
-                        c.setFont("Helvetica-Bold", 8)
+                        c.setFont(FONT_BOLD, 8)
                         c.setFillColor(end_stroke)
                         c.drawCentredString(cx, cy + node_r + 0.15*cm, end_label)
                     else:
@@ -1554,7 +1554,7 @@ def _draw_maze_path(c, abschnitt, farb_key, start_y, modus="schatz"):
                     # Show solution if available
                     if loes_parts and answer_i < len(loes_parts):
                         c.setFillColor(FARBEN["gruen"])
-                        c.setFont("Helvetica-Bold", 13)
+                        c.setFont(FONT_BOLD, 13)
                         c.drawCentredString(cx, cy - 0.18*cm, loes_parts[answer_i])
 
                 prev_cx, prev_cy = cx, cy
@@ -1598,9 +1598,9 @@ def _draw_hinweis_boxen(c, boxen, farb_key, start_y):
         c.setFillColor(bg)
         c.roundRect(x, y, box_w - 0.15*cm, box_h, radius=6, fill=1, stroke=0)
         c.setFillColor(white)
-        c.setFont("Helvetica-Bold", 9)
+        c.setFont(FONT_BOLD, 9)
         c.drawString(x + 0.3*cm, y + box_h - 0.4*cm, box["titel"])
-        c.setFont("Helvetica", 8)
+        c.setFont(FONT, 8)
         c.drawString(x + 0.3*cm, y + box_h - 0.85*cm, box["text"])
 
     # Remaining boxes: full width below
@@ -1612,13 +1612,13 @@ def _draw_hinweis_boxen(c, boxen, farb_key, start_y):
         c.setFillColor(bg)
         c.roundRect(1.8*cm, ry, full_w, row_h, radius=6, fill=1, stroke=0)
         c.setFillColor(white)
-        c.setFont("Helvetica-Bold", 9)
+        c.setFont(FONT_BOLD, 9)
         c.drawString(2.1*cm, ry + row_h - 0.4*cm, box["titel"])
         # Text with word wrap
-        c.setFont("Helvetica", 8)
+        c.setFont(FONT, 8)
         text = box["text"]
         max_w = full_w - 0.8*cm
-        lines = _wrap_text(c, text, "Helvetica", 8, max_w)
+        lines = _wrap_text(c, text, FONT, 8, max_w)
         for li, l in enumerate(lines):
             c.drawString(2.1*cm, ry + row_h - 0.85*cm - li * 0.35*cm, l)
         total_h += row_h + 0.15*cm
@@ -1649,12 +1649,12 @@ def draw_zahlenraetsel(c, abschnitt, farb_key, start_y):
 
         # Number label
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 12)
+        c.setFont(FONT_BOLD, 12)
         c.drawString(1.8*cm, y, f"{idx + 1}.")
 
         # Clue lines
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica", 11)
+        c.setFont(FONT, 11)
         for li, hinweis in enumerate(hinweise):
             c.drawString(2.8*cm, y - li * 0.5*cm, f"• {hinweis}")
 
@@ -1662,7 +1662,7 @@ def draw_zahlenraetsel(c, abschnitt, farb_key, start_y):
         box_x = W - 4.5*cm
         box_cy = y - (len(hinweise) - 1) * 0.25*cm
         c.setFillColor(FARBEN["grau"])
-        c.setFont("Helvetica-Bold", 11)
+        c.setFont(FONT_BOLD, 11)
         c.drawCentredString(box_x + 0.75*cm, box_cy + 1.0*cm, "Ich bin:")
         draw_answer_box(c, box_x, box_cy - 0.3*cm, w=1.5*cm, h=1.0*cm)
 
@@ -1689,7 +1689,7 @@ def draw_einkaufen(c, abschnitt, farb_key, start_y):
 
         # Number
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 12)
+        c.setFont(FONT_BOLD, 12)
         c.drawString(1.8*cm, y, f"{idx + 1}.")
 
         # Price tags
@@ -1698,23 +1698,23 @@ def draw_einkaufen(c, abschnitt, farb_key, start_y):
             name = art["name"]
             preis = art["preis"]
             # Draw a price tag
-            tag_w = c.stringWidth(f"{name} {preis}€", "Helvetica-Bold", 11) + 0.8*cm
+            tag_w = c.stringWidth(f"{name} {preis}€", FONT_BOLD, 11) + 0.8*cm
             c.setFillColor(FARBEN["yellow"])
             c.roundRect(tag_x, y - 0.3*cm, tag_w, 0.9*cm, radius=5, fill=1, stroke=0)
             c.setFillColor(FARBEN["dunkel"])
-            c.setFont("Helvetica-Bold", 11)
+            c.setFont(FONT_BOLD, 11)
             c.drawString(tag_x + 0.3*cm, y - 0.05*cm, f"{name} {preis}€")
             tag_x += tag_w + 0.4*cm
 
         # Question
         q_y = y - 1.0*cm
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica", 10)
+        c.setFont(FONT, 10)
         c.drawString(2.8*cm, q_y, frage)
 
         # Answer box
         c.setFillColor(FARBEN["grau"])
-        c.setFont("Helvetica", 9)
+        c.setFont(FONT, 9)
         c.drawString(2.8*cm, q_y - 0.7*cm, "Antwort:")
         draw_answer_box(c, 5*cm, q_y - 1.0*cm, w=1.8*cm, h=0.9*cm)
 
@@ -1740,21 +1740,21 @@ def draw_kalender_raetsel(c, abschnitt, farb_key, start_y):
 
         # Number
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 12)
+        c.setFont(FONT_BOLD, 12)
         c.drawString(1.8*cm, y, f"{idx + 1}.")
 
         # Text with word wrap
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica", 11)
+        c.setFont(FONT, 11)
         max_w = W - 5*cm
-        lines = _wrap_text(c, text, "Helvetica", 11, max_w)
+        lines = _wrap_text(c, text, FONT, 11, max_w)
         for li, l in enumerate(lines):
             c.drawString(2.8*cm, y - li * 0.45*cm, l)
 
         # Answer box (no solution shown, more spacing)
         box_y = y - len(lines) * 0.45*cm - 0.7*cm
         c.setFillColor(FARBEN["grau"])
-        c.setFont("Helvetica", 9)
+        c.setFont(FONT, 9)
         c.drawString(2.8*cm, box_y + 0.3*cm, "Antwort:")
         draw_answer_box(c, 5*cm, box_y, w=2.5*cm, h=0.9*cm)
 
@@ -1777,19 +1777,19 @@ def draw_textaufgaben(c, abschnitt, farb_key, start_y):
 
         # Number
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 12)
+        c.setFont(FONT_BOLD, 12)
         c.drawString(1.8*cm, y, f"{idx + 1}.")
 
         # Problem text with proper word wrap using stringWidth
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica", 11)
+        c.setFont(FONT, 11)
         max_w = W - 4.3*cm  # 2.8cm left indent + 1.5cm right margin
         words = text.split()
         lines = []
         line = ""
         for w in words:
             test = (line + " " + w).strip()
-            if c.stringWidth(test, "Helvetica", 11) > max_w:
+            if c.stringWidth(test, FONT, 11) > max_w:
                 lines.append(line)
                 line = w
             else:
@@ -1803,17 +1803,17 @@ def draw_textaufgaben(c, abschnitt, farb_key, start_y):
         # Hint
         if hinweis:
             c.setFillColor(FARBEN["grau"])
-            c.setFont("Helvetica-Oblique", 9)
+            c.setFont(FONT_ITALIC, 9)
             c.drawString(2.8*cm, y - len(lines) * 0.5*cm - 0.15*cm, hinweis)
 
         # Rechnung + Antwort
         bottom = y - len(lines) * 0.5*cm - 0.8*cm
         c.setFillColor(FARBEN["grau"])
-        c.setFont("Helvetica", 9)
+        c.setFont(FONT, 9)
         c.drawString(2.8*cm, bottom + 0.3*cm, "Rechnung:")
         draw_answer_box(c, 5.0*cm, bottom, w=4*cm, h=0.9*cm)
         c.setFillColor(FARBEN["grau"])
-        c.setFont("Helvetica", 9)
+        c.setFont(FONT, 9)
         c.drawString(10*cm, bottom + 0.3*cm, "Antwort:")
         draw_answer_box(c, 12*cm, bottom, w=6*cm, h=0.9*cm)
 
@@ -1864,7 +1864,7 @@ def draw_wuerfel_zuordnen(c, abschnitt, farb_key, start_y):
     for i in range(n):
         y = base_y - i * row_h
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica-Bold", 20)
+        c.setFont(FONT_BOLD, 20)
         if doppel:
             num = items[i][0] + items[i][1]
         else:
@@ -1931,7 +1931,7 @@ def draw_zahlenkreis(c, abschnitt, farb_key, start_y):
         # Optional label below circle
         if idx < len(task_labels):
             c.setFillColor(FARBEN["grau"])
-            c.setFont("Helvetica-Oblique", 10)
+            c.setFont(FONT_ITALIC, 10)
             c.drawCentredString(cx, cy - radius_kreis - 0.9*cm, task_labels[idx])
 
         # Draw lines between nodes
@@ -1970,14 +1970,14 @@ def draw_zahlenkreis(c, abschnitt, farb_key, start_y):
                 c.circle(nx, ny, node_r, fill=1, stroke=1)
                 if task_loes and loes_idx < len(task_loes):
                      c.setFillColor(FARBEN["gruen"])
-                     c.setFont("Helvetica-Bold", 14)
+                     c.setFont(FONT_BOLD, 14)
                      c.drawCentredString(nx, ny - 0.15*cm, str(task_loes[loes_idx]))
                      loes_idx += 1
             else:
                 c.setFillColor(FARBEN[farb_key])
                 c.circle(nx, ny, node_r, fill=1, stroke=0)
                 c.setFillColor(white)
-                c.setFont("Helvetica-Bold", 14)
+                c.setFont(FONT_BOLD, 14)
                 c.drawCentredString(nx, ny - 0.15*cm, str(val))
                 
     total_rows = (len(aufgaben) + cols - 1) // cols
@@ -2012,15 +2012,15 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
 
         # Draw task text
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica-Bold", 11)
+        c.setFont(FONT_BOLD, 11)
         c.drawString(2 * cm, cy + 0.1 * cm, f"Rechne: {aufgabe_text} = ?")
 
         # Draw answer box next to task
-        task_text_w = c.stringWidth(f"Rechne: {aufgabe_text} = ?", "Helvetica-Bold", 11)
+        task_text_w = c.stringWidth(f"Rechne: {aufgabe_text} = ?", FONT_BOLD, 11)
         draw_answer_box(c, 2.3 * cm + task_text_w, cy - 0.15 * cm, w=1.2 * cm, h=0.8 * cm)
         if loes and a_idx < len(loes):
             c.setFillColor(FARBEN["gruen"])
-            c.setFont("Helvetica-Bold", 12)
+            c.setFont(FONT_BOLD, 12)
             c.drawCentredString(2.3 * cm + task_text_w + 0.6 * cm,
                                 cy + 0.05 * cm, str(loes[a_idx]))
 
@@ -2031,7 +2031,7 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
         entrance_col = aufg.get("eingang", 0)
         ex = gx + entrance_col * cell + cell / 2
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 9)
+        c.setFont(FONT_BOLD, 9)
         c.drawCentredString(ex, cy + 0.35 * cm, "▼ Eingang")
 
         # Draw grid
@@ -2051,7 +2051,7 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
 
                 # Number
                 c.setFillColor(FARBEN["dunkel"])
-                c.setFont("Helvetica-Bold", 13)
+                c.setFont(FONT_BOLD, 13)
                 c.drawCentredString(x0 + cell / 2, y0 + cell / 2 - 0.15 * cm,
                                     str(val))
 
@@ -2059,7 +2059,7 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
         exit_col = aufg.get("ausgang", cols - 1)
         ax = gx + exit_col * cell + cell / 2
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 9)
+        c.setFont(FONT_BOLD, 9)
         c.drawCentredString(ax, gy - 0.35 * cm, "Ausgang ▼")
 
         cy = gy - 0.9 * cm
@@ -2095,7 +2095,7 @@ def draw_zehneruebergang(c, abschnitt, farb_key, start_y):
         y = row_y - idx * row_h
         x = 1.8 * cm
 
-        c.setFont("Helvetica-Bold", 18)
+        c.setFont(FONT_BOLD, 18)
 
         # a
         c.setFillColor(dunkel)
@@ -2185,7 +2185,7 @@ def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
             loes = loesungen[ai] if ai < len(loesungen) else None
             
             # Draw original numbers in a row
-            c.setFont("Helvetica-Bold", 14)
+            c.setFont(FONT_BOLD, 14)
             c.setFillColor(FARBEN["dunkel"])
             num_str = "  ".join(map(str, zahlen))
             c.drawCentredString(W/2, row_y, num_str)
@@ -2199,18 +2199,18 @@ def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
             c.setStrokeColor(FARBEN["blau"])
             c.roundRect(bx_gerade, row_y - box_h, box_w, box_h, radius=8, fill=0, stroke=1)
             c.setFillColor(FARBEN["blau"])
-            c.setFont("Helvetica-Bold", 10)
+            c.setFont(FONT_BOLD, 10)
             c.drawString(bx_gerade + 0.3*cm, row_y - 0.4*cm, "Gerade")
             
             # Ungerade Box
             c.setStrokeColor(FARBEN["pink"])
             c.roundRect(bx_ungerade, row_y - box_h, box_w, box_h, radius=8, fill=0, stroke=1)
             c.setFillColor(FARBEN["pink"])
-            c.setFont("Helvetica-Bold", 10)
+            c.setFont(FONT_BOLD, 10)
             c.drawString(bx_ungerade + 0.3*cm, row_y - 0.4*cm, "Ungerade")
             
             if loes:
-                c.setFont("Helvetica-Bold", 14)
+                c.setFont(FONT_BOLD, 14)
                 c.setFillColor(FARBEN["gruen"])
                 c.drawCentredString(bx_gerade + box_w/2, row_y - 1.5*cm, ", ".join(map(str, loes[0])))
                 c.drawCentredString(bx_ungerade + box_w/2, row_y - 1.5*cm, ", ".join(map(str, loes[1])))
@@ -2226,7 +2226,7 @@ def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
             zahlen = aufg["zahlen"]
             loes = loesungen[ai] if ai < len(loesungen) else None # list of colors
             
-            c.setFont("Helvetica-Bold", 10)
+            c.setFont(FONT_BOLD, 10)
             c.setFillColor(FARBEN["grau"])
             c.drawString(2*cm, row_y + 0.5*cm, "Gerade = blau, Ungerade = pink")
             
@@ -2243,7 +2243,7 @@ def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
                 c.circle(cx, row_y, node_r, fill=1, stroke=1)
                 
                 c.setFillColor(FARBEN["dunkel"] if fill_col == FARBEN["antwort"] else white)
-                c.setFont("Helvetica-Bold", 14)
+                c.setFont(FONT_BOLD, 14)
                 c.drawCentredString(cx, row_y - 0.15*cm, str(z))
                 
             row_y -= 2*cm
@@ -2260,7 +2260,7 @@ def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
             box_h = 1.0*cm
             
             # Draw start numbers
-            c.setFont("Helvetica-Bold", 16)
+            c.setFont(FONT_BOLD, 16)
             for z in start_zahlen:
                 c.setFillColor(FARBEN[farb_key])
                 c.roundRect(x, row_y - 0.5*cm, box_w, box_h, radius=4, fill=1, stroke=0)
@@ -2295,7 +2295,7 @@ def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
                 cy = row_y - row * row_h
                 
                 c.setFillColor(FARBEN["dunkel"])
-                c.setFont("Helvetica-Bold", 14)
+                c.setFont(FONT_BOLD, 14)
                 c.drawString(cx, cy, f"{z}:")
                 
                 # Draw pairs
@@ -2310,7 +2310,7 @@ def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
                     
                 # Question text and box
                 c.setFillColor(FARBEN["grau"])
-                c.setFont("Helvetica", 10)
+                c.setFont(FONT, 10)
                 c.drawString(cx + 4.5 * cm, cy, "Gerade?")
                 draw_answer_box(c, cx + 6.0 * cm, cy - 0.3 * cm, w=0.8 * cm, h=0.7 * cm)
                 
