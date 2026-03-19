@@ -145,7 +145,7 @@ def render_trennseite(c, section):
 
 
 def render_titelseite(c):
-    """Titelseite mit Buchtitel, Namensfeld und Malblock."""
+    """Titelseite mit Buchtitel, Namensfeld, persönlichen Feldern und Malblock."""
     draw_page_bg(c)
 
     # Großer bunter Titel
@@ -176,20 +176,57 @@ def render_titelseite(c):
     c.roundRect(2.5 * cm, name_y - 1.5 * cm, W - 5 * cm, 1.3 * cm,
                 radius=8, fill=1, stroke=1)
 
-    # Malblock: "Male dich selbst!"
-    mal_y = name_y - 3.5 * cm
+    # Persönliche Eingabefelder
+    felder_y = name_y - 3.2 * cm
+    felder = ["Mein Alter:", "Meine Klasse:", "Mein Lieblingsfach:"]
+    feld_farben = [FARBEN["gruen"], FARBEN["orange"], FARBEN["pink"]]
+    field_h = 1.0 * cm
+    field_gap = 0.4 * cm
+    for i, (label, farbe) in enumerate(zip(felder, feld_farben)):
+        fy = felder_y - i * (field_h + field_gap)
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(2.5 * cm, fy + 0.2 * cm, label)
+        label_w = c.stringWidth(label, "Helvetica-Bold", 12)
+        box_x = 2.5 * cm + label_w + 0.4 * cm
+        box_w = W - 5 * cm - label_w - 0.4 * cm
+        c.setStrokeColor(farbe)
+        c.setFillColor(white)
+        c.setLineWidth(2)
+        c.roundRect(box_x, fy - 0.2 * cm, box_w, field_h,
+                    radius=8, fill=1, stroke=1)
+
+    # Malblock: "Male dich selbst!" (reduzierte Größe ~8cm)
+    mal_y = felder_y - len(felder) * (field_h + field_gap) - 1.0 * cm
     c.setFillColor(FARBEN["dunkel"])
     c.setFont("Helvetica-Bold", 14)
     c.drawString(2.5 * cm, mal_y + 0.2 * cm, "Male dich selbst:")
-    # Großer Rahmen zum Malen
-    box_h = 10 * cm
+    # Rahmen zum Malen (8×8cm statt vorher 10cm hoch)
+    box_h = 6 * cm
+    box_w = 8 * cm
+    box_x = (W - box_w) / 2
     c.setStrokeColor(FARBEN["hellgrau"])
     c.setFillColor(white)
     c.setLineWidth(1.5)
     c.setDash(4, 4)
-    c.roundRect(2.5 * cm, mal_y - box_h, W - 5 * cm, box_h,
+    c.roundRect(box_x, mal_y - box_h, box_w, box_h,
                 radius=10, fill=1, stroke=1)
     c.setDash()  # Reset dash
+
+    # Dekorative Mathe-Symbole um den Malblock
+    math_symbols = ["+", "−", "×", "=", "1", "2", "3", "4", "5"]
+    symbol_colors = RAND_FARBEN
+    c.setFont("Helvetica-Bold", 18)
+    # Symbole links vom Malblock
+    for i, sym in enumerate(math_symbols[:4]):
+        sy = mal_y - 0.5 * cm - i * 1.5 * cm
+        c.setFillColor(symbol_colors[i % len(symbol_colors)])
+        c.drawCentredString(box_x - 1.0 * cm, sy, sym)
+    # Symbole rechts vom Malblock
+    for i, sym in enumerate(math_symbols[4:]):
+        sy = mal_y - 0.5 * cm - i * 1.2 * cm
+        c.setFillColor(symbol_colors[(i + 4) % len(symbol_colors)])
+        c.drawCentredString(box_x + box_w + 1.0 * cm, sy, sym)
 
 
 def _draw_toc_section_header(c, y, text, line_h):
