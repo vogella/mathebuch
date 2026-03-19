@@ -412,6 +412,31 @@ def _solve_dungeon_flucht(abschnitt):
     return [str(aufg["antwort"]) for aufg in abschnitt["aufgaben"]]
 
 
+def _solve_dungeon_abenteuer(abschnitt):
+    results = []
+    for aufg in abschnitt.get("aufgaben", []):
+        grid = aufg["grid"]
+        entrance_col = aufg.get("eingang", 0)
+        current_val = grid[0][entrance_col]
+
+        path_values = [current_val]
+        for op_str in aufg.get("pfad", []):
+            parts = op_str.split()
+            if len(parts) == 2:
+                op, val_str = parts[0], parts[1]
+                try:
+                    val = int(val_str)
+                    if op == "+":
+                        current_val += val
+                    elif op == "-":
+                        current_val -= val
+                except ValueError:
+                    pass
+            path_values.append(current_val)
+        results.append(path_values)
+    return results
+
+
 def _solve_zehneruebergang(abschnitt):
     results = []
     for aufg in abschnitt["aufgaben"]:
@@ -508,9 +533,11 @@ SOLVER = {
     "kalender_raetsel": _solve_textaufgaben,
     "schatzsuche": _solve_schatzsuche,
     "labyrinth_flucht": _solve_schatzsuche,
-    "zahlenkreis": _solve_zahlenkreis,
+    "zahlenkreis":        _solve_zahlenkreis,
     "dungeon_flucht":     _solve_dungeon_flucht,
+    "dungeon_abenteuer":  _solve_dungeon_abenteuer,
     "zehneruebergang":    _solve_zehneruebergang,
+
     "gerade_ungerade":    _solve_gerade_ungerade,
     "rechenquadrat_2x2":  _solve_rechenquadrat_2x2,
     "muster_fortsetzen":  _solve_muster_fortsetzen,

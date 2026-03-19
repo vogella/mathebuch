@@ -60,3 +60,17 @@ abschnitte:
           - [15, 7,  18, 18,  3, 12]
           - [10, 19,  5, 14, 18,  6]
           - [4, 16, 11,  9,  1, 18]
+
+  - typ: dungeon_abenteuer
+    titel: "C  Abenteuer bis 20!"
+    beschreibung: "Rechne immer weiter, um den nächsten Raum zu finden!"
+    aufgaben:
+      - eingang: 1
+        pfad: ["+ 5", "+ 3", "- 2", "- 4", "+ 7", "- 6"]
+        ausgang: 3
+        grid:
+          - [5, 10, 8, 12, 6]
+          - [7, 15, 13, 11, 4]
+          - [9, 18, 16, 12, 5]
+          - [14, 6, 11, 19, 15]
+          - [3, 17, 9, 13, 20]

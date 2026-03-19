@@ -56,3 +56,17 @@ abschnitte:
           - [1, 8, 3, 7, 5]
           - [6, 3, 3, 2, 9]
           - [4, 3, 8, 1, 7]
+
+  - typ: dungeon_abenteuer
+    titel: "C  Finde den Weg!"
+    beschreibung: "Rechne immer weiter, um den nächsten Raum zu finden!"
+    aufgaben:
+      - eingang: 2
+        pfad: ["+ 2", "- 4", "+ 5"]
+        ausgang: 3
+        grid:
+          - [1, 3, 5, 7, 2]
+          - [4, 6, 7, 2, 9]
+          - [9, 3, 1, 5, 4]
+          - [2, 8, 4, 8, 3]
+          - [5, 1, 6, 8, 7]

@@ -36,7 +36,7 @@ from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_einkaufen, draw_kalender_raetsel,
                            draw_textaufgaben, draw_wuerfel_zuordnen,
                            draw_schatzsuche, draw_labyrinth_flucht,
-                           draw_zahlenkreis, draw_dungeon_flucht,
+                           draw_zahlenkreis, draw_dungeon_flucht, draw_dungeon_abenteuer,
                            draw_zehneruebergang, draw_gerade_ungerade,
                            draw_rechenquadrat_2x2, draw_muster_fortsetzen)
 
@@ -73,6 +73,7 @@ TYPEN = {
     "labyrinth_flucht":   draw_labyrinth_flucht,
     "zahlenkreis":        draw_zahlenkreis,
     "dungeon_flucht":     draw_dungeon_flucht,
+    "dungeon_abenteuer":  draw_dungeon_abenteuer,
     "zehneruebergang":    draw_zehneruebergang,
     "gerade_ungerade":    draw_gerade_ungerade,
     "rechenquadrat_2x2":  draw_rechenquadrat_2x2,
