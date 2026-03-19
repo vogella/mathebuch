@@ -3,6 +3,7 @@ loesungen.py – Berechnet und rendert kompakte Lösungsseiten am Ende des Buchs
 """
 import re
 import sys
+import math
 from itertools import permutations
 
 from reportlab.lib.colors import HexColor, white
@@ -459,7 +460,7 @@ SKIP_TYPES = {"erklaerung", "wuerfel_zuordnen"}
 # ── Rendering ─────────────────────────────────────────────
 
 def render_loesungsseiten(c, alle_kapitel, start_seite):
-    """Renders compact solution pages. Returns the number of pages added."""
+    """Renders readable solution pages. Returns the number of pages added."""
     # Collect solutions per chapter
     kapitel_loesungen = []
     for seite_nr, (dateiname, kap_data) in enumerate(alle_kapitel, start=1):
@@ -467,6 +468,8 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
         if kap.get("erklaerungsseite"):
             continue
         titel = kap["titel"]
+        emoji = kap.get("emoji", "")
+        farbe = kap.get("farbe", "blau")
         abschnitte = kap_data.get("abschnitte", [])
         sektionen = []
         for abschnitt in abschnitte:
@@ -491,7 +494,7 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
                         short_label = first
                 sektionen.append((short_label, antworten))
         if sektionen:
-            kapitel_loesungen.append((f"S.{seite_nr} {titel}", sektionen))
+            kapitel_loesungen.append((seite_nr, titel, emoji, farbe, sektionen))
 
     if not kapitel_loesungen:
         return 0
@@ -500,12 +503,14 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
     pages = 0
     font_name = "Helvetica"
     font_bold = "Helvetica-Bold"
-    font_size = 7.5
-    line_h = 0.35 * cm
+    font_size = 9
+    title_size = 9.5
+    line_h = 0.45 * cm
     col_margin = 1.5 * cm
     max_y = H - 3.0 * cm
     min_y = 2.0 * cm
-    max_text_w = W - 3 * cm
+    max_text_w = W - 3.5 * cm
+    alt_bg = HexColor("#F5F5F5")  # light gray for alternating chapters
 
     def new_page():
         nonlocal y, pages
@@ -525,17 +530,33 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
     y = min_y  # force first new_page
     new_page()
 
-    for kap_titel, sektionen in kapitel_loesungen:
-        # Check if we need a new page
-        needed = line_h * (1 + len(sektionen)) + 0.15 * cm
+    for kap_idx, (seite_nr, titel, emoji, farbe, sektionen) in enumerate(kapitel_loesungen):
+        # Calculate total height needed for this chapter block
+        needed = line_h * (1 + len(sektionen)) + 0.3 * cm
         if y - needed < min_y:
             draw_page_number(c, start_seite + pages - 1, show_stars=False)
             new_page()
 
-        # Chapter title
+        # Draw alternating light gray background for every other chapter
+        if kap_idx % 2 == 1:
+            block_h = line_h * (1 + len(sektionen)) + 0.15 * cm
+            c.setFillColor(alt_bg)
+            c.rect(col_margin - 0.2 * cm, y - block_h + line_h * 0.3,
+                   W - 2 * col_margin + 0.4 * cm, block_h + 0.1 * cm,
+                   fill=1, stroke=0)
+
+        # Chapter title with emoji and color accent
+        farb_col = FARBEN.get(farbe, FARBEN["blau"])
+        emoji_str = f"{emoji} " if emoji else ""
+        # Draw emoji in chapter color
+        c.setFillColor(farb_col)
+        c.setFont(font_bold, 12)
+        emoji_w = c.stringWidth(emoji_str, font_bold, 12) if emoji_str else 0
+        c.drawString(col_margin, y, emoji_str)
+        # Draw chapter reference in dark color
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont(font_bold, 8)
-        c.drawString(col_margin, y, kap_titel)
+        c.setFont(font_bold, title_size)
+        c.drawString(col_margin + emoji_w, y, f"Seite {seite_nr}, {titel}")
         y -= line_h
 
         # Section answers
@@ -543,7 +564,8 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
             if y < min_y:
                 draw_page_number(c, start_seite + pages - 1, show_stars=False)
                 new_page()
-            prefix = f"{short_label}: " if short_label else ""
+            
+            prefix = f"Aufgabe {short_label}: " if short_label else ""
             
             # Format answers: join nested lists with commas
             formatted_antworten = []
@@ -554,15 +576,16 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
                     formatted_antworten.append(str(a))
             
             text = prefix + " · ".join(formatted_antworten)
+            
             # Truncate if too wide
             c.setFont(font_name, font_size)
             while c.stringWidth(text, font_name, font_size) > max_text_w and len(text) > 20:
                 text = text[:len(text) - 4] + "…"
-            c.setFillColor(FARBEN["grau"])
-            c.drawString(col_margin + 0.3 * cm, y, text)
+            c.setFillColor(FARBEN["dunkel"])
+            c.drawString(col_margin + 0.4 * cm, y, text)
             y -= line_h
 
-        y -= 0.1 * cm  # small gap between chapters
+        y -= 0.2 * cm  # gap between chapters
 
     draw_page_number(c, start_seite + pages - 1, show_stars=False)
     return pages
