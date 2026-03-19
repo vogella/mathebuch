@@ -360,26 +360,37 @@ def _solve_schatzsuche(abschnitt):
 
 def _solve_zahlenkreis(abschnitt):
     results = []
-    for aufg in abschnitt["aufgaben"]:
+    labels = abschnitt.get("labels", [])
+    for idx, aufg in enumerate(abschnitt.get("aufgaben", [])):
         n = len(aufg)
-        # Find where 0 or 5 is
+        # Find any non-None value to use as start
         start_idx = -1
         start_val = -1
         for i, v in enumerate(aufg):
-            if v == 0 or v == 5:
+            if v is not None:
                 start_idx = i
                 start_val = v
                 break
         
-        if start_val == 0:
-            # Ascending from 0
-            full = [(i - start_idx) % n for i in range(n)]
-        elif start_val == 5:
-            # Descending from 5
-            full = [(start_val - (i - start_idx)) % n for i in range(n)]
-        else:
-            # Fallback
-            full = [0] * n
+        if start_idx == -1:
+            results.append("")
+            continue
+            
+        # Determine direction from label
+        label = labels[idx] if idx < len(labels) else "Immer einer mehr"
+        direction = 1 if "mehr" in label.lower() else -1
+        
+        # Determine base (0 for range 0-9, 10 for 10-19)
+        base = 0 if start_val < 10 else 10
+        
+        # Calculate full circle values
+        # The circle always has n nodes, usually 10
+        full = []
+        for i in range(n):
+            # Calculate value at index i based on start_val at start_idx
+            # Relative offset from start_idx is (i - start_idx)
+            val = ((start_val - base + (i - start_idx) * direction) % n) + base
+            full.append(val)
         
         missing = []
         for i in range(n):
