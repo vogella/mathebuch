@@ -91,6 +91,13 @@ TRENNSEITEN_INFO = {
          "untertitel": "Du bist schon ein Rechen-Profi!"},
 }
 
+# ── Inhaltsverzeichnis-Layout ────────────────────────────────────────
+TOC_LINE_HEIGHT = 0.55 * cm
+TOC_START_Y = H - 5.0 * cm
+TOC_MIN_Y = 2.5 * cm
+TOC_SECTION_GAP = 0.15 * cm
+TOC_NEW_PAGE_START_Y = H - 3.5 * cm
+
 # TOC Grouping definition
 CHAPTER_GROUPS = [
     ("Willkommen & Grundlagen", ["k00", "k01"]),
@@ -293,7 +300,7 @@ def _toc_new_page(c):
     c.setFillColor(FARBEN["grau"])
     c.setFont(FONT_BOLD, 12)
     c.drawCentredString(W / 2, H - 2.0 * cm, "Inhaltsverzeichnis (Fortsetzung)")
-    return H - 3.5 * cm
+    return TOC_NEW_PAGE_START_Y
 
 
 def _draw_toc_dots(c, y, text, font_name, font_size):
@@ -372,7 +379,7 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
             if section != current_section:
                 current_section = section
                 section_titles = {5: "Zahlenraum bis 5", 10: "Zahlenraum bis 10", 20: "Zahlenraum bis 20"}
-                y -= 0.15 * cm
+                y -= TOC_SECTION_GAP
                 if y < min_y:
                     y = _toc_new_page(c)
                     toc_pages += 1
