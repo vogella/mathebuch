@@ -97,6 +97,13 @@ FARBEN = {
     "hellgrau":   HexColor("#DDDDDD"),
     "hellorange": HexColor("#FFF0E8"),
     "tipp_bg":    HexColor("#FFFBEA"),
+    # Illustrationsfarben
+    "euli_body":    HexColor("#8B6914"),
+    "euli_belly":   HexColor("#F5DEB3"),
+    "euli_wing":    HexColor("#7A5C10"),
+    "hand_skin":    HexColor("#FDBCB4"),
+    "hand_outline": HexColor("#D4967E"),
+    "gold_dark":    HexColor("#E6B800"),
 }
 
 RAND_FARBEN = [
