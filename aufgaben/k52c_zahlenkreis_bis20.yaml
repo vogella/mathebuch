@@ -1,0 +1,25 @@
+kapitel:
+  titel: "Zahlenkreis bis 20"
+  untertitel: "Trage die fehlenden Zahlen in den Kreis ein!"
+  emoji: "⭕"
+  farbe: "pink"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: zahlenkreis
+    titel: "A  Zahlen im Kreis"
+    beschreibung: "Hier sollen die Zahlen von 10 bis 19 eingetragen werden."
+    aufgaben:
+      - [10, null, null, null, null, null, null, null, null, null]
+      - [19, null, null, null, null, null, null, null, null, null]
+      - [null, null, null, 10, null, null, null, null, null, null]
+      - [null, null, null, null, null, 19, null, null, null, null]
+      - [null, null, null, null, null, null, null, null, null, 10]
+      - [null, 19, null, null, null, null, null, null, null, null]
+    labels:
+      - "Immer einer mehr"
+      - "Immer einer weniger"
+      - "Immer einer mehr"
+      - "Immer einer weniger"
+      - "Immer einer mehr"
+      - "Immer einer weniger"

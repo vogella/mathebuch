@@ -1,0 +1,37 @@
+kapitel:
+  titel: "Rechenraupe bis 10"
+  untertitel: "Rechne Schritt für Schritt weiter!"
+  emoji: "🐛"
+  farbe: "gruen"
+  zahlenraum: 10
+
+abschnitte:
+  - typ: rechenraupe
+    titel: "A"
+    start: 2
+    schritte: ["+3", "+4", "-1"]
+
+  - typ: rechenraupe
+    titel: "B"
+    start: 5
+    schritte: ["+3", "-2", "+4"]
+
+  - typ: rechenraupe
+    titel: "C"
+    start: 8
+    schritte: ["-3", "+5", "-2"]
+
+  - typ: rechenraupe
+    titel: "D"
+    start: 1
+    schritte: ["+6", "-4", "+3"]
+
+  - typ: rechenraupe
+    titel: "E"
+    start: 10
+    schritte: ["-5", "+3", "-2"]
+
+  - typ: rechenraupe
+    titel: "F"
+    start: 4
+    schritte: ["+5", "-3", "+2"]
