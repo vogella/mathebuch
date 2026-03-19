@@ -21,8 +21,13 @@ abschnitte:
       - [4, "-", null, 1]
       - [null, "+", 3, 5]
 
+  - typ: zahlenhaus
+    titel: "B  Zahlenhaus"
+    beschreibung: "Welche zwei Zahlen ergeben zusammen die Dachzahl?"
+    dachzahlen: [3, 4, 5, 5]
+
   - typ: nachbarzahlen
-    titel: "B  Nachbarzahlen"
+    titel: "C  Nachbarzahlen"
     beschreibung: "Welche Zahlen stehen davor und danach?"
     aufgaben:
       - [null, 1, null]
