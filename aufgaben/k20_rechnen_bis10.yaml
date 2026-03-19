@@ -23,9 +23,9 @@ abschnitte:
   - typ: zahlenhaus
     titel: "B  Zahlenhaus"
     beschreibung: "Finde zwei Zahlen für das Dach."
-    dachzahlen: [8, 9, 10, 11]
+    dachzahlen: [8, 9, 10, 7]
 
   - typ: rechenraupe
     titel: "C  Rechenraupe"
     start: 10
-    schritte: ["-3", "-2", "+4"]
+    schritte: ["-2", "-3", "+4"]
