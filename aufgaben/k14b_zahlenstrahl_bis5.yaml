@@ -20,7 +20,7 @@ abschnitte:
         werte: [0, null, null, 3, null, 5]
       - von: 0
         bis: 5
-        werte: [null, 1, null, null, 4, null]
+        werte: [null, 1, 2, null, null, 5]
       - von: 0
         bis: 5
-        werte: [0, null, null, null, 4, null]
+        werte: [0, 1, null, 3, null, null]
