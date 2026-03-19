@@ -1,0 +1,35 @@
+kapitel:
+  titel: "Minus rechnen bis 10"
+  untertitel: "Löse alle Minusaufgaben im Zahlenraum bis 10!"
+  emoji: "➖"
+  farbe: "blau"
+  zahlenraum: 10
+
+abschnitte:
+  - typ: lückenaufgaben
+    titel: "A  Einfache Minusaufgaben"
+    beschreibung: "Rechne aus!"
+    aufgaben:
+      - [8, "-", 1, null]
+      - [9, "-", 2, null]
+      - [7, "-", 3, null]
+      - [6, "-", 4, null]
+      - [10, "-", 5, null]
+      - [5, "-", 4, null]
+      - [9, "-", 8, null]
+      - [10, "-", 2, null]
+      - [8, "-", 3, null]
+      - [7, "-", 7, null]
+
+  - typ: lückenaufgaben
+    titel: "B  Mehr Minusaufgaben"
+    beschreibung: "Schreibe das Ergebnis in die Lücke!"
+    aufgaben:
+      - [10, "-", 1, null]
+      - [10, "-", 3, null]
+      - [10, "-", 4, null]
+      - [10, "-", 6, null]
+      - [10, "-", 7, null]
+      - [10, "-", 8, null]
+      - [10, "-", 9, null]
+      - [10, "-", 10, null]

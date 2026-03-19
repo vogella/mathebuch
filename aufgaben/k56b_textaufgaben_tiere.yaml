@@ -1,0 +1,31 @@
+kapitel:
+  titel: "Tierische Textaufgaben"
+  untertitel: "Rechnen mit unseren tierischen Freunden!"
+  emoji: "🐾"
+  farbe: "pink"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: textaufgaben
+    titel: "A  Auf dem Bauernhof"
+    beschreibung: "Lies die Geschichte und löse die Aufgabe."
+    aufgaben:
+      - text: "Auf der Wiese stehen 4 Schafe. 3 weitere Schafe kommen dazu. Wie viele Schafe sind es jetzt?"
+        antwort: 7
+      - text: "Bauer Bernd hat 8 Schweinchen. 2 Schweinchen laufen in den Stall. Wie viele sind noch draußen?"
+        antwort: 6
+      - text: "Es gibt 5 Hühner und 4 Enten. Wie viele Tiere sind das zusammen?"
+        antwort: 9
+      - text: "Im Nest liegen 10 Eier. 3 Eier gehen kaputt. Wie viele Eier sind noch ganz?"
+        antwort: 7
+
+  - typ: textaufgaben
+    titel: "B  Im Wald"
+    beschreibung: "Rechne aus!"
+    aufgaben:
+      - text: "Ein Eichhörnchen hat 12 Nüsse gesammelt. Es frisst 4 Nüsse auf. Wie viele Nüsse hat es noch?"
+        antwort: 8
+      - text: "Auf einem Baum sitzen 7 Vögel. 5 Vögel fliegen weg. Wie viele bleiben sitzen?"
+        antwort: 2
+      - text: "Der Igel findet 6 Äpfel. Später findet er noch 6 Äpfel. Wie viele Äpfel hat er jetzt?"
+        antwort: 12

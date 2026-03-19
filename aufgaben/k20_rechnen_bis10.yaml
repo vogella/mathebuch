@@ -29,3 +29,28 @@ abschnitte:
     titel: "C  Rechenraupe"
     start: 10
     schritte: ["-2", "-3", "+4"]
+
+  - typ: lückenaufgaben
+    titel: "D  Mix-Aufgaben"
+    beschreibung: "Rechne Plus und Minus!"
+    aufgaben:
+      - [4, "+", 4, null]
+      - [8, "-", 4, null]
+      - [3, "+", 7, null]
+      - [10, "-", 3, null]
+      - [2, "+", 6, null]
+      - [8, "-", 6, null]
+      - [5, "+", 5, null]
+      - [10, "-", 5, null]
+      - [1, "+", 9, null]
+      - [10, "-", 1, null]
+      - [4, "+", 5, null]
+      - [9, "-", 4, null]
+      - [3, "+", 3, null]
+      - [6, "-", 3, null]
+      - [2, "+", 8, null]
+      - [10, "-", 2, null]
+      - [6, "+", 4, null]
+      - [10, "-", 6, null]
+      - [7, "+", 2, null]
+      - [9, "-", 7, null]

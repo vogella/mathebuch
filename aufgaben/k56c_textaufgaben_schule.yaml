@@ -1,0 +1,31 @@
+kapitel:
+  titel: "Textaufgaben in der Schule"
+  untertitel: "Rechnen im Klassenzimmer!"
+  emoji: "🎒"
+  farbe: "blau"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: textaufgaben
+    titel: "A  Schultasche packen"
+    beschreibung: "Wie viel kommt in die Tasche?"
+    aufgaben:
+      - text: "In Max' Mäppchen sind 5 rote Stifte und 5 blaue Stifte. Wie viele Stifte sind es insgesamt?"
+        antwort: 10
+      - text: "Lisa hat 12 Buntstifte. 3 Stifte sind nicht gespitzt. Wie viele sind gespitzt?"
+        antwort: 9
+      - text: "Auf dem Tisch liegen 4 Hefte. Frau Lehrerin bringt noch 6 Hefte. Wie viele Hefte liegen jetzt dort?"
+        antwort: 10
+
+  - typ: textaufgaben
+    titel: "B  In der Pause"
+    beschreibung: "Rechne mit deinen Mitschülern!"
+    aufgaben:
+      - text: "Am Klettergerüst spielen 6 Kinder. 4 Kinder kommen noch dazu. Wie viele Kinder spielen jetzt dort?"
+        antwort: 10
+      - text: "In einer Kiste liegen 15 Bälle. Die Kinder nehmen 7 Bälle zum Spielen raus. Wie viele Bälle sind noch in der Kiste?"
+        antwort: 8
+      - text: "Es gibt 9 Äpfel und 5 Bananen für die Pause. Wie viele Früchte sind das zusammen?"
+        antwort: 14
+      - text: "10 Kinder spielen Fangen. 4 Kinder müssen zum Unterricht. Wie viele spielen noch?"
+        antwort: 6

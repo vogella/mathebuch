@@ -18,3 +18,22 @@ abschnitte:
       - text: "Paul hat 5 Bonbons. Er isst 2 davon auf. Wie viele Bonbons hat er noch?"
       - text: "Im Nest sitzen 3 Vögel. Dann fliegt 1 weg. Wie viele Vögel sitzen noch im Nest?"
     loesungen: [4, 4, 5, 4, 3, 2]
+
+  - typ: textaufgaben
+    titel: "B  Mehr Geschichten"
+    beschreibung: "Wie viele sind es?"
+    aufgaben:
+      - text: "Im Park fliegen 3 Drachen. 2 weitere Drachen steigen auf. Wie viele sind es?"
+        antwort: 5
+      - text: "5 Schmetterlinge sitzen auf einer Blume. 2 fliegen weg. Wie viele bleiben?"
+        antwort: 3
+      - text: "Ein Kind hat 4 rote Autos und 1 blaues Auto. Wie viele Autos hat es?"
+        antwort: 5
+      - text: "3 Hunde spielen im Garten. Einer läuft weg. Wie viele spielen noch?"
+        antwort: 2
+      - text: "Mama kauft 2 Birnen und 3 Äpfel. Wie viele Früchte sind das?"
+        antwort: 5
+      - text: "Im Nest liegen 5 Eier. 3 Küken schlüpfen. Wie viele Eier sind noch da?"
+        antwort: 2
+      - text: "Lisa hat 4 Sticker. Sie bekommt einen dazu. Wie viele hat sie?"
+        antwort: 5

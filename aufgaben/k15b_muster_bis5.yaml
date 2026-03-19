@@ -1,0 +1,33 @@
+kapitel:
+  titel: "Muster fortsetzen"
+  untertitel: "Was kommt als nächstes?"
+  emoji: "🌀"
+  farbe: "gruen"
+  zahlenraum: 5
+
+abschnitte:
+  - typ: muster_fortsetzen
+    titel: "A  Einfache Zahlenmuster"
+    beschreibung: "Schreibe die nächste Zahl auf."
+    aufgaben:
+      - elemente: [1, 2, 1, 2, null, null]
+      - elemente: [0, 1, 2, 3, null, null]
+      - elemente: [5, 4, 3, null, null]
+      - elemente: [2, 2, 1, 1, 2, 2, null]
+    loesungen:
+      - [1, 2]
+      - [4, 5]
+      - [2, 1]
+      - [1]
+
+  - typ: muster_fortsetzen
+    titel: "B  Formen und Farben"
+    beschreibung: "Male das Muster weiter."
+    aufgaben:
+      - elemente: ["kreis:rot", "kreis:blau", "kreis:rot", "kreis:blau", null, null]
+      - elemente: ["quadrat:gelb", "quadrat:gelb", "quadrat:blau", "quadrat:gelb", "quadrat:gelb", null]
+      - elemente: ["dreieck:rot", "kreis:gruen", "dreieck:rot", "kreis:gruen", null, null]
+    loesungen:
+      - ["kreis:rot", "kreis:blau"]
+      - ["quadrat:blau"]
+      - ["dreieck:rot", "kreis:gruen"]

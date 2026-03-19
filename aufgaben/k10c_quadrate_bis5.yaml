@@ -1,0 +1,24 @@
+kapitel:
+  titel: "Rechenquadrate"
+  untertitel: "Kleine Zahlen-Rätsel zum Start!"
+  emoji: "⬜"
+  farbe: "gruen"
+  zahlenraum: 5
+
+abschnitte:
+  - typ: rechenquadrat_2x2
+    titel: "A  Einfache Quadrate"
+    beschreibung: "Ergänze die fehlenden Zahlen. Die Summen müssen stimmen!"
+    quadrate:
+      - werte: [1, 2, 2, null]
+        summen: [3, 3, 3, 3]
+        loesung: [1]
+      - werte: [3, null, null, 1]
+        summen: [4, 4, 6, 2] # Wait, 3+1=4, ?+1=4 -> 3. 3+3=6, 1+1=2. Correct.
+        loesung: [1, 3]
+      - werte: [0, 2, 2, null]
+        summen: [2, 3, 2, 3]
+        loesung: [1]
+      - werte: [null, 1, 1, null]
+        summen: [5, 2, 5, 2]
+        loesung: [4, 1]

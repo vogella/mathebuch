@@ -341,7 +341,14 @@ def _solve_textaufgaben(abschnitt):
     loesungen = abschnitt.get("loesungen", [])
     if loesungen:
         return [str(l) for l in loesungen]
-    return []
+    
+    # Fallback: check individual tasks for "antwort" field
+    aufgaben = abschnitt.get("aufgaben", [])
+    results = []
+    for a in aufgaben:
+        if "antwort" in a:
+            results.append(str(a["antwort"]))
+    return results
 
 
 def _solve_schatzsuche(abschnitt):
@@ -425,7 +432,7 @@ def _solve_gerade_ungerade(abschnitt):
     results = []
     modus = abschnitt.get("modus", "sortieren")
     aufgaben = abschnitt.get("aufgaben", [])
-    
+
     for aufg in aufgaben:
         if modus == "sortieren":
             zahlen = aufg["zahlen"]
@@ -446,6 +453,31 @@ def _solve_gerade_ungerade(abschnitt):
             for i in range(1, n_luecken + 1):
                 luecken_res.append(str(last + i * diff))
             results.append(luecken_res)
+    return results
+
+
+def _solve_rechenquadrat_2x2(abschnitt):
+    results = []
+    for q in abschnitt.get("quadrate", []):
+        res = q.get("loesung", [])
+        results.append(",".join(str(v) for v in res))
+    return results
+
+
+def _solve_muster_fortsetzen(abschnitt):
+    results = []
+    loesungen = abschnitt.get("loesungen", [])
+    for res in loesungen:
+        # res can be list of numbers or list of strings "shape:color"
+        parts = []
+        for v in res:
+            if isinstance(v, str) and ":" in v:
+                # For shapes, just use the first letter of shape and color for brevity
+                shape, color = v.split(":")
+                parts.append(f"{shape[0]}{color[0]}")
+            else:
+                parts.append(str(v))
+        results.append(",".join(parts))
     return results
 
 
@@ -480,8 +512,9 @@ SOLVER = {
     "dungeon_flucht":     _solve_dungeon_flucht,
     "zehneruebergang":    _solve_zehneruebergang,
     "gerade_ungerade":    _solve_gerade_ungerade,
+    "rechenquadrat_2x2":  _solve_rechenquadrat_2x2,
+    "muster_fortsetzen":  _solve_muster_fortsetzen,
 }
-
 # Types to skip (explanation, visual-only)
 SKIP_TYPES = {"erklaerung", "wuerfel_zuordnen"}
 
