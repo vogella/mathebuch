@@ -201,7 +201,7 @@ def render_titelseite(c):
     c.setFillColor(FARBEN["dunkel"])
     c.setFont("Helvetica-Bold", 14)
     c.drawString(2.5 * cm, mal_y + 0.2 * cm, "Male dich selbst:")
-    # Rahmen zum Malen (8×8cm statt vorher 10cm hoch)
+    # Rahmen zum Malen (8×6cm)
     box_h = 6 * cm
     box_w = 8 * cm
     box_x = (W - box_w) / 2
@@ -217,16 +217,20 @@ def render_titelseite(c):
     math_symbols = ["+", "−", "×", "=", "1", "2", "3", "4", "5"]
     symbol_colors = RAND_FARBEN
     c.setFont("Helvetica-Bold", 18)
-    # Symbole links vom Malblock
-    for i, sym in enumerate(math_symbols[:4]):
-        sy = mal_y - 0.5 * cm - i * 1.5 * cm
-        c.setFillColor(symbol_colors[i % len(symbol_colors)])
-        c.drawCentredString(box_x - 1.0 * cm, sy, sym)
-    # Symbole rechts vom Malblock
-    for i, sym in enumerate(math_symbols[4:]):
-        sy = mal_y - 0.5 * cm - i * 1.2 * cm
-        c.setFillColor(symbol_colors[(i + 4) % len(symbol_colors)])
-        c.drawCentredString(box_x + box_w + 1.0 * cm, sy, sym)
+
+    # Symbole links und rechts vom Malblock
+    side_configs = [
+        # (symbols, x_offset, y_step, color_start_index)
+        (math_symbols[:4], -1.0 * cm, 1.5 * cm, 0),
+        (math_symbols[4:], box_w + 1.0 * cm, 1.2 * cm, 4),
+    ]
+
+    for symbols, x_offset, y_step, color_start_idx in side_configs:
+        for i, sym in enumerate(symbols):
+            sy = mal_y - 0.5 * cm - i * y_step
+            color_idx = (color_start_idx + i) % len(symbol_colors)
+            c.setFillColor(symbol_colors[color_idx])
+            c.drawCentredString(box_x + x_offset, sy, sym)
 
 
 def _draw_toc_section_header(c, y, text, line_h):
