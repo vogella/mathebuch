@@ -420,6 +420,34 @@ def _solve_zehneruebergang(abschnitt):
     return results
 
 
+def _solve_gerade_ungerade(abschnitt):
+    results = []
+    modus = abschnitt.get("modus", "sortieren")
+    aufgaben = abschnitt.get("aufgaben", [])
+    
+    for aufg in aufgaben:
+        if modus == "sortieren":
+            zahlen = aufg["zahlen"]
+            gerade = [z for z in zahlen if z % 2 == 0]
+            ungerade = [z for z in zahlen if z % 2 != 0]
+            results.append([gerade, ungerade])
+        elif modus == "malen":
+            zahlen = aufg["zahlen"]
+            res = ["G" if z % 2 == 0 else "U" for z in zahlen]
+            results.append(res)
+        elif modus == "muster":
+            start = aufg["start"]
+            n_luecken = aufg["lücken"]
+            # Assume constant difference based on first two elements
+            diff = start[1] - start[0] if len(start) >= 2 else 2
+            last = start[-1]
+            luecken_res = []
+            for i in range(1, n_luecken + 1):
+                luecken_res.append(str(last + i * diff))
+            results.append(luecken_res)
+    return results
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -448,8 +476,9 @@ SOLVER = {
     "schatzsuche": _solve_schatzsuche,
     "labyrinth_flucht": _solve_schatzsuche,
     "zahlenkreis": _solve_zahlenkreis,
-    "dungeon_flucht": _solve_dungeon_flucht,
-    "zehneruebergang": _solve_zehneruebergang,
+    "dungeon_flucht":     _solve_dungeon_flucht,
+    "zehneruebergang":    _solve_zehneruebergang,
+    "gerade_ungerade":    _solve_gerade_ungerade,
 }
 
 # Types to skip (explanation, visual-only)
