@@ -3,13 +3,12 @@ loesungen.py – Berechnet und rendert kompakte Lösungsseiten am Ende des Buchs
 """
 import re
 import sys
-import math
 from itertools import permutations
 
 from reportlab.lib.colors import HexColor, white
 from reportlab.lib.units import cm
 from reportlab.lib.pagesizes import A4
-from layout import FARBEN, draw_page_bg, draw_page_number, FONT, FONT_BOLD
+from layout import FARBEN, draw_page_bg, draw_page_number
 
 W, H = A4
 
@@ -341,14 +340,7 @@ def _solve_textaufgaben(abschnitt):
     loesungen = abschnitt.get("loesungen", [])
     if loesungen:
         return [str(l) for l in loesungen]
-    
-    # Fallback: check individual tasks for "antwort" field
-    aufgaben = abschnitt.get("aufgaben", [])
-    results = []
-    for a in aufgaben:
-        if "antwort" in a:
-            results.append(str(a["antwort"]))
-    return results
+    return []
 
 
 def _solve_schatzsuche(abschnitt):
@@ -369,9 +361,9 @@ def _solve_schatzsuche(abschnitt):
 def _solve_zahlenkreis(abschnitt):
     results = []
     labels = abschnitt.get("labels", [])
-    for idx, aufg in enumerate(abschnitt.get("aufgaben", [])):
+    for idx, aufg in enumerate(abschnitt["aufgaben"]):
         n = len(aufg)
-        # Find any non-None value to use as start
+        # Find any known value
         start_idx = -1
         start_val = -1
         for i, v in enumerate(aufg):
@@ -379,27 +371,24 @@ def _solve_zahlenkreis(abschnitt):
                 start_idx = i
                 start_val = v
                 break
-        
+
         if start_idx == -1:
             results.append("")
             continue
-            
+
         # Determine direction from label
         label = labels[idx] if idx < len(labels) else "Immer einer mehr"
         direction = 1 if "mehr" in label.lower() else -1
-        
+
         # Determine base (0 for range 0-9, 10 for 10-19)
-        base = 0 if start_val < 10 else 10
-        
+        base = (start_val // 10) * 10
+
         # Calculate full circle values
-        # The circle always has n nodes, usually 10
         full = []
         for i in range(n):
-            # Calculate value at index i based on start_val at start_idx
-            # Relative offset from start_idx is (i - start_idx)
             val = ((start_val - base + (i - start_idx) * direction) % n) + base
             full.append(val)
-        
+
         missing = []
         for i in range(n):
             if aufg[i] is None:
@@ -482,84 +471,28 @@ def _solve_muster_fortsetzen(abschnitt):
 
 
 def _solve_gerade_ungerade(abschnitt):
-    results = []
-    modus = abschnitt.get("modus", "sortieren")
-    
-    # Handle PR version (single 'zahlen' list or 'muster' list)
-    if modus in ("sortieren", "einkreisen", "malen"):
-        zahlen = abschnitt.get("zahlen")
-        if zahlen:
-
-            gerade = [z for z in zahlen if z % 2 == 0]
-            ungerade = [z for z in zahlen if z % 2 != 0]
-            if modus == "einkreisen" or modus == "sortieren":
-                return [f"G:{','.join(str(x) for x in gerade)} U:{','.join(str(x) for x in ungerade)}"]
-            else: # malen
-                return ["G" if z % 2 == 0 else "U" for z in zahlen]
-        
-        # Fallback for old structure (list of 'aufgaben')
-        aufgaben = abschnitt.get("aufgaben", [])
-        for aufg in aufgaben:
-            zahlen = aufg.get("zahlen", [])
-            if modus == "sortieren":
-                gerade = [z for z in zahlen if z % 2 == 0]
-                ungerade = [z for z in zahlen if z % 2 != 0]
-                results.append([gerade, ungerade])
-            elif modus == "malen":
-                res = ["G" if z % 2 == 0 else "U" for z in zahlen]
-                results.append(res)
+    modus = abschnitt.get("modus", "einkreisen")
+    if modus in ("einkreisen", "sortieren"):
+        zahlen = abschnitt.get("zahlen", [])
+        gerade = [z for z in zahlen if z % 2 == 0]
+        ungerade = [z for z in zahlen if z % 2 != 0]
+        return [f"G:{','.join(str(x) for x in gerade)} U:{','.join(str(x) for x in ungerade)}"]
     elif modus == "muster":
-        muster_list = abschnitt.get("muster")
-        if muster_list:
-            for m in muster_list:
-                start = m["start"]
-                luecken = m["luecken"]
-                schritt = m.get("schritt", 2)
-                last = start[-1]
-                results.append([last + (i+1) * schritt for i in range(luecken)])
-            return results
-        
-        # Fallback for old structure
-        aufgaben = abschnitt.get("aufgaben", [])
-        for aufg in aufgaben:
-            start = aufg["start"]
-            n_luecken = aufg["lücken"]
-            diff = start[1] - start[0] if len(start) >= 2 else 2
-            last = start[-1]
-            results.append([last + (i+1) * diff for i in range(n_luecken)])
-    elif modus == "paare":
-        # From main: "X = ja, leer = nein"
-        aufgaben = abschnitt.get("aufgaben", [])
-        for aufg in aufgaben:
-            zahlen = aufg.get("zahlen", [])
-            results.append(["X" if z % 2 == 0 else "" for z in zahlen])
-            
-    return results
+        muster_list = abschnitt.get("muster", [])
+        results = []
+        for m in muster_list:
+            if not (m.get("start") and m.get("luecken") and "schritt" in m):
+                continue
 
-
-def _solve_rechenquadrat_2x2(abschnitt):
-    results = []
-    for q in abschnitt.get("quadrate", []):
-        res = q.get("loesung", [])
-        results.append(",".join(str(v) for v in res))
-    return results
-
-
-def _solve_muster_fortsetzen(abschnitt):
-    results = []
-    loesungen = abschnitt.get("loesungen", [])
-    for res in loesungen:
-        # res can be list of numbers or list of strings "shape:color"
-        parts = []
-        for v in res:
-            if isinstance(v, str) and ":" in v:
-                # For shapes, just use the first letter of shape and color for brevity
-                shape, color = v.split(":")
-                parts.append(f"{shape[0]}{color[0]}")
-            else:
-                parts.append(str(v))
-        results.append(",".join(parts))
-    return results
+            row = []
+            last_num = m["start"][-1]
+            schritt = m["schritt"]
+            luecken = m["luecken"]
+            for i in range(1, luecken + 1):
+                row.append(last_num + i * schritt)
+            results.append(",".join(str(x) for x in row))
+        return results
+    return []
 
 
 # ── Solver-Registry ───────────────────────────────────────
@@ -598,6 +531,7 @@ SOLVER = {
     "rechenquadrat_2x2":  _solve_rechenquadrat_2x2,
     "muster_fortsetzen":  _solve_muster_fortsetzen,
 }
+
 # Types to skip (explanation, visual-only)
 SKIP_TYPES = {"erklaerung", "wuerfel_zuordnen"}
 
@@ -605,7 +539,7 @@ SKIP_TYPES = {"erklaerung", "wuerfel_zuordnen"}
 # ── Rendering ─────────────────────────────────────────────
 
 def render_loesungsseiten(c, alle_kapitel, start_seite):
-    """Renders readable solution pages. Returns the number of pages added."""
+    """Renders compact solution pages. Returns the number of pages added."""
     # Collect solutions per chapter
     kapitel_loesungen = []
     for seite_nr, (dateiname, kap_data) in enumerate(alle_kapitel, start=1):
@@ -613,8 +547,6 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
         if kap.get("erklaerungsseite"):
             continue
         titel = kap["titel"]
-        emoji = kap.get("emoji", "")
-        farbe = kap.get("farbe", "blau")
         abschnitte = kap_data.get("abschnitte", [])
         sektionen = []
         for abschnitt in abschnitte:
@@ -639,28 +571,21 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
                         short_label = first
                 sektionen.append((short_label, antworten))
         if sektionen:
-            kapitel_loesungen.append((seite_nr, titel, emoji, farbe, sektionen))
+            kapitel_loesungen.append((f"S.{seite_nr} {titel}", sektionen))
 
     if not kapitel_loesungen:
         return 0
 
     # Render
     pages = 0
-    font_name = FONT
-    font_bold = FONT_BOLD
-    
-    # Styling constants
-    FONT_SIZE = 9
-    TITLE_SIZE = 9.5
-    EMOJI_FONT_SIZE = 12
-    LINE_H = 0.45 * cm
-    COL_MARGIN = 1.5 * cm
-    MAX_Y = H - 3.0 * cm
-    MIN_Y = 2.0 * cm
-    MAX_TEXT_W = W - 3.5 * cm
-    ALT_BG = HexColor("#F5F5F5")  # light gray for alternating chapters
-    ANSWER_INDENT = 0.4 * cm
-    CHAPTER_GAP = 0.2 * cm
+    font_name = "Helvetica"
+    font_bold = "Helvetica-Bold"
+    font_size = 7.5
+    line_h = 0.35 * cm
+    col_margin = 1.5 * cm
+    max_y = H - 3.0 * cm
+    min_y = 2.0 * cm
+    max_text_w = W - 3 * cm
 
     def new_page():
         nonlocal y, pages
@@ -673,76 +598,42 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
         c.drawCentredString(W / 2, H - 2.2 * cm, "Lösungen")
         c.setStrokeColor(FARBEN["hellgrau"])
         c.setLineWidth(0.5)
-        c.line(COL_MARGIN, H - 2.5 * cm, W - COL_MARGIN, H - 2.5 * cm)
-        y = MAX_Y
+        c.line(col_margin, H - 2.5 * cm, W - col_margin, H - 2.5 * cm)
+        y = max_y
         pages += 1
 
-    y = MIN_Y  # force first new_page
+    y = min_y  # force first new_page
     new_page()
 
-    for kap_idx, (seite_nr, titel, emoji, farbe, sektionen) in enumerate(kapitel_loesungen):
-        # Calculate total height needed for this chapter block
-        needed = LINE_H * (1 + len(sektionen)) + 0.3 * cm
-        if y - needed < MIN_Y:
+    for kap_titel, sektionen in kapitel_loesungen:
+        # Check if we need a new page
+        needed = line_h * (1 + len(sektionen)) + 0.15 * cm
+        if y - needed < min_y:
             draw_page_number(c, start_seite + pages - 1, show_stars=False)
             new_page()
 
-        # Draw alternating light gray background for every other chapter
-        if kap_idx % 2 == 1:
-            # Refactor calculation for clarity without changing the output
-            content_h = LINE_H * (1 + len(sektionen))
-            padding_top = 0.3 * LINE_H + 0.1 * cm
-            padding_bottom = 0.15 * cm - 0.3 * LINE_H
-
-            rect_h = content_h + padding_top + padding_bottom
-            rect_y = y - content_h - padding_bottom
-            
-            c.setFillColor(ALT_BG)
-            c.rect(COL_MARGIN - 0.2 * cm, rect_y,
-                   W - 2 * COL_MARGIN + 0.4 * cm, rect_h,
-                   fill=1, stroke=0)
-
-        # Chapter title with emoji and color accent
-        farb_col = FARBEN.get(farbe, FARBEN["blau"])
-        emoji_str = f"{emoji} " if emoji else ""
-        # Draw emoji in chapter color
-        c.setFillColor(farb_col)
-        c.setFont(font_bold, EMOJI_FONT_SIZE)
-        emoji_w = c.stringWidth(emoji_str, font_bold, EMOJI_FONT_SIZE) if emoji_str else 0
-        c.drawString(COL_MARGIN, y, emoji_str)
-        # Draw chapter reference in dark color
+        # Chapter title
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont(font_bold, TITLE_SIZE)
-        c.drawString(COL_MARGIN + emoji_w, y, f"Seite {seite_nr}, {titel}")
-        y -= LINE_H
+        c.setFont(font_bold, 8)
+        c.drawString(col_margin, y, kap_titel)
+        y -= line_h
 
         # Section answers
         for short_label, antworten in sektionen:
-            if y < MIN_Y:
+            if y < min_y:
                 draw_page_number(c, start_seite + pages - 1, show_stars=False)
                 new_page()
-            
-            prefix = f"Aufgabe {short_label}: " if short_label else ""
-            
-            # Format answers: join nested lists with commas
-            formatted_antworten = []
-            for a in antworten:
-                if isinstance(a, (list, tuple)):
-                    formatted_antworten.append(",".join(map(str, a)))
-                else:
-                    formatted_antworten.append(str(a))
-            
-            text = prefix + " · ".join(formatted_antworten)
-            
+            prefix = f"{short_label}: " if short_label else ""
+            text = prefix + " · ".join(antworten)
             # Truncate if too wide
-            c.setFont(font_name, FONT_SIZE)
-            while c.stringWidth(text, font_name, FONT_SIZE) > MAX_TEXT_W and len(text) > 20:
+            c.setFont(font_name, font_size)
+            while c.stringWidth(text, font_name, font_size) > max_text_w and len(text) > 20:
                 text = text[:len(text) - 4] + "…"
-            c.setFillColor(FARBEN["dunkel"])
-            c.drawString(COL_MARGIN + ANSWER_INDENT, y, text)
-            y -= LINE_H
+            c.setFillColor(FARBEN["grau"])
+            c.drawString(col_margin + 0.3 * cm, y, text)
+            y -= line_h
 
-        y -= CHAPTER_GAP  # gap between chapters
+        y -= 0.1 * cm  # small gap between chapters
 
     draw_page_number(c, start_seite + pages - 1, show_stars=False)
     return pages
