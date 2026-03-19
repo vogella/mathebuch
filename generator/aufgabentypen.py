@@ -2044,3 +2044,96 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
         cy = gy - 0.9 * cm
 
     return cy
+
+
+# ── Zehnerübergang ───────────────────────────────────────
+
+def draw_zehneruebergang(c, abschnitt, farb_key, start_y):
+    """
+    Zeichnet Zehnerübergang-Aufgaben im Format:
+    Addition:    a + b = a + ___ + ___ = ___
+    Subtraktion: a - b = a - ___ - ___ = ___
+    Die Zerlegung geht schrittweise über die 10.
+    """
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]
+    loesungen = abschnitt.get("loesungen", [None] * len(aufgaben))
+    row_y = start_y - 1.5 * cm - y_off
+    row_h = 1.8 * cm
+
+    dunkel = FARBEN["dunkel"]
+    op_col = FARBEN[farb_key]
+    box_w = 1.4 * cm
+    box_h = 1.0 * cm
+
+    for idx, aufg in enumerate(aufgaben):
+        a, op, b = aufg
+        loes = loesungen[idx] if idx < len(loesungen) else None
+        y = row_y - idx * row_h
+        x = 1.8 * cm
+
+        c.setFont("Helvetica-Bold", 18)
+
+        # a
+        c.setFillColor(dunkel)
+        c.drawCentredString(x + 0.5 * cm, y, str(a))
+        x += 1.2 * cm
+
+        # op
+        c.setFillColor(op_col)
+        c.drawCentredString(x + 0.3 * cm, y, op)
+        x += 0.9 * cm
+
+        # b
+        c.setFillColor(dunkel)
+        c.drawCentredString(x + 0.5 * cm, y, str(b))
+        x += 1.2 * cm
+
+        # =
+        c.setFillColor(op_col)
+        c.drawCentredString(x + 0.3 * cm, y, "=")
+        x += 0.8 * cm
+
+        # a (repeated)
+        c.setFillColor(dunkel)
+        c.drawCentredString(x + 0.5 * cm, y, str(a))
+        x += 1.2 * cm
+
+        # op
+        c.setFillColor(op_col)
+        c.drawCentredString(x + 0.3 * cm, y, op)
+        x += 0.7 * cm
+
+        # First blank: step1 (how much to reach 10)
+        if loes is not None:
+            _draw_filled_answer_box(c, x, y - 0.25 * cm, loes[0], w=box_w, h=box_h)
+        else:
+            draw_answer_box(c, x, y - 0.25 * cm, w=box_w, h=box_h)
+        x += box_w + 0.3 * cm
+
+        # op
+        c.setFillColor(op_col)
+        c.drawCentredString(x + 0.3 * cm, y, op)
+        x += 0.7 * cm
+
+        # Second blank: step2 (remainder)
+        if loes is not None:
+            _draw_filled_answer_box(c, x, y - 0.25 * cm, loes[1], w=box_w, h=box_h)
+        else:
+            draw_answer_box(c, x, y - 0.25 * cm, w=box_w, h=box_h)
+        x += box_w + 0.3 * cm
+
+        # =
+        c.setFillColor(op_col)
+        c.drawCentredString(x + 0.3 * cm, y, "=")
+        x += 0.8 * cm
+
+        # Third blank: final result
+        if loes is not None:
+            _draw_filled_answer_box(c, x, y - 0.25 * cm, loes[2], w=box_w, h=box_h)
+        else:
+            draw_answer_box(c, x, y - 0.25 * cm, w=box_w, h=box_h)
+
+    return row_y - len(aufgaben) * row_h - 0.5 * cm

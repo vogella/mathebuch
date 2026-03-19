@@ -404,6 +404,22 @@ def _solve_dungeon_flucht(abschnitt):
     return [str(aufg["antwort"]) for aufg in abschnitt["aufgaben"]]
 
 
+def _solve_zehneruebergang(abschnitt):
+    results = []
+    for aufg in abschnitt["aufgaben"]:
+        a, op, b = aufg
+        if op == "+":
+            step1 = 10 - a       # how much to add to reach 10
+            step2 = b - step1    # remainder after reaching 10
+            total = a + b
+        else:  # "-"
+            step1 = a - 10       # how much to subtract to reach 10
+            step2 = b - step1    # remainder after reaching 10
+            total = a - b
+        results.append(f"{step1},{step2},{total}")
+    return results
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -433,6 +449,7 @@ SOLVER = {
     "labyrinth_flucht": _solve_schatzsuche,
     "zahlenkreis": _solve_zahlenkreis,
     "dungeon_flucht": _solve_dungeon_flucht,
+    "zehneruebergang": _solve_zehneruebergang,
 }
 
 # Types to skip (explanation, visual-only)
