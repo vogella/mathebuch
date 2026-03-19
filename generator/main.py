@@ -98,6 +98,8 @@ TOC_START_Y = H - 5.0 * cm
 TOC_MIN_Y = 2.5 * cm
 TOC_SECTION_GAP = 0.15 * cm
 TOC_NEW_PAGE_START_Y = H - 3.5 * cm
+TOC_SECTION_FONT_SIZE = 11
+TOC_ENTRY_FONT_SIZE = 9
 
 # TOC Grouping definition
 CHAPTER_GROUPS = [
@@ -279,7 +281,7 @@ def _draw_toc_section_header(c, y, text, line_h):
     c.roundRect(1.8 * cm, y - 0.15 * cm, W - 3.6 * cm, line_h,
                 radius=6, fill=1, stroke=0)
     c.setFillColor(white)
-    c.setFont(FONT_BOLD, 11)
+    c.setFont(FONT_BOLD, TOC_SECTION_FONT_SIZE)
     c.drawString(2.3 * cm, y, text)
     return y - line_h - 0.15 * cm
 
@@ -395,14 +397,14 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
 
         # Titel
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont(FONT, 9)
+        c.setFont(FONT, TOC_ENTRY_FONT_SIZE)
         c.drawString(3.5 * cm, y, entry["titel"])
 
-        _draw_toc_dots(c, y, entry["titel"], FONT, 9)
+        _draw_toc_dots(c, y, entry["titel"], FONT, TOC_ENTRY_FONT_SIZE)
 
         # Seitennummer
         c.setFillColor(FARBEN[entry["farbe"]])
-        c.setFont(FONT_BOLD, 9)
+        c.setFont(FONT_BOLD, TOC_ENTRY_FONT_SIZE)
         c.drawRightString(W - 2 * cm, y, str(entry["seite"]))
 
         y -= line_h
