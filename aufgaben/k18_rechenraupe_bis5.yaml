@@ -35,3 +35,23 @@ abschnitte:
     titel: "F"
     start: 4
     schritte: ["-1", "-2", "+3"]
+
+  - typ: rechenraupe
+    titel: "G"
+    start: 0
+    schritte: ["+3", "+1", "-2"]
+
+  - typ: rechenraupe
+    titel: "H"
+    start: 2
+    schritte: ["+3", "-1", "-2"]
+
+  - typ: rechenraupe
+    titel: "I"
+    start: 5
+    schritte: ["-3", "+2", "-1"]
+
+  - typ: rechenraupe
+    titel: "J"
+    start: 0
+    schritte: ["+4", "-1", "+1"]
