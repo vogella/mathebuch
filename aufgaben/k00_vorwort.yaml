@@ -8,6 +8,21 @@ kapitel:
 
 abschnitte:
   - typ: erklaerung
+    titel: "Hallo, schön, dass du da bist!"
+    zeilen:
+      - "In diesem Buch warten viele spannende Aufgaben auf dich:"
+      - "Rechenmauern, Zahlenhäuser, Schatzkarten und noch viel mehr!"
+      - ""
+      - "Auf jeder Seite kannst du dir Sterne verdienen."
+      - "Male sie aus, wenn du die Aufgaben geschafft hast!"
+      - ""
+      - "Trau dich – du kannst das!"
+      - "Und wenn etwas knifflig ist, schau einfach"
+      - "bei den Erklärungsseiten am Anfang nach."
+      - ""
+      - "**Viel Spaß beim Rechnen!**"
+
+  - typ: erklaerung
     titel: "Liebe Eltern,"
     zeilen:
       - "dieses Buch begleitet Ihr Kind beim Entdecken der Welt der Zahlen."
@@ -29,20 +44,3 @@ abschnitte:
       - "Nicht alle Aufgaben müssen auf einmal gelöst werden."
       - "Loben Sie den Fortschritt – jede gelöste Aufgabe zählt!"
       - "Wenn eine Aufgabe schwerfällt, helfen die Erklärungsseiten."
-
-  - typ: erklaerung
-    titel: "Und jetzt zu dir!"
-    zeilen:
-      - "Hallo, schön, dass du da bist!"
-      - ""
-      - "In diesem Buch warten viele spannende Aufgaben auf dich:"
-      - "Rechenmauern, Zahlenhäuser, Schatzkarten und noch viel mehr!"
-      - ""
-      - "Auf jeder Seite kannst du dir Sterne verdienen."
-      - "Male sie aus, wenn du die Aufgaben geschafft hast!"
-      - ""
-      - "Trau dich – du kannst das!"
-      - "Und wenn etwas knifflig ist, schau einfach"
-      - "bei den Erklärungsseiten am Anfang nach."
-      - ""
-      - "**Viel Spaß beim Rechnen!**"
