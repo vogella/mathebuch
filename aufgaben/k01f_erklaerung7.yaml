@@ -1,0 +1,18 @@
+kapitel:
+  titel: "So funktioniert's!"
+  untertitel: "Zehnerübergang – Rechnen über den Zehner"
+  emoji: "📖"
+  farbe: "orange"
+  zahlenraum: 20
+  erklaerungsseite: true
+
+abschnitte:
+  - typ: zehneruebergang
+    titel: "Über den Zehner rechnen"
+    beschreibung: "Bei 8 + 5 rechnest du schrittweise über den Zehner:\nSchritt 1: Ergänze zuerst bis 10 → 8 + 2 = 10\nSchritt 2: Rechne den Rest dazu → 10 + 3 = 13\nSo schreibst du es auf: 8 + 5 = 8 + 2 + 3 = 13"
+    aufgaben:
+      # [a, "+", b] – die Zerlegung über 10 wird automatisch berechnet
+      # Schüler füllen die Zerlegung aus: a + b = a + ___ + ___ = ___
+      - [8, "+", 5]
+    loesungen:
+      - [2, 3, 13]
