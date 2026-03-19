@@ -503,14 +503,19 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
     pages = 0
     font_name = "Helvetica"
     font_bold = "Helvetica-Bold"
-    font_size = 9
-    title_size = 9.5
-    line_h = 0.45 * cm
-    col_margin = 1.5 * cm
-    max_y = H - 3.0 * cm
-    min_y = 2.0 * cm
-    max_text_w = W - 3.5 * cm
-    alt_bg = HexColor("#F5F5F5")  # light gray for alternating chapters
+    
+    # Styling constants
+    FONT_SIZE = 9
+    TITLE_SIZE = 9.5
+    EMOJI_FONT_SIZE = 12
+    LINE_H = 0.45 * cm
+    COL_MARGIN = 1.5 * cm
+    MAX_Y = H - 3.0 * cm
+    MIN_Y = 2.0 * cm
+    MAX_TEXT_W = W - 3.5 * cm
+    ALT_BG = HexColor("#F5F5F5")  # light gray for alternating chapters
+    ANSWER_INDENT = 0.4 * cm
+    CHAPTER_GAP = 0.2 * cm
 
     def new_page():
         nonlocal y, pages
@@ -523,26 +528,33 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
         c.drawCentredString(W / 2, H - 2.2 * cm, "Lösungen")
         c.setStrokeColor(FARBEN["hellgrau"])
         c.setLineWidth(0.5)
-        c.line(col_margin, H - 2.5 * cm, W - col_margin, H - 2.5 * cm)
-        y = max_y
+        c.line(COL_MARGIN, H - 2.5 * cm, W - COL_MARGIN, H - 2.5 * cm)
+        y = MAX_Y
         pages += 1
 
-    y = min_y  # force first new_page
+    y = MIN_Y  # force first new_page
     new_page()
 
     for kap_idx, (seite_nr, titel, emoji, farbe, sektionen) in enumerate(kapitel_loesungen):
         # Calculate total height needed for this chapter block
-        needed = line_h * (1 + len(sektionen)) + 0.3 * cm
-        if y - needed < min_y:
+        needed = LINE_H * (1 + len(sektionen)) + 0.3 * cm
+        if y - needed < MIN_Y:
             draw_page_number(c, start_seite + pages - 1, show_stars=False)
             new_page()
 
         # Draw alternating light gray background for every other chapter
         if kap_idx % 2 == 1:
-            block_h = line_h * (1 + len(sektionen)) + 0.15 * cm
-            c.setFillColor(alt_bg)
-            c.rect(col_margin - 0.2 * cm, y - block_h + line_h * 0.3,
-                   W - 2 * col_margin + 0.4 * cm, block_h + 0.1 * cm,
+            # Refactor calculation for clarity without changing the output
+            content_h = LINE_H * (1 + len(sektionen))
+            padding_top = 0.3 * LINE_H + 0.1 * cm
+            padding_bottom = 0.15 * cm - 0.3 * LINE_H
+
+            rect_h = content_h + padding_top + padding_bottom
+            rect_y = y - content_h - padding_bottom
+            
+            c.setFillColor(ALT_BG)
+            c.rect(COL_MARGIN - 0.2 * cm, rect_y,
+                   W - 2 * COL_MARGIN + 0.4 * cm, rect_h,
                    fill=1, stroke=0)
 
         # Chapter title with emoji and color accent
@@ -550,18 +562,18 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
         emoji_str = f"{emoji} " if emoji else ""
         # Draw emoji in chapter color
         c.setFillColor(farb_col)
-        c.setFont(font_bold, 12)
-        emoji_w = c.stringWidth(emoji_str, font_bold, 12) if emoji_str else 0
-        c.drawString(col_margin, y, emoji_str)
+        c.setFont(font_bold, EMOJI_FONT_SIZE)
+        emoji_w = c.stringWidth(emoji_str, font_bold, EMOJI_FONT_SIZE) if emoji_str else 0
+        c.drawString(COL_MARGIN, y, emoji_str)
         # Draw chapter reference in dark color
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont(font_bold, title_size)
-        c.drawString(col_margin + emoji_w, y, f"Seite {seite_nr}, {titel}")
-        y -= line_h
+        c.setFont(font_bold, TITLE_SIZE)
+        c.drawString(COL_MARGIN + emoji_w, y, f"Seite {seite_nr}, {titel}")
+        y -= LINE_H
 
         # Section answers
         for short_label, antworten in sektionen:
-            if y < min_y:
+            if y < MIN_Y:
                 draw_page_number(c, start_seite + pages - 1, show_stars=False)
                 new_page()
             
@@ -578,14 +590,14 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
             text = prefix + " · ".join(formatted_antworten)
             
             # Truncate if too wide
-            c.setFont(font_name, font_size)
-            while c.stringWidth(text, font_name, font_size) > max_text_w and len(text) > 20:
+            c.setFont(font_name, FONT_SIZE)
+            while c.stringWidth(text, font_name, FONT_SIZE) > MAX_TEXT_W and len(text) > 20:
                 text = text[:len(text) - 4] + "…"
             c.setFillColor(FARBEN["dunkel"])
-            c.drawString(col_margin + 0.4 * cm, y, text)
-            y -= line_h
+            c.drawString(COL_MARGIN + ANSWER_INDENT, y, text)
+            y -= LINE_H
 
-        y -= 0.2 * cm  # gap between chapters
+        y -= CHAPTER_GAP  # gap between chapters
 
     draw_page_number(c, start_seite + pages - 1, show_stars=False)
     return pages
