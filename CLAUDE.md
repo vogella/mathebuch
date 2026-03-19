@@ -59,6 +59,20 @@ abschnitte:
 - All new development must be done in a new branch based on `origin/main`.
 - Before creating the branch, always fetch the latest information from the remote (`git fetch origin`).
 
+## Common Task Shortcuts
+
+**"fix issue X"** means:
+1. `git fetch origin`
+2. Create a new local branch based on `origin/main`
+3. Fix the issue
+4. Commit, push, and create a new PR
+
+**"check PR X"** means:
+1. Fetch the PR branch locally (e.g., `gh pr checkout X`)
+2. Review all new review comments/feedback on the PR
+3. Evaluate each piece of feedback — apply changes that make sense
+4. Commit and push the updates to the existing PR branch
+
 ## Key Conventions
 
 - All user-facing text is in **German** (titles, descriptions, labels). Always write German content in YAML and UI strings.
