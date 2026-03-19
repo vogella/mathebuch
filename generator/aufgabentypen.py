@@ -1936,14 +1936,17 @@ def draw_textaufgaben(c, abschnitt, farb_key, start_y):
         for li, l in enumerate(lines):
             c.drawString(2.8*cm, y - li * 0.5*cm, l)
 
-        # Hint
+        # Hint - give it its own line below the text
+        hint_offset = 0
         if hinweis:
+            HINT_VERTICAL_OFFSET = 0.45*cm
             c.setFillColor(FARBEN["grau"])
             c.setFont(FONT_ITALIC, 9)
             c.drawString(2.8*cm, y - len(lines) * 0.5*cm - 0.15*cm, hinweis)
+            hint_offset = HINT_VERTICAL_OFFSET
 
         # Rechnung + Antwort
-        bottom = y - len(lines) * 0.5*cm - 0.8*cm
+        bottom = y - len(lines) * 0.5*cm - 0.8*cm - hint_offset
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 9)
         c.drawString(2.8*cm, bottom + 0.3*cm, "Rechnung:")
