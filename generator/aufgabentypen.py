@@ -620,10 +620,12 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
     # to find which cells were originally blank
     aufgabe_mauer = None
 
-    # Arrange walls in rows that fit within page margins
-    margin = 1.5*cm
-    usable_w = W - 2 * margin
-    gap = 1.0*cm  # horizontal gap between walls
+    # Layout constants for Rechenmauer grid
+    GRID_MARGIN = 1.5*cm
+    GRID_GAP_HORIZONTAL = 1.0*cm
+    GRID_GAP_VERTICAL = 1.0*cm
+
+    usable_w = W - 2 * GRID_MARGIN
 
     # Calculate the width each wall needs (based on its widest/bottom row)
     def wall_width(mauer):
@@ -635,7 +637,7 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
     current_row_w = 0
     for mi, mauer in enumerate(mauern):
         mw = wall_width(mauer)
-        needed = mw if not current_row else current_row_w + gap + mw
+        needed = mw if not current_row else current_row_w + GRID_GAP_HORIZONTAL + mw
         if current_row and needed > usable_w:
             grid_rows.append(current_row)
             current_row = [(mi, mauer)]
@@ -655,9 +657,9 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
         row_height = max_rows * brick_h
 
         # Total width of all walls + gaps
-        total_w = sum(wall_width(m) for _, m in grid_row) + gap * (len(grid_row) - 1)
+        total_w = sum(wall_width(m) for _, m in grid_row) + GRID_GAP_HORIZONTAL * (len(grid_row) - 1)
         # Center the row horizontally
-        row_start_x = margin + (usable_w - total_w) / 2
+        row_start_x = GRID_MARGIN + (usable_w - total_w) / 2
 
         x_cursor = row_start_x
         for mi, mauer in grid_row:
@@ -715,9 +717,9 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
 
             # Remember this wall as reference for the next (Lösung) wall
             aufgabe_mauer = rows
-            x_cursor += mw + gap
+            x_cursor += mw + GRID_GAP_HORIZONTAL
 
-        cursor_y -= row_height + 1.0*cm  # vertical gap between grid rows
+        cursor_y -= row_height + GRID_GAP_VERTICAL
 
     return cursor_y
 
