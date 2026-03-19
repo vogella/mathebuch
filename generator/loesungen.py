@@ -428,6 +428,26 @@ def _solve_zehneruebergang(abschnitt):
     return results
 
 
+def _solve_muster_fortsetzen(abschnitt):
+    results = []
+    for aufg in abschnitt["aufgaben"]:
+        muster = aufg["muster"]
+        # Find the constant difference from the known (non-None) values
+        known = [(i, v) for i, v in enumerate(muster) if v is not None]
+        if len(known) >= 2:
+            diff = known[1][1] - known[0][1]
+        else:
+            diff = 1
+        # Fill in the blanks
+        filled = list(muster)
+        for i in range(len(filled)):
+            if filled[i] is None and i > 0 and filled[i - 1] is not None:
+                filled[i] = filled[i - 1] + diff
+        missing = [str(filled[i]) for i, v in enumerate(muster) if v is None]
+        results.append(",".join(missing))
+    return results
+
+
 def _solve_gerade_ungerade(abschnitt):
     results = []
     modus = abschnitt.get("modus", "sortieren")
