@@ -1390,25 +1390,29 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
                 c.setFont("Helvetica-Bold", 14)
                 c.drawCentredString(col_x, cy - 0.15*cm, str(val))
 
-            # Arrows to next column
+            # Plus sign between columns
             if ci < num_cols - 1:
                 next_x = 3*cm + (ci + 1) * col_spacing
-                c.setStrokeColor(FARBEN["hellgrau"])
-                c.setLineWidth(1.5)
-                # Instead of mesh, draw centered arrows between columns
-                # to indicate general flow
-                arrow_y = grid_top - grid_h / 2
-                c.line(col_x + node_r + 0.1*cm, arrow_y, next_x - node_r - 0.1*cm, arrow_y)
-                # Arrow head
-                c.line(next_x - node_r - 0.3*cm, arrow_y + 0.15*cm, next_x - node_r - 0.1*cm, arrow_y)
-                c.line(next_x - node_r - 0.3*cm, arrow_y - 0.15*cm, next_x - node_r - 0.1*cm, arrow_y)
+                mid_x = (col_x + next_x) / 2
+                mid_y = grid_top - grid_h / 2
+                c.setFillColor(FARBEN["grau"])
+                c.setFont("Helvetica-Bold", 18)
+                c.drawCentredString(mid_x, mid_y - 0.15*cm, "+")
 
         # Target sum label (no answer box)
         target_x = 3*cm + (num_cols - 1) * col_spacing + 2*cm
         target_y = grid_top - grid_h / 2
+        
         c.setFillColor(FARBEN[farb_key])
-        c.setFont("Helvetica-Bold", 14)
-        c.drawCentredString(target_x, target_y + 0.5*cm, "Ziel:")
+        c.setFont("Helvetica-Bold", 12)
+        c.drawCentredString(target_x, target_y + 0.7*cm, "Ziel 🎯")
+        
+        # Draw a circle around the target sum
+        c.setStrokeColor(FARBEN[farb_key])
+        c.setLineWidth(1.5)
+        c.circle(target_x, target_y, 0.6*cm, fill=0, stroke=1)
+        
+        c.setFont("Helvetica-Bold", 18)
         c.drawCentredString(target_x, target_y - 0.2*cm, str(zielsumme))
 
         row_y = grid_top - grid_h - 0.8*cm
