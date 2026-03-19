@@ -189,3 +189,6 @@ def draw_page_number(c, n, show_stars=True):
     c.drawCentredString(W / 2, 1.2*cm, str(n))
     if show_stars:
         draw_stars(c, W - 7*cm, 1.8*cm)
+        # Kleiner Pokal neben den Sternen
+        from illustrationen import draw_mini_pokal
+        draw_mini_pokal(c, W - 7.5*cm, 2.0*cm, size=0.8)

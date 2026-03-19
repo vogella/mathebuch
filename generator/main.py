@@ -22,6 +22,9 @@ from reportlab.lib.colors import white
 from layout import (draw_page_bg, draw_header, draw_emoji,
                     draw_page_number, FARBEN, RAND_FARBEN,
                     FONT, FONT_BOLD, FONT_ITALIC)
+from illustrationen import (draw_euli, draw_euli_mit_sprechblase,
+                            draw_separator_illustration,
+                            draw_eckverzierungen)
 from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_zahlenhaus, draw_rechenraupe,
                            draw_magisches_dreieck, draw_magische_dreiecke,
@@ -167,13 +170,15 @@ def render_trennseite(c, section):
     c.setFont(FONT, 16)
     c.drawCentredString(W / 2, titel_y - 2 * cm, info["untertitel"])
 
-    # Deko-Punkte
-    deko = RAND_FARBEN
-    total_w = (len(deko) - 1) * 2.5 * cm
-    start_x = W / 2 - total_w / 2
-    for i, col in enumerate(deko):
-        c.setFillColor(col)
-        c.circle(start_x + i * 2.5 * cm, titel_y - 4 * cm, 0.5 * cm, fill=1, stroke=0)
+    # Thematische Illustration für den Zahlenraum
+    illust_y = titel_y - 4.5 * cm
+    draw_separator_illustration(c, section, W / 2, illust_y, size=1.0)
+
+    # Euli-Maskottchen unten auf der Trennseite
+    draw_euli(c, W / 2, illust_y - 4.5 * cm, size=0.6)
+
+    # Eckverzierungen
+    draw_eckverzierungen(c, info["farbe"])
 
 
 def render_titelseite(c):
@@ -197,8 +202,12 @@ def render_titelseite(c):
         c.setFillColor(col)
         c.circle(cx, y_top - 1.2 * cm, 0.4 * cm, fill=1, stroke=0)
 
+    # Euli-Maskottchen mit Sprechblase
+    draw_euli_mit_sprechblase(c, 3.5 * cm, y_top - 3.0 * cm,
+                              "Rechnen macht Spass!", size=0.7)
+
     # Namensfeld
-    name_y = y_top - 3.5 * cm
+    name_y = y_top - 5.5 * cm
     c.setFillColor(FARBEN["dunkel"])
     c.setFont(FONT_BOLD, 14)
     c.drawString(2.5 * cm, name_y + 0.2 * cm, "Dieses Buch gehört:")
@@ -511,6 +520,7 @@ def render_kapitel(c, kapitel_data, seitennummer):
             c.showPage()
         draw_page_bg(c)
         draw_header(c, titel, untertitel, emoji, farbe)
+        draw_eckverzierungen(c, farbe)
         y = H - 5.5*cm
         pages += 1
         seitennr_aktuell = seitennummer + pages - 1
