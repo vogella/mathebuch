@@ -1,0 +1,33 @@
+kapitel:
+  titel: "Neues Dungeon-Abenteuer!"
+  untertitel: "Der Rechen-Weg durch den Dungeon"
+  emoji: "📖"
+  farbe: "purple"
+  zahlenraum: 10
+  erklaerungsseite: true
+
+abschnitte:
+  - typ: erklaerung
+    titel: "So funktioniert das neue Abenteuer"
+    zeilen:
+      - "1. Starte beim Eingang im ersten Feld."
+      - "   Beispiel: Der Eingang steht bei der 3."
+      - ""
+      - "2. Rechne die erste Aufgabe im Kopf."
+      - "   Beispiel: 3 + 1 = 4"
+      - ""
+      - "3. Suche das Feld mit der Lösung (4) direkt nebenan."
+      - "   Gehe in dieses Feld."
+      - ""
+      - "4. Nimm nun die neue Zahl (4) und rechne die nächste Aufgabe."
+      - "   Beispiel: 4 - 2 = 2"
+      - ""
+      - "5. Gehe so Schritt für Schritt bis zum Ausgang!"
+      - ""
+      - "## Beispiel"
+      - "**Start bei 3:  ➔ + 1  ➔ - 2  ➔ Ziel**"
+      - "Eingang ▼ (Feld mit 3)"
+      - "[ 3 ] [ 1 ] [ 6 ]"
+      - "[ 4 ] [ 3 ] [ 5 ]"
+      - "[ 2 ] [ 1 ] [ 4 ]"
+      - "Ausgang ▼ (Feld mit 2)"

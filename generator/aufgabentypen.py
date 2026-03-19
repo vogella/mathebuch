@@ -1936,17 +1936,14 @@ def draw_textaufgaben(c, abschnitt, farb_key, start_y):
         for li, l in enumerate(lines):
             c.drawString(2.8*cm, y - li * 0.5*cm, l)
 
-        # Hint - give it its own line below the text
-        hint_offset = 0
+        # Hint
         if hinweis:
-            HINT_VERTICAL_OFFSET = 0.45*cm
             c.setFillColor(FARBEN["grau"])
             c.setFont(FONT_ITALIC, 9)
             c.drawString(2.8*cm, y - len(lines) * 0.5*cm - 0.15*cm, hinweis)
-            hint_offset = HINT_VERTICAL_OFFSET
 
         # Rechnung + Antwort
-        bottom = y - len(lines) * 0.5*cm - 0.8*cm - hint_offset
+        bottom = y - len(lines) * 0.5*cm - 0.8*cm
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 9)
         c.drawString(2.8*cm, bottom + 0.3*cm, "Rechnung:")
@@ -2193,6 +2190,91 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
                 c.setFont(FONT_BOLD, 13)
                 c.drawCentredString(x0 + cell / 2, y0 + cell / 2 - 0.15 * cm,
                                     str(val))
+
+        # Exit arrow
+        exit_col = aufg.get("ausgang", cols - 1)
+        ax = gx + exit_col * cell + cell / 2
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont(FONT_BOLD, 9)
+        c.drawCentredString(ax, gy - 0.35 * cm, "Ausgang ▼")
+
+        cy = gy - 0.9 * cm
+
+    return cy
+
+
+# ── Dungeon-Abenteuer ───────────────────────────────────────────
+
+def draw_dungeon_abenteuer(c, abschnitt, farb_key, start_y):
+    """Draws a number grid where the student follows a sequence of math operations
+    from cell to cell to find the path to the exit."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt.get("aufgaben", [])
+    loesungen = abschnitt.get("loesungen")
+    cy = start_y - 1.5 * cm - y_off
+
+    for a_idx, aufg in enumerate(aufgaben):
+        grid = aufg["grid"]
+        pfad = aufg.get("pfad", [])
+        entrance_col = aufg.get("eingang", 0)
+        rows = len(grid)
+        cols = len(grid[0])
+
+        start_wert = grid[0][entrance_col]
+        task_loes = loesungen[a_idx] if loesungen and a_idx < len(loesungen) else None
+
+        cell = 1.2 * cm
+        grid_w = cols * cell
+        grid_h = rows * cell
+        gx = (W - grid_w) / 2
+
+        # Draw task/path description
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont(FONT_BOLD, 10)
+        tx = 2 * cm
+        txt = f"Start bei {start_wert}"
+        c.drawString(tx, cy + 0.1 * cm, txt)
+        tx += c.stringWidth(txt, FONT_BOLD, 10) + 0.3 * cm
+
+        for i, op in enumerate(pfad):
+            c.setFont(FONT, 10)
+            c.drawString(tx, cy + 0.1 * cm, "➔")
+            tx += 0.5 * cm
+            c.setFont(FONT_BOLD, 10)
+            c.drawString(tx, cy + 0.1 * cm, op)
+            tx += c.stringWidth(op, FONT_BOLD, 10) + 0.2 * cm
+
+        cy -= 0.7 * cm
+        gy = cy - grid_h
+
+        # Entrance arrow
+        ex = gx + entrance_col * cell + cell / 2
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont(FONT_BOLD, 9)
+        c.drawCentredString(ex, cy + 0.35 * cm, "▼ Eingang")
+
+        # Draw grid
+        for ri, row in enumerate(grid):
+            for ci, val in enumerate(row):
+                x0 = gx + ci * cell
+                y0 = cy - ri * cell - cell
+
+                # Highlight the path if in solution mode
+                if task_loes and val in task_loes:
+                    c.setFillColor(FARBEN["antwort"])
+                else:
+                    c.setFillColor(white)
+
+                c.setStrokeColor(FARBEN["hellgrau"])
+                c.setLineWidth(1)
+                c.rect(x0, y0, cell, cell, fill=1, stroke=1)
+
+                # Number
+                c.setFillColor(FARBEN["dunkel"])
+                c.setFont(FONT_BOLD, 13)
+                c.drawCentredString(x0 + cell / 2, y0 + cell / 2 - 0.15 * cm, str(val))
 
         # Exit arrow
         exit_col = aufg.get("ausgang", cols - 1)
