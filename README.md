@@ -55,7 +55,7 @@ source .venv/bin/activate
 
 # PDF generieren
 cd generator
-python3 main.py
+python3 generator/main.py
 ```
 
 Das fertige PDF liegt danach in `output/mathebuch_klasse1.pdf`.
