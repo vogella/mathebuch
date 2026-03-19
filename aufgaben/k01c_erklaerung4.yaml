@@ -9,7 +9,7 @@ kapitel:
 abschnitte:
   - typ: zahlenstrahl
     titel: "Zahlenstrahl"
-    beschreibung: "Auf dem Zahlenstrahl fehlen Zahlen. Schreibe die fehlenden Zahlen in die Kästchen."
+    beschreibung: "Welche Zahlen fehlen in der Reihe?"
     strahlen:
       - von: 0
         bis: 5
@@ -18,7 +18,7 @@ abschnitte:
 
   - typ: vergleiche
     titel: "Vergleiche"
-    beschreibung: "Vergleiche die Zahlen links und rechts. Schreibe >, < oder = in den Kreis."
+    beschreibung: "Schreibe >, < oder = in den Kreis."
     aufgaben:
       - [3, 5]
       - [7, 7]
@@ -26,7 +26,7 @@ abschnitte:
 
   - typ: kettenaufgaben
     titel: "Kettenaufgaben"
-    beschreibung: "Rechne Schritt für Schritt von links nach rechts und schreibe das Ergebnis in das Kästchen."
+    beschreibung: "Rechne die lange Kette Schritt für Schritt aus."
     aufgaben:
       - "3 + 2 − 1"
     loesungen: [4]

@@ -9,7 +9,7 @@ kapitel:
 abschnitte:
   - typ: zahlenhaus
     titel: "Zahlenhaus"
-    beschreibung: "Finde zwei verschiedene Zahlen, die zusammen die Dachzahl ergeben.\nDie verbotenen Zahlen darfst du nicht verwenden!"
+    beschreibung: "Welche zwei Zahlen ergeben zusammen die Zahl im Dach?"
     verboten: [1, 2]
     dachzahlen: [7]
     loesungen:
@@ -17,21 +17,21 @@ abschnitte:
 
   - typ: würfelzählen
     titel: "Würfelzählen"
-    beschreibung: "Zähle die Augen auf den Würfeln zusammen und schreibe das Ergebnis in das Kästchen."
+    beschreibung: "Zähle alle Würfelpunkte zusammen."
     aufgaben:
       - [4, 5]
     loesungen: [9]
 
   - typ: tauschaufgaben
     titel: "Tauschaufgaben"
-    beschreibung: "Rechne beide Seiten aus. Du wirst sehen: Wenn man die Zahlen tauscht, bleibt das Ergebnis gleich!"
+    beschreibung: "Tausche die Zahlen – das Ergebnis bleibt gleich!"
     aufgaben:
       - [3, 5]
     loesungen: [8]
 
   - typ: zahlzerlegung
     titel: "Zahlzerlegung"
-    beschreibung: "Eine Zahl wird in zwei Teile zerlegt. Finde die fehlenden Teile, die zusammen die obere Zahl ergeben."
+    beschreibung: "Teile die obere Zahl in zwei Teile auf."
     zerlegung_labels: ["Aufgabe", "Lösung"]
     aufgaben:
       - [8, 3, null]

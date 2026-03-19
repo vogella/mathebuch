@@ -12,10 +12,12 @@ abschnitte:
     zeilen:
       - "In diesem Buch findest du viele verschiedene Rechenaufgaben."
       - "Schau dir die Beispiele an – die grünen Zahlen zeigen die Lösung."
+      - ""
+      - "*Tipp: Lies die Erklärungen am besten mit Mama oder Papa zusammen!*"
 
   - typ: punktefeld
     titel: "Punktefeld"
-    beschreibung: "Du siehst ein Feld mit Kreisen. Einige davon sind ausgefüllt. Zähle die ausgefüllten Punkte und schreibe die Anzahl in das Kästchen."
+    beschreibung: "Zähle die Punkte und schreibe die Zahl in das Kästchen."
     felder: 10
     aufgaben:
       - 4
@@ -23,7 +25,7 @@ abschnitte:
 
   - typ: nachbarzahlen
     titel: "Nachbarzahlen"
-    beschreibung: "Jede Zahl hat einen Vorgänger (davor) und einen Nachfolger (danach). Schreibe die fehlenden Nachbarn in die leeren Kästchen."
+    beschreibung: "Schreibe die Zahlen davor und danach auf."
     aufgaben:
       - [null, 5, null]
     loesungen:
@@ -31,7 +33,7 @@ abschnitte:
 
   - typ: lückenaufgaben
     titel: "Lückenaufgaben"
-    beschreibung: "In jeder Rechnung fehlt eine Zahl. Finde die fehlende Zahl und schreibe sie in das blaue Kästchen."
+    beschreibung: "Finde die fehlende Zahl für das blaue Kästchen."
     aufgaben:
       - [3, "+", 5, null]
       - [12, "-", null, 8]

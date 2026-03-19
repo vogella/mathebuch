@@ -9,7 +9,7 @@ kapitel:
 abschnitte:
   - typ: zahlen_ordnen
     titel: "Zahlen ordnen"
-    beschreibung: "Du bekommst Zahlen durcheinander. Ordne sie von der kleinsten zur größten Zahl und schreibe sie in die Kästchen."
+    beschreibung: "Sortiere die Zahlen von klein nach groß."
     aufgaben:
       - [5, 2, 8]
     loesungen:
@@ -17,7 +17,7 @@ abschnitte:
 
   - typ: magische_dreiecke
     titel: "Magisches Dreieck"
-    beschreibung: "Setze die Zahlen so ein, dass jede Seite des Dreiecks die gleiche Summe ergibt. Es gibt mehrere Möglichkeiten die Zahlen in das Dreieck einzusetzen, finde eine davon."
+    beschreibung: "Jede Seite des Dreiecks muss die gleiche Summe ergeben."
     dreiecke:
       - zielsumme: 9
         label: "Aufgabe"

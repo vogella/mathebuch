@@ -9,7 +9,7 @@ kapitel:
 abschnitte:
   - typ: magisches_quadrat
     titel: "Magisches Quadrat"
-    beschreibung: "Setze die Zahlen so ein, dass jede Reihe und Spalte zusammen addiert die gleiche Summe ergibt. Bei den Übungen sind bestimmte Felder schon vorgegeben."
+    beschreibung: "In jeder Reihe und Spalte muss die Summe gleich sein."
     zielsumme: 15
     werte: [2, null, null, null, 5, null, null, null, 8]
     paar:
@@ -20,8 +20,8 @@ abschnitte:
   - typ: erklaerung
     titel: "Textaufgaben"
     zeilen:
-      - "Lies die Aufgabe genau durch. Überlege, ob du plus oder minus rechnen musst."
-      - "Schreibe die Rechnung und die Antwort in die Kästchen."
+      - "Lies genau und überlege: Musst du plus (+) oder minus (-) rechnen?"
+      - "Schreibe die Rechnung und die Antwort auf."
       - ""
-      - "**  Beispiel: Anna hat 3 Äpfel. Ben gibt ihr 4 dazu.**"
-      - "**  Rechnung: 3 + 4 = 7    Antwort: 7 Äpfel**"
+      - "**Beispiel: Anna hat 3 Äpfel. Ben gibt ihr 4 dazu. Wie viele sind es?**"
+      - "**Rechnung: 3 + 4 = 7    Antwort: 7 Äpfel**"
