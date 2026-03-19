@@ -7,7 +7,7 @@ kapitel:
 
 abschnitte:
   - typ: lückenaufgaben
-    titel: "A  Was fehlt bis 10?"
+    titel: "A  Was fehlt?"
     aufgaben:
       - [1, "+", null, 10]
       - [2, "+", null, 10]
@@ -22,15 +22,15 @@ abschnitte:
   - typ: lückenaufgaben
     titel: "B  Andersherum – was steht vorne?"
     aufgaben:
-      - [null, "+", 9, 10]
-      - [null, "+", 7, 10]
-      - [null, "+", 5, 10]
-      - [null, "+", 3, 10]
       - [null, "+", 1, 10]
-      - [null, "+", 8, 10]
-      - [null, "+", 4, 10]
-      - [null, "+", 6, 10]
       - [null, "+", 2, 10]
+      - [null, "+", 3, 10]
+      - [null, "+", 4, 10]
+      - [null, "+", 5, 10]
+      - [null, "+", 6, 10]
+      - [null, "+", 7, 10]
+      - [null, "+", 8, 10]
+      - [null, "+", 9, 10]
 
   - typ: lückenaufgaben
     titel: "C  Gemischt – Ergänze bis 10!"
