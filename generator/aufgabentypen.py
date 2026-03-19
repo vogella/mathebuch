@@ -2539,6 +2539,68 @@ def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
                 draw_answer_box(c, cx + 6.0 * cm, cy - 0.3 * cm, w=0.8 * cm, h=0.7 * cm)
                 
             row_y -= (len(zahlen) + 1) // 2 * row_h
-            
+
     return row_y
+
+
+# ── Muster fortsetzen ────────────────────────────────────
+
+def draw_muster_fortsetzen(c, abschnitt, farb_key, start_y):
+    """Draws pattern continuation exercises: students fill in missing values."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]
+    box_w = 1.4 * cm
+    box_h = 1.2 * cm
+    gap = 0.3 * cm
+    row_h = 2.0 * cm
+    row_y = start_y - 1.8 * cm - y_off
+
+    for idx, aufg in enumerate(aufgaben):
+        muster = aufg["muster"]
+        x0 = 1.8 * cm
+        y0 = row_y - idx * row_h
+
+        # Task number
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont("Helvetica-Bold", 11)
+        c.drawString(x0 - 0.3 * cm, y0 - box_h / 2 - 0.15 * cm,
+                     f"{idx + 1})")
+
+        for j, val in enumerate(muster):
+            bx = x0 + 0.5 * cm + j * (box_w + gap)
+            is_blank = val is None
+
+            if is_blank:
+                # Answer box for blanks
+                c.setFillColor(FARBEN["antwort"])
+                c.setStrokeColor(FARBEN[farb_key])
+                c.setLineWidth(1.5)
+                c.roundRect(bx, y0 - box_h, box_w, box_h,
+                            radius=5, fill=1, stroke=1)
+            else:
+                # Filled box with value
+                c.setFillColor(FARBEN[farb_key])
+                c.setStrokeColor(FARBEN[farb_key])
+                c.setLineWidth(1.5)
+                c.roundRect(bx, y0 - box_h, box_w, box_h,
+                            radius=5, fill=1, stroke=1)
+                c.setFillColor(white)
+                c.setFont("Helvetica-Bold", 16)
+                c.drawCentredString(bx + box_w / 2,
+                                    y0 - box_h / 2 - 0.2 * cm,
+                                    str(val))
+
+            # Arrow between boxes (except after last)
+            if j < len(muster) - 1:
+                arrow_x = bx + box_w + 0.02 * cm
+                arrow_y = y0 - box_h / 2
+                c.setStrokeColor(FARBEN["hellgrau"])
+                c.setLineWidth(1.5)
+                c.line(arrow_x, arrow_y,
+                       arrow_x + gap - 0.04 * cm, arrow_y)
+
+    total_rows = len(aufgaben)
+    return row_y - total_rows * row_h - 0.3 * cm
 

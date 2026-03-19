@@ -42,7 +42,6 @@ from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_zahlenkreis, draw_dungeon_flucht, draw_dungeon_abenteuer,
                            draw_zehneruebergang, draw_gerade_ungerade,
                            draw_rechenquadrat_2x2, draw_muster_fortsetzen)
-
 W, H = A4
 
 # Mapping Typ-String → Zeichenfunktion

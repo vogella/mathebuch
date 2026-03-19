@@ -1,0 +1,25 @@
+kapitel:
+  titel: "Muster fortsetzen"
+  untertitel: "Erkenne das Muster und setze fort!"
+  emoji: "🔢"
+  farbe: "purple"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: "muster_fortsetzen"
+    titel: "A  Setze das Muster fort"
+    beschreibung: "Welche Zahlen kommen als Nächstes?"
+    aufgaben:
+      - muster: [2, 4, 6, 8, null, null, null]
+      - muster: [3, 6, 9, 12, null, null, null]
+      - muster: [1, 4, 7, 10, null, null, null]
+      - muster: [20, 18, 16, 14, null, null, null]
+
+  - typ: "muster_fortsetzen"
+    titel: "B  Knifflige Muster"
+    beschreibung: "Schau genau hin – was kommt danach?"
+    aufgaben:
+      - muster: [5, 10, 15, null, null, null]
+      - muster: [2, 5, 8, 11, null, null, null]
+      - muster: [20, 16, 12, null, null, null]
+      - muster: [1, 3, 5, 7, null, null, null]
