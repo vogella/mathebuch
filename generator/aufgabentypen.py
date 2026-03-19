@@ -607,8 +607,6 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
     mauern = abschnitt["mauern"]  # list of walls, each a list of rows bottom-to-top
     if not mauern:
         return start_y - (2.5*cm + y_off)
-    count = len(mauern)
-    spacing = (W - 3*cm) / count
     brick_w = 2.0*cm
     brick_h = 1.4*cm
 
@@ -622,64 +620,106 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
     # to find which cells were originally blank
     aufgabe_mauer = None
 
-    top_offset = 2.5*cm + y_off
+    # Arrange walls in rows that fit within page margins
+    margin = 1.5*cm
+    usable_w = W - 2 * margin
+    gap = 1.0*cm  # horizontal gap between walls
+
+    # Calculate the width each wall needs (based on its widest/bottom row)
+    def wall_width(mauer):
+        return max(len(row) for row in mauer) * brick_w
+
+    # Pack walls into rows that fit within usable width
+    grid_rows = []  # each entry: list of (original_index, mauer)
+    current_row = []
+    current_row_w = 0
     for mi, mauer in enumerate(mauern):
-        rows = mauer  # bottom row first
-        num_rows = len(rows)
-        base_cx = 1.5*cm + spacing * mi + spacing / 2
-        base_y = start_y - top_offset - (num_rows - 1) * brick_h
+        mw = wall_width(mauer)
+        needed = mw if not current_row else current_row_w + gap + mw
+        if current_row and needed > usable_w:
+            grid_rows.append(current_row)
+            current_row = [(mi, mauer)]
+            current_row_w = mw
+        else:
+            current_row.append((mi, mauer))
+            current_row_w = needed
+    if current_row:
+        grid_rows.append(current_row)
 
-        # Determine if this is a "Lösung" wall
-        is_loesung = (mi < len(mauer_labels) and
-                      mauer_labels[mi] == "Lösung" and
-                      aufgabe_mauer is not None)
+    top_offset = 2.5*cm + y_off
+    cursor_y = start_y - top_offset
 
-        # Optional label above the wall
-        if mi < len(mauer_labels):
-            c.setFillColor(FARBEN[farb_key])
-            c.setFont("Helvetica-Bold", 11)
-            c.drawCentredString(base_cx, base_y + num_rows * brick_h + 0.3*cm,
-                                mauer_labels[mi])
+    for grid_row in grid_rows:
+        # Height of tallest wall in this row
+        max_rows = max(len(m) for _, m in grid_row)
+        row_height = max_rows * brick_h
 
-        for ri, row in enumerate(rows):
-            num_bricks = len(row)
-            row_w = num_bricks * brick_w
-            rx = base_cx - row_w / 2
-            ry = base_y + ri * brick_h
-            row_col = row_colors[ri % len(row_colors)]
+        # Total width of all walls + gaps
+        total_w = sum(wall_width(m) for _, m in grid_row) + gap * (len(grid_row) - 1)
+        # Center the row horizontally
+        row_start_x = margin + (usable_w - total_w) / 2
 
-            for bi, val in enumerate(row):
-                bx = rx + bi * brick_w
-                is_blank = val is None
-                # Check if this cell was blank in the Aufgabe wall
-                is_solution_cell = (is_loesung and
-                                    ri < len(aufgabe_mauer) and
-                                    bi < len(aufgabe_mauer[ri]) and
-                                    aufgabe_mauer[ri][bi] is None)
-                if is_blank:
-                    c.setFillColor(FARBEN["antwort"])
-                    c.setStrokeColor(row_col)
-                elif is_solution_cell:
-                    c.setFillColor(FARBEN["antwort"])
-                    c.setStrokeColor(row_col)
-                else:
-                    c.setFillColor(row_col)
-                    c.setStrokeColor(row_col)
-                c.setLineWidth(1.5)
-                c.roundRect(bx, ry, brick_w, brick_h, radius=4, fill=1, stroke=1)
-                if val is not None:
-                    if is_solution_cell:
-                        c.setFillColor(FARBEN["gruen"])
+        x_cursor = row_start_x
+        for mi, mauer in grid_row:
+            rows = mauer  # bottom row first
+            num_rows = len(rows)
+            mw = wall_width(mauer)
+            base_cx = x_cursor + mw / 2
+            base_y = cursor_y - (num_rows - 1) * brick_h
+
+            # Determine if this is a "Lösung" wall
+            is_loesung = (mi < len(mauer_labels) and
+                          mauer_labels[mi] == "Lösung" and
+                          aufgabe_mauer is not None)
+
+            # Optional label above the wall
+            if mi < len(mauer_labels):
+                c.setFillColor(FARBEN[farb_key])
+                c.setFont("Helvetica-Bold", 11)
+                c.drawCentredString(base_cx, base_y + num_rows * brick_h + 0.3*cm,
+                                    mauer_labels[mi])
+
+            for ri, row in enumerate(rows):
+                num_bricks = len(row)
+                row_w = num_bricks * brick_w
+                rx = base_cx - row_w / 2
+                ry = base_y + ri * brick_h
+                row_col = row_colors[ri % len(row_colors)]
+
+                for bi, val in enumerate(row):
+                    bx = rx + bi * brick_w
+                    is_blank = val is None
+                    # Check if this cell was blank in the Aufgabe wall
+                    is_solution_cell = (is_loesung and
+                                        ri < len(aufgabe_mauer) and
+                                        bi < len(aufgabe_mauer[ri]) and
+                                        aufgabe_mauer[ri][bi] is None)
+                    if is_blank:
+                        c.setFillColor(FARBEN["antwort"])
+                        c.setStrokeColor(row_col)
+                    elif is_solution_cell:
+                        c.setFillColor(FARBEN["antwort"])
+                        c.setStrokeColor(row_col)
                     else:
-                        c.setFillColor(white)
-                    c.setFont("Helvetica-Bold", 16)
-                    c.drawCentredString(bx + brick_w/2, ry + brick_h/2 - 0.2*cm, str(val))
+                        c.setFillColor(row_col)
+                        c.setStrokeColor(row_col)
+                    c.setLineWidth(1.5)
+                    c.roundRect(bx, ry, brick_w, brick_h, radius=4, fill=1, stroke=1)
+                    if val is not None:
+                        if is_solution_cell:
+                            c.setFillColor(FARBEN["gruen"])
+                        else:
+                            c.setFillColor(white)
+                        c.setFont("Helvetica-Bold", 16)
+                        c.drawCentredString(bx + brick_w/2, ry + brick_h/2 - 0.2*cm, str(val))
 
-        # Remember this wall as reference for the next (Lösung) wall
-        aufgabe_mauer = rows
+            # Remember this wall as reference for the next (Lösung) wall
+            aufgabe_mauer = rows
+            x_cursor += mw + gap
 
-    bottom_y = start_y - top_offset - (max(len(m) for m in mauern) - 1) * brick_h
-    return bottom_y - 0.5*cm
+        cursor_y -= row_height + 1.0*cm  # vertical gap between grid rows
+
+    return cursor_y
 
 
 # ── Größer/Kleiner/Gleich ─────────────────────────────────
