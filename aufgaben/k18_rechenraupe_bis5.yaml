@@ -7,31 +7,31 @@ kapitel:
 
 abschnitte:
   - typ: rechenraupe
-    titel: "A"
+    titel: "A Rechne Schritt für Schritt!"
     start: 1
     schritte: ["+2", "+1", "+1"]
 
   - typ: rechenraupe
-    titel: "B"
+    titel: "B Vorwärts und zurück!"
     start: 2
     schritte: ["+1", "+2", "-1"]
 
   - typ: rechenraupe
-    titel: "C"
+    titel: "C Immer weiter rechnen!"
     start: 3
     schritte: ["+2", "-1", "+1"]
 
   - typ: rechenraupe
-    titel: "D"
+    titel: "D Rückwärts geht's los!"
     start: 5
     schritte: ["-2", "-1", "+2"]
 
   - typ: rechenraupe
-    titel: "E"
+    titel: "E Große Sprünge!"
     start: 1
     schritte: ["+3", "-2", "+3"]
 
   - typ: rechenraupe
-    titel: "F"
+    titel: "F Hoch und runter!"
     start: 4
     schritte: ["-1", "-2", "+3"]
