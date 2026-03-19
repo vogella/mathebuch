@@ -1,0 +1,31 @@
+kapitel:
+  titel: "Rechnen bis 10"
+  untertitel: "Plus und Minus!"
+  emoji: "➕"
+  farbe: "gruen"
+  zahlenraum: 10
+
+abschnitte:
+  - typ: lückenaufgaben
+    titel: "A  Wie viel ist das?"
+    aufgaben:
+      - [2, "+", 3, null]
+      - [5, "+", null, 8]
+      - [4, "+", 4, null]
+      - [3, "+", null, 9]
+      - [1, "+", 5, null]
+      - [9, "-", 3, null]
+      - [10, "-", null, 4]
+      - [7, "-", 4, null]
+      - [8, "-", null, 5]
+      - [6, "-", 6, null]
+
+  - typ: zahlenhaus
+    titel: "B  Zahlenhaus"
+    beschreibung: "Finde zwei Zahlen für das Dach."
+    dachzahlen: [8, 9, 10, 11]
+
+  - typ: rechenraupe
+    titel: "C  Rechenraupe"
+    start: 10
+    schritte: ["-3", "-2", "+4"]
