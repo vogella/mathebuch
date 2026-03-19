@@ -219,20 +219,25 @@ def draw_zahlenhaus(c, abschnitt, farb_key, start_y):
         vx_start = vx + 7.5*cm
         vx = vx_start
         for vz in verboten:
+            center_x = vx + 0.4*cm
+            center_y = vy + 0.15*cm
+            radius = 0.45*cm
+            
             # Circle background
             c.setFillColor(FARBEN["hellgrau"])
-            c.circle(vx + 0.4*cm, vy + 0.15*cm, 0.45*cm, fill=1, stroke=0)
+            c.circle(center_x, center_y, radius, fill=1, stroke=0)
             
-            # Number drawn first (slightly smaller than circle)
+            # Number
             c.setFillColor(FARBEN["dunkel"])
             c.setFont("Helvetica-Bold", 14)
-            c.drawCentredString(vx + 0.4*cm, vy - 0.05*cm, str(vz))
+            c.drawCentredString(center_x, center_y - 0.2*cm, str(vz))
 
-            # Red X on top of the number
+            # Red X on top
+            size = radius * 0.8
             c.setStrokeColor(HexColor("#FF0000"))
             c.setLineWidth(3)
-            c.line(vx + 0.05*cm, vy - 0.2*cm, vx + 0.75*cm, vy + 0.5*cm)
-            c.line(vx + 0.05*cm, vy + 0.5*cm, vx + 0.75*cm, vy - 0.2*cm)
+            c.line(center_x - size, center_y - size, center_x + size, center_y + size)
+            c.line(center_x - size, center_y + size, center_x + size, center_y - size)
             
             vx += 1.3*cm
         y_offset += 1.0*cm
