@@ -10,6 +10,7 @@ import os
 import glob
 import argparse
 import yaml
+import random
 
 # Generator-Ordner zum Suchpfad hinzufügen
 sys.path.insert(0, os.path.dirname(__file__))
@@ -409,10 +410,10 @@ def render_geschafft_seite(c, seite_nr):
     c.drawCentredString(W / 2, H - 5.3 * cm, "Du bist ein Mathe-Profi!")
 
     # Sterne / Konfetti-Deko
-    import random
-    _rnd = random.Random(42)
-    for _ in range(30):
-        c.setFillColor(RAND_FARBEN[_rnd.randint(0, len(RAND_FARBEN)-1)])
+    confetti_count = 30
+    _rnd = random.Random(42) # Deterministic for layout stability
+    for _ in range(confetti_count):
+        c.setFillColor(random.choice(RAND_FARBEN))
         sz = _rnd.uniform(0.1, 0.4) * cm
         cx = _rnd.uniform(1 * cm, W - 1 * cm)
         cy = _rnd.uniform(1 * cm, H - 7 * cm)
