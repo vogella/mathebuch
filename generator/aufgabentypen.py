@@ -213,25 +213,29 @@ def draw_zahlenhaus(c, abschnitt, farb_key, start_y):
     if verboten:
         vx = 2*cm
         vy = start_y - 0.9*cm - y_offset
-        c.setFont("Helvetica-Bold", 10)
+        c.setFont("Helvetica-Bold", 11)
         c.setFillColor(FARBEN["dunkel"])
-        c.drawString(vx, vy, "Verboten:")
-        vx += 2.2*cm
+        c.drawString(vx, vy, "Diese Zahlen darfst du NICHT benutzen:")
+        vx_start = vx + 7.5*cm
+        vx = vx_start
         for vz in verboten:
             # Circle background
             c.setFillColor(FARBEN["hellgrau"])
-            c.circle(vx + 0.4*cm, vy + 0.15*cm, 0.4*cm, fill=1, stroke=0)
-            # Red X behind the number
+            c.circle(vx + 0.4*cm, vy + 0.15*cm, 0.45*cm, fill=1, stroke=0)
+            
+            # Number drawn first (slightly smaller than circle)
+            c.setFillColor(FARBEN["dunkel"])
+            c.setFont("Helvetica-Bold", 14)
+            c.drawCentredString(vx + 0.4*cm, vy - 0.05*cm, str(vz))
+
+            # Red X on top of the number
             c.setStrokeColor(HexColor("#FF0000"))
-            c.setLineWidth(2.5)
+            c.setLineWidth(3)
             c.line(vx + 0.05*cm, vy - 0.2*cm, vx + 0.75*cm, vy + 0.5*cm)
             c.line(vx + 0.05*cm, vy + 0.5*cm, vx + 0.75*cm, vy - 0.2*cm)
-            # Number drawn on top of the X
-            c.setFillColor(FARBEN["dunkel"])
-            c.setFont("Helvetica-Bold", 12)
-            c.drawCentredString(vx + 0.4*cm, vy, str(vz))
-            vx += 1.2*cm
-        y_offset += 0.8*cm
+            
+            vx += 1.3*cm
+        y_offset += 1.0*cm
 
     dachzahlen = abschnitt["dachzahlen"]
     loesungen = abschnitt.get("loesungen", [None] * len(dachzahlen))
