@@ -11,32 +11,32 @@ abschnitte:
     beschreibung: "Rechne die Preise zusammen!"
     aufgaben:
       - artikel:
-          - {name: "Heft", preis: 1}
-          - {name: "Radiergummi", preis: 2}
+          - {name: "Apfel", preis: 2}
+          - {name: "Birne", preis: 3}
         frage: "Wie viel kosten beide zusammen?"
       - artikel:
-          - {name: "Buntstifte", preis: 5}
-          - {name: "Kleber", preis: 3}
+          - {name: "Brot", preis: 4}
+          - {name: "Butter", preis: 3}
         frage: "Wie viel kosten beide zusammen?"
       - artikel:
-          - {name: "Lineal", preis: 2}
-          - {name: "Spitzer", preis: 1}
-          - {name: "Schere", preis: 4}
+          - {name: "Milch", preis: 2}
+          - {name: "Käse", preis: 5}
+          - {name: "Ei", preis: 1}
         frage: "Wie viel kostet alles zusammen?"
-    loesungen: [3, 8, 7]
+    loesungen: [5, 7, 8]
 
   - typ: einkaufen
     titel: "B  Wie viel Rückgeld?"
     beschreibung: "Du bezahlst mit dem angegebenen Betrag. Wie viel bekommst du zurück?"
     aufgaben:
       - artikel:
-          - {name: "Sticker", preis: 3}
+          - {name: "Eis", preis: 3}
         frage: "Du bezahlst mit 5€. Wie viel Rückgeld?"
       - artikel:
-          - {name: "Malbuch", preis: 4}
-          - {name: "Kreide", preis: 2}
+          - {name: "Saft", preis: 4}
+          - {name: "Keks", preis: 2}
         frage: "Du bezahlst mit 10€. Wie viel Rückgeld?"
       - artikel:
-          - {name: "Puzzle", preis: 7}
+          - {name: "Ball", preis: 7}
         frage: "Du bezahlst mit 10€. Wie viel Rückgeld?"
     loesungen: [2, 4, 3]
