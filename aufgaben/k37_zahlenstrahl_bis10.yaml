@@ -23,4 +23,4 @@ abschnitte:
         werte: [null, null, 2, null, null, 5, null, null, 8, null, 10]
       - von: 0
         bis: 10
-        werte: [0, null, null, null, 4, null, null, null, 8, null, null]
+        werte: [0, null, 2, null, null, 5, 6, null, 8, null, null]
