@@ -460,14 +460,22 @@ def _solve_muster_fortsetzen(abschnitt):
         # Find the constant difference from the known (non-None) values
         known = [(i, v) for i, v in enumerate(muster) if v is not None]
         if len(known) >= 2:
-            diff = known[1][1] - known[0][1]
+            # Calculate difference based on distance between known values
+            idx1, v1 = known[0]
+            idx2, v2 = known[1]
+            diff = (v2 - v1) // (idx2 - idx1)
         else:
-            diff = 1
-        # Fill in the blanks
+            # Muster kann nicht eindeutig bestimmt werden, wenn weniger als 2 bekannte Werte vorhanden sind.
+            results.append("")
+            continue
+
+        # Lücken vorwärts und rückwärts ausfüllen
         filled = list(muster)
+        ref_idx, ref_val = known[0]
         for i in range(len(filled)):
-            if filled[i] is None and i > 0 and filled[i - 1] is not None:
-                filled[i] = filled[i - 1] + diff
+            if filled[i] is None:
+                filled[i] = ref_val + (i - ref_idx) * diff
+
         missing = [str(filled[i]) for i, v in enumerate(muster) if v is None]
         results.append(",".join(missing))
     return results
