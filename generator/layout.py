@@ -4,6 +4,8 @@ layout.py – Farben, Schriften, gemeinsame Zeichenfunktionen
 import math
 import os
 import tempfile
+import atexit
+import shutil
 
 from PIL import Image, ImageDraw, ImageFont
 from reportlab.lib.colors import HexColor, white
@@ -34,10 +36,19 @@ FONT_BOLD = "Andika-Bold"
 FONT_ITALIC = "Andika-Italic"
 
 # ── Emoji-Rendering via Pillow ────────────────────────────────
-_EMOJI_FONT_PATH = "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf"
+_EMOJI_FONT_PATH = os.environ.get("MATHEBUCH_EMOJI_FONT", "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf")
 _EMOJI_FONT_SIZE = 109  # NotoColorEmoji is a bitmap font – only 109px works
 _emoji_cache: dict[str, str] = {}
 _emoji_tmpdir = tempfile.mkdtemp(prefix="mathebuch_emoji_")
+
+
+def _cleanup_emoji_tmpdir():
+    """Removes the temporary directory for emoji images on exit."""
+    if os.path.exists(_emoji_tmpdir):
+        shutil.rmtree(_emoji_tmpdir)
+
+
+atexit.register(_cleanup_emoji_tmpdir)
 
 
 def _render_emoji_to_file(emoji_char: str) -> str:
