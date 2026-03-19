@@ -2123,6 +2123,286 @@ def draw_zahlenkreis(c, abschnitt, farb_key, start_y):
     return row_y - total_rows * row_h + 1.5*cm
 
 
+# ── Gerade und Ungerade ──────────────────────────────────────
+
+def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
+    """Even/odd exercises: circling, sorting, pattern continuation, or pairs."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    modus = abschnitt.get("modus", "einkreisen")
+    y = start_y - 1.5*cm - y_off
+    loesungen = abschnitt.get("loesungen", [])
+
+    if modus == "einkreisen" or modus == "malen":
+        zahlen = abschnitt.get("zahlen")
+        if not zahlen:
+            # Fallback for old structure
+            aufgaben = abschnitt.get("aufgaben", [])
+            zahlen = aufgaben[0].get("zahlen", []) if aufgaben else []
+            
+        cols = 5
+        cell_w = (W - 4*cm) / cols
+        cell_h = 1.6*cm
+        x_start = 2*cm
+
+        for idx, z in enumerate(zahlen):
+            col = idx % cols
+            row = idx // cols
+            cx = x_start + col * cell_w + cell_w / 2
+            cy = y - row * cell_h
+
+            # Draw number in circle
+            r = 0.55*cm
+            fill_col = FARBEN["antwort"]
+            if loesungen:
+                # If loesungen is a list (malen mode)
+                if isinstance(loesungen, list) and idx < len(loesungen):
+                    fill_col = FARBEN["blau"] if loesungen[idx] == "G" else FARBEN["pink"]
+                # If loesungen is a dict with gerade/ungerade lists (einkreisen mode)
+                elif isinstance(loesungen, dict):
+                    gerade_set = set(loesungen.get("gerade", []))
+                    fill_col = FARBEN["blau"] if z in gerade_set else FARBEN["pink"]
+                elif isinstance(loesungen, str): # Compact string G:.. U:..
+                    if f",{z}," in f",{loesungen.split('U:')[0].split('G:')[1]},":
+                        fill_col = FARBEN["blau"]
+                    elif f",{z}," in f",{loesungen.split('U:')[1]},":
+                        fill_col = FARBEN["pink"]
+
+            if fill_col != FARBEN["antwort"]:
+                c.setFillColor(fill_col)
+                c.circle(cx, cy, r, fill=1, stroke=0)
+                c.setFillColor(white)
+            else:
+                c.setFillColor(FARBEN["antwort"])
+                c.setStrokeColor(FARBEN["hellgrau"])
+                c.setLineWidth(1.5)
+                c.circle(cx, cy, r, fill=1, stroke=1)
+                c.setFillColor(FARBEN["dunkel"])
+
+            c.setFont(FONT_BOLD, 16)
+            c.drawCentredString(cx, cy - 0.2*cm, str(z))
+
+        total_rows = (len(zahlen) + cols - 1) // cols
+        y -= total_rows * cell_h + 0.3*cm
+
+        # Legend
+        c.setFillColor(FARBEN["blau"])
+        c.circle(2.5*cm, y, 0.3*cm, fill=1, stroke=0)
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont(FONT, 10)
+        c.drawString(3.1*cm, y - 0.12*cm, "= gerade")
+
+        c.setFillColor(FARBEN["pink"])
+        c.circle(6*cm, y, 0.3*cm, fill=1, stroke=0)
+        c.setFillColor(FARBEN["dunkel"])
+        c.drawString(6.6*cm, y - 0.12*cm, "= ungerade")
+        y -= 0.8*cm
+
+    elif modus == "sortieren":
+        zahlen = abschnitt.get("zahlen", [])
+        if not zahlen:
+            # Fallback for old structure
+            aufgaben = abschnitt.get("aufgaben", [])
+            zahlen = []
+            for a in aufgaben: zahlen.extend(a.get("zahlen", []))
+
+        # Draw two column headers
+        left_x = 2.5*cm
+        right_x = W / 2 + 1*cm
+        col_w = W / 2 - 3*cm
+        header_h = 0.9*cm
+
+        # "Gerade" header
+        c.setFillColor(FARBEN["blau"])
+        c.roundRect(left_x, y - header_h, col_w, header_h, radius=6, fill=1, stroke=0)
+        c.setFillColor(white)
+        c.setFont(FONT_BOLD, 14)
+        c.drawCentredString(left_x + col_w / 2, y - header_h + 0.22*cm, "Gerade")
+
+        # "Ungerade" header
+        c.setFillColor(FARBEN["pink"])
+        c.roundRect(right_x, y - header_h, col_w, header_h, radius=6, fill=1, stroke=0)
+        c.setFillColor(white)
+        c.setFont(FONT_BOLD, 14)
+        c.drawCentredString(right_x + col_w / 2, y - header_h + 0.22*cm, "Ungerade")
+
+        y -= header_h + 0.5*cm
+
+        # Unsorted numbers displayed in colored circles
+        cols = 8
+        cell_w = (W - 4*cm) / cols
+        cell_h = 1.4*cm
+        x_start = 2*cm
+
+        for idx, z in enumerate(zahlen):
+            col = idx % cols
+            row = idx // cols
+            cx = x_start + col * cell_w + cell_w / 2
+            cy = y - row * cell_h
+
+            c.setFillColor(FARBEN[farb_key])
+            c.circle(cx, cy, 0.5*cm, fill=1, stroke=0)
+            c.setFillColor(white)
+            c.setFont(FONT_BOLD, 14)
+            c.drawCentredString(cx, cy - 0.18*cm, str(z))
+
+        total_rows = (len(zahlen) + cols - 1) // cols
+        y -= total_rows * cell_h + 0.3*cm
+
+        # Draw answer boxes in two columns
+        gerade_loes = []
+        ungerade_loes = []
+        if isinstance(loesungen, dict):
+            gerade_loes = loesungen.get("gerade", [])
+            ungerade_loes = loesungen.get("ungerade", [])
+        elif isinstance(loesungen, list) and len(loesungen) > 0 and isinstance(loesungen[0], list):
+            # list of [gerade, ungerade]
+            for pair in loesungen:
+                gerade_loes.extend(pair[0])
+                ungerade_loes.extend(pair[1])
+        elif isinstance(loesungen, str):
+            # Parse G:8,2 U:3,15
+            parts = loesungen.split("U:")
+            gerade_loes = [s.strip() for s in parts[0].replace("G:", "").split(",") if s.strip()]
+            ungerade_loes = [s.strip() for s in parts[1].split(",") if s.strip()]
+
+        max_count = max(len(gerade_loes), len(ungerade_loes), (len(zahlen) + 1) // 2)
+        box_w = 1.1*cm
+        box_h = 0.9*cm
+        box_cols = 4
+        box_spacing = 1.3*cm
+
+        for i in range(max_count):
+            col = i % box_cols
+            row = i // box_cols
+            bx_left = left_x + col * box_spacing
+            bx_right = right_x + col * box_spacing
+            by = y - row * 1.2*cm
+
+            # Left column (gerade)
+            c.setFillColor(FARBEN["antwort"])
+            c.setStrokeColor(FARBEN["blau"])
+            c.setLineWidth(1.5)
+            c.roundRect(bx_left, by - box_h, box_w, box_h, radius=4, fill=1, stroke=1)
+            if i < len(gerade_loes):
+                c.setFillColor(FARBEN["gruen"])
+                c.setFont(FONT_BOLD, 14)
+                c.drawCentredString(bx_left + box_w / 2, by - box_h + 0.2*cm,
+                                    str(gerade_loes[i]))
+
+            # Right column (ungerade)
+            c.setFillColor(FARBEN["antwort"])
+            c.setStrokeColor(FARBEN["pink"])
+            c.setLineWidth(1.5)
+            c.roundRect(bx_right, by - box_h, box_w, box_h, radius=4, fill=1, stroke=1)
+            if i < len(ungerade_loes):
+                c.setFillColor(FARBEN["gruen"])
+                c.setFont(FONT_BOLD, 14)
+                c.drawCentredString(bx_right + box_w / 2, by - box_h + 0.2*cm,
+                                    str(ungerade_loes[i]))
+
+        total_box_rows = (max_count + box_cols - 1) // box_cols
+        y -= total_box_rows * 1.2*cm + 0.3*cm
+
+    elif modus == "muster":
+        muster_list = abschnitt.get("muster")
+        if not muster_list:
+            # Fallback for old structure
+            aufgaben = abschnitt.get("aufgaben", [])
+            muster_list = [{"start": a["start"], "luecken": a["lücken"]} for a in aufgaben]
+            
+        row_h = 1.6*cm
+
+        for idx, m in enumerate(muster_list):
+            start_nums = m["start"]
+            luecken = m.get("luecken", m.get("lücken", 0))
+            loes_row = loesungen[idx] if idx < len(loesungen) else []
+            if isinstance(loes_row, str): loes_row = loes_row.split(",")
+
+            mx = 2.2*cm
+            my = y - idx * row_h
+
+            # Exercise number
+            c.setFillColor(FARBEN[farb_key])
+            c.setFont(FONT_BOLD, 12)
+            c.drawString(1.8*cm, my - 0.15*cm, f"{idx + 1}.")
+
+            # Given numbers
+            c.setFillColor(FARBEN["dunkel"])
+            c.setFont(FONT_BOLD, 18)
+            for i, n in enumerate(start_nums):
+                c.drawCentredString(mx + 1*cm + i * 1.5*cm, my - 0.15*cm, str(n))
+                if i < len(start_nums) - 1 or luecken > 0:
+                    c.setFillColor(FARBEN["hellgrau"])
+                    c.drawCentredString(mx + 1*cm + i * 1.5*cm + 0.75*cm,
+                                        my - 0.15*cm, ",")
+                    c.setFillColor(FARBEN["dunkel"])
+
+            # Blank boxes for continuation
+            bx = mx + 1*cm + len(start_nums) * 1.5*cm
+            for j in range(luecken):
+                draw_answer_box(c, bx + j * 1.8*cm - 0.55*cm, my - 0.5*cm,
+                                w=1.3*cm, h=1.1*cm)
+                if j < len(loes_row):
+                    c.setFillColor(FARBEN["gruen"])
+                    c.setFont(FONT_BOLD, 16)
+                    c.drawCentredString(bx + j * 1.8*cm + 0.1*cm, my - 0.15*cm,
+                                        str(loes_row[j]))
+                if j < luecken - 1:
+                    c.setFillColor(FARBEN["hellgrau"])
+                    c.setFont(FONT_BOLD, 18)
+                    c.drawCentredString(bx + j * 1.8*cm + 0.75*cm,
+                                        my - 0.15*cm, ",")
+
+        y -= len(muster_list) * row_h + 0.3*cm
+
+    elif modus == "paare":
+        # Visual representation: dots in pairs
+        row_h = 1.6 * cm
+        dot_r = 0.2 * cm
+        gap = 0.25 * cm
+        aufgaben = abschnitt.get("aufgaben", [])
+        
+        for idx, aufg in enumerate(aufgaben):
+            zahlen = aufg.get("zahlen", [])
+            for z_idx, z in enumerate(zahlen):
+                items_per_col = (len(zahlen) + 1) // 2
+                col = z_idx // items_per_col
+                row = z_idx % items_per_col
+                cx = 2.2 * cm + col * 9 * cm
+                cy = y - row * row_h
+                
+                c.setFillColor(FARBEN["dunkel"])
+                c.setFont(FONT_BOLD, 14)
+                c.drawString(cx, cy, f"{z}:")
+                
+                # Draw pairs
+                dot_x = cx + 1.2 * cm
+                for i in range(z):
+                    pair_idx = i // 2
+                    is_top = i % 2 == 0
+                    dx = dot_x + pair_idx * (dot_r * 2 + gap)
+                    dy = cy + (0.2 * cm if is_top else -0.2 * cm)
+                    c.setFillColor(FARBEN[farb_key])
+                    c.circle(dx, dy, dot_r, fill=1, stroke=0)
+                    
+                # Question text and box
+                c.setFillColor(FARBEN["grau"])
+                c.setFont(FONT, 10)
+                c.drawString(cx + 4.5 * cm, cy, "Gerade?")
+                
+                ans = loesungen[idx][z_idx] if (idx < len(loesungen) and z_idx < len(loesungen[idx])) else ""
+                if ans:
+                    _draw_filled_answer_box(c, cx + 6.0 * cm, cy - 0.3 * cm, str(ans), w=0.8 * cm, h=0.7 * cm)
+                else:
+                    draw_answer_box(c, cx + 6.0 * cm, cy - 0.3 * cm, w=0.8 * cm, h=0.7 * cm)
+                
+            y -= (len(zahlen) + 1) // 2 * row_h
+            
+    return y
+
+
 # ── Dungeon-Flucht ───────────────────────────────────────────
 
 def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
@@ -2603,4 +2883,3 @@ def draw_muster_fortsetzen(c, abschnitt, farb_key, start_y):
 
     total_rows = len(aufgaben)
     return row_y - total_rows * row_h - 0.3 * cm
-

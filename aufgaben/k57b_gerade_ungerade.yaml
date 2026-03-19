@@ -1,44 +1,55 @@
 kapitel:
-  titel: "Gerade und Ungerade"
-  untertitel: "Welche Zahlen lassen sich gerecht teilen?"
-  emoji: "⚖️"
-  farbe: "pink"
+  titel: "Gerade und Ungerade Zahlen"
+  untertitel: "Welche Zahlen lassen sich fair teilen?"
+  emoji: "🔵🔴"
+  farbe: "blau"
   zahlenraum: 20
 
 abschnitte:
-  - typ: gerade_ungerade
-    titel: "A  Zahlen sortieren"
-    beschreibung: "Sortiere die Zahlen in die richtigen Körbe. Gerade Zahlen lassen sich genau zur Hälfte teilen!"
-    modus: sortieren
-    aufgaben:
-      - zahlen: [2, 5, 8, 11, 14, 17]
-      - zahlen: [3, 6, 9, 12, 15, 20]
+  - typ: erklaerung
+    titel: "Was sind gerade und ungerade Zahlen?"
+    zeilen:
+      - "Stell dir vor, du verteilst Bonbons an zwei Kinder."
+      - "Geht es genau auf? Dann ist die Zahl gerade!"
+      - "Bleibt eins übrig? Dann ist die Zahl ungerade!"
+      - ""
+      - "**Gerade Zahlen: 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20**"
+      - "**Ungerade Zahlen: 1, 3, 5, 7, 9, 11, 13, 15, 17, 19**"
+      - ""
+      - "Tipp: Gerade Zahlen enden auf 0, 2, 4, 6 oder 8."
 
   - typ: gerade_ungerade
-    titel: "B  Zahlen anmalen"
-    beschreibung: "Male die Kreise mit geraden Zahlen BLAU an. Male die Kreise mit ungeraden Zahlen PINK an."
-    modus: malen
-    aufgaben:
-      - zahlen: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-      - zahlen: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    titel: "A  Kreise die geraden Zahlen ein"
+    beschreibung: "Kreise alle geraden Zahlen blau ein und alle ungeraden Zahlen rot."
+    modus: "einkreisen"
+    zahlen: [3, 8, 15, 2, 11, 6, 19, 4, 13, 10, 7, 16, 1, 14, 9, 20, 5, 18, 12, 17]
 
   - typ: gerade_ungerade
-    titel: "C  Muster fortsetzen"
-    beschreibung: "Schreibe die nächsten Zahlen der Reihe auf."
-    modus: muster
-    aufgaben:
+    titel: "B  Sortiere die Zahlen"
+    beschreibung: "Schreibe die Zahlen in die richtige Spalte!"
+    modus: "sortieren"
+    zahlen: [12, 7, 4, 19, 10, 3, 16, 5, 8, 11, 20, 1, 14, 9, 6, 17]
+
+  - typ: gerade_ungerade
+    titel: "C  Setze das Muster fort"
+    beschreibung: "Welche Zahlen fehlen? Schreibe sie in die Kästchen!"
+    modus: "muster"
+    muster:
       - start: [2, 4, 6]
-        lücken: 4
+        luecken: 3
+        schritt: 2
       - start: [1, 3, 5]
-        lücken: 4
-      - start: [20, 18, 16]
-        lücken: 4
-      - start: [19, 17, 15]
-        lücken: 4
-
-  - typ: gerade_ungerade
-    titel: "D  Gerechte Verteilung"
-    beschreibung: "Kann man die Zahl gerecht in Paare teilen? Kreuze an (X = ja, leer = nein)."
-    modus: paare
-    aufgaben:
-      - zahlen: [4, 7, 6, 9, 10, 3, 8, 5]
+        luecken: 3
+        schritt: 2
+      - start: [10, 12, 14]
+        luecken: 3
+        schritt: 2
+      - start: [9, 11, 13]
+        luecken: 3
+        schritt: 2
+      - start: [4, 6, 8]
+        luecken: 3
+        schritt: 2
+      - start: [3, 5, 7]
+        luecken: 3
+        schritt: 2

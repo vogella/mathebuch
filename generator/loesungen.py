@@ -484,28 +484,56 @@ def _solve_muster_fortsetzen(abschnitt):
 def _solve_gerade_ungerade(abschnitt):
     results = []
     modus = abschnitt.get("modus", "sortieren")
-    aufgaben = abschnitt.get("aufgaben", [])
+    
+    # Handle PR version (single 'zahlen' list or 'muster' list)
+    if modus in ("sortieren", "einkreisen", "malen"):
+        zahlen = abschnitt.get("zahlen")
+        if zahlen:
 
-    for aufg in aufgaben:
-        if modus == "sortieren":
-            zahlen = aufg["zahlen"]
             gerade = [z for z in zahlen if z % 2 == 0]
             ungerade = [z for z in zahlen if z % 2 != 0]
-            results.append([gerade, ungerade])
-        elif modus == "malen":
-            zahlen = aufg["zahlen"]
-            res = ["G" if z % 2 == 0 else "U" for z in zahlen]
-            results.append(res)
-        elif modus == "muster":
+            if modus == "einkreisen" or modus == "sortieren":
+                return [f"G:{','.join(str(x) for x in gerade)} U:{','.join(str(x) for x in ungerade)}"]
+            else: # malen
+                return ["G" if z % 2 == 0 else "U" for z in zahlen]
+        
+        # Fallback for old structure (list of 'aufgaben')
+        aufgaben = abschnitt.get("aufgaben", [])
+        for aufg in aufgaben:
+            zahlen = aufg.get("zahlen", [])
+            if modus == "sortieren":
+                gerade = [z for z in zahlen if z % 2 == 0]
+                ungerade = [z for z in zahlen if z % 2 != 0]
+                results.append([gerade, ungerade])
+            elif modus == "malen":
+                res = ["G" if z % 2 == 0 else "U" for z in zahlen]
+                results.append(res)
+    elif modus == "muster":
+        muster_list = abschnitt.get("muster")
+        if muster_list:
+            for m in muster_list:
+                start = m["start"]
+                luecken = m["luecken"]
+                schritt = m.get("schritt", 2)
+                last = start[-1]
+                results.append([last + (i+1) * schritt for i in range(luecken)])
+            return results
+        
+        # Fallback for old structure
+        aufgaben = abschnitt.get("aufgaben", [])
+        for aufg in aufgaben:
             start = aufg["start"]
             n_luecken = aufg["lücken"]
-            # Assume constant difference based on first two elements
             diff = start[1] - start[0] if len(start) >= 2 else 2
             last = start[-1]
-            luecken_res = []
-            for i in range(1, n_luecken + 1):
-                luecken_res.append(str(last + i * diff))
-            results.append(luecken_res)
+            results.append([last + (i+1) * diff for i in range(n_luecken)])
+    elif modus == "paare":
+        # From main: "X = ja, leer = nein"
+        aufgaben = abschnitt.get("aufgaben", [])
+        for aufg in aufgaben:
+            zahlen = aufg.get("zahlen", [])
+            results.append(["X" if z % 2 == 0 else "" for z in zahlen])
+            
     return results
 
 
