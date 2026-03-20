@@ -233,18 +233,24 @@ def render_titelseite(c):
     feld_farben = [FARBEN["gruen"], FARBEN["orange"], FARBEN["pink"]]
     field_h = 1.0 * cm
     field_gap = 0.4 * cm
+    
+    # Consistent starting position for all boxes
+    max_label_w = 0
+    for label in felder:
+        max_label_w = max(max_label_w, c.stringWidth(label, FONT_BOLD, 12))
+    box_start_x = 2.5 * cm + max_label_w + 0.6 * cm
+
     for i, (label, farbe) in enumerate(zip(felder, feld_farben)):
         fy = felder_y - i * (field_h + field_gap)
         c.setFillColor(FARBEN["dunkel"])
         c.setFont(FONT_BOLD, 12)
         c.drawString(2.5 * cm, fy + 0.2 * cm, label)
-        label_w = c.stringWidth(label, FONT_BOLD, 12)
-        box_x = 2.5 * cm + label_w + 0.4 * cm
-        box_w = W - 5 * cm - label_w - 0.4 * cm
+        
+        box_w = W - 2.5 * cm - box_start_x
         c.setStrokeColor(farbe)
         c.setFillColor(white)
         c.setLineWidth(2)
-        c.roundRect(box_x, fy - 0.2 * cm, box_w, field_h,
+        c.roundRect(box_start_x, fy - 0.2 * cm, box_w, field_h,
                     radius=8, fill=1, stroke=1)
 
     # Malblock: "Male dich selbst!" (reduzierte Größe ~8cm)
