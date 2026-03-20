@@ -2872,9 +2872,9 @@ def draw_zahlen_schreiben(c, abschnitt, farb_key, start_y):
     box_w = 1.6 * cm
     box_h = 2.0 * cm
     box_gap = 0.25 * cm
-    practice_count = 4
+    practice_count = 8
 
-    cols = 2
+    cols = 1
     col_w = (W - 3 * cm) / cols
     group_h = box_h + 0.9 * cm
 
