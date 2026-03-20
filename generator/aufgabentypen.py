@@ -1262,13 +1262,15 @@ def draw_zahlen_ordnen(c, abschnitt, farb_key, start_y):
 
 def draw_vervielfachen(c, abschnitt, farb_key, start_y):
     """How many times must you add a number to itself to reach a target?
-    Single line per task: zahl + [___________] = ziel  also  zahl × [___] = ziel"""
+    Line 1: zahl + [addition chain box] = ziel
+    Line 2: zahl passt [___] mal in die ziel."""
     draw_section_label(c, abschnitt["titel"], farb_key, start_y)
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of [zahl, ziel]
     loesungen = abschnitt.get("loesungen", [])
-    row_h = 1.5*cm
+    line_gap = 1.1*cm   # vertical gap between line 1 and line 2
+    row_h = 2.5*cm      # total height per exercise (two lines + spacing)
     row_y = start_y - 1.5*cm - y_off
 
     for idx, aufg in enumerate(aufgaben):
@@ -1277,7 +1279,7 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
         x = 1.5*cm
         y = row_y - idx * row_h
 
-        # ── Addition part: zahl + [___________] = ziel ──
+        # ── Line 1: zahl + [___________] = ziel ──
         c.setFillColor(FARBEN["dunkel"])
         c.setFont(FONT_BOLD, 16)
         c.drawCentredString(x + 0.4*cm, y, str(zahl))
@@ -1302,34 +1304,39 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
         c.setFillColor(FARBEN["dunkel"])
         c.drawCentredString(eq1_x + 0.8*cm, y, str(ziel))
 
-        # ── "also" connector ──
-        also_x = eq1_x + 1.8*cm
+        # ── Line 2: zahl passt [___] mal in die ziel. ──
+        y2 = y - line_gap
+        px = x  # start x for "passt" line
+
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont(FONT_BOLD, 16)
+        zahl_w = c.stringWidth(str(zahl), FONT_BOLD, 16)
+        c.drawString(px, y2, str(zahl))
+        px += zahl_w + 0.2*cm
+
         c.setFillColor(FARBEN["grau"])
-        c.setFont(FONT, 12)
-        c.drawCentredString(also_x, y, "also")
+        c.setFont(FONT, 14)
+        passt_w = c.stringWidth("passt", FONT, 14)
+        c.drawString(px, y2, "passt")
+        px += passt_w + 0.2*cm
 
-        # ── Multiplication part: zahl × [___] = ziel ──
-        mul_x = also_x + 1.2*cm
-        c.setFillColor(FARBEN["dunkel"])
-        c.setFont(FONT_BOLD, 16)
-        c.drawCentredString(mul_x, y, str(zahl))
-
-        c.setFillColor(FARBEN[farb_key])
-        c.drawCentredString(mul_x + 0.7*cm, y, "×")
-
-        mul_box_x = mul_x + 1.1*cm
+        box_w = 1.6*cm
         if loes is not None:
-            _draw_filled_answer_box(c, mul_box_x, y - 0.3*cm, loes,
-                                    w=1.2*cm, h=0.9*cm)
+            _draw_filled_answer_box(c, px, y2 - 0.3*cm, loes, w=box_w, h=0.9*cm)
         else:
-            draw_answer_box(c, mul_box_x, y - 0.3*cm, w=1.2*cm, h=0.9*cm)
+            draw_answer_box(c, px, y2 - 0.3*cm, w=box_w, h=0.9*cm)
+        px += box_w + 0.2*cm
 
-        c.setFillColor(FARBEN[farb_key])
-        c.setFont(FONT_BOLD, 16)
-        c.drawCentredString(mul_box_x + 1.5*cm, y, "=")
+        c.setFillColor(FARBEN["grau"])
+        c.setFont(FONT, 14)
+        mal_text = f"mal in die"
+        mal_w = c.stringWidth(mal_text, FONT, 14)
+        c.drawString(px, y2, mal_text)
+        px += mal_w + 0.2*cm
 
         c.setFillColor(FARBEN["dunkel"])
-        c.drawCentredString(mul_box_x + 2.3*cm, y, str(ziel))
+        c.setFont(FONT_BOLD, 16)
+        c.drawString(px, y2, f"{ziel}.")
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
 
