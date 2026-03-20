@@ -19,9 +19,7 @@ abschnitte:
       - [4, null, 2]
       - [4, 3, null]
       - [5, 1, null]
-      - [5, null, 2]
-      - [5, 3, null]
-      - [5, null, 4]
+
 
   - typ: zahlenhaus
     titel: "B  Zahlenhaus"
