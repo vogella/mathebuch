@@ -8,7 +8,7 @@ from itertools import permutations
 from reportlab.lib.colors import HexColor, white
 from reportlab.lib.units import cm
 from reportlab.lib.pagesizes import A4
-from layout import FARBEN, draw_page_bg, draw_page_number
+from layout import FARBEN, draw_page_bg, draw_page_number, FONT, FONT_BOLD
 
 W, H = A4
 
@@ -516,6 +516,31 @@ def _solve_rechenquadrat_2x2(abschnitt):
     return results
 
 
+def _solve_umkehraufgaben(abschnitt):
+    """
+    For each [a, op, b, result]:
+    - "+": inverse rows are (result-b)=a and (result-a)=b
+    - "-": inverse rows are (result+b)=a and (b+result)=a
+    Returns a list of [ans1, ans2] pairs.
+    """
+    results = []
+    for aufg in abschnitt["aufgaben"]:
+        a, op, b, result = aufg
+        if op == "+":
+            ans1 = result - b   # = a
+            ans2 = result - a   # = b
+        else:  # "−" or "-"
+            ans1 = a            # result + b = a
+            ans2 = a            # b + result = a
+        results.append([ans1, ans2])
+    return results
+
+
+def _solve_zahlen_schreiben(abschnitt):
+    """No computed answer needed for digit tracing."""
+    return [str(d) for d in abschnitt["aufgaben"]]
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -552,6 +577,8 @@ SOLVER = {
     "rechenquadrat_2x2":  _solve_rechenquadrat_2x2,
     "muster_fortsetzen":  _solve_muster_fortsetzen,
     "motivation":         lambda ab: [],
+    "umkehraufgaben":     _solve_umkehraufgaben,
+    "zahlen_schreiben":   _solve_zahlen_schreiben,
 }
 
 # Types to skip (explanation, visual-only)
@@ -600,8 +627,8 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
 
     # Render
     pages = 0
-    font_name = "Helvetica"
-    font_bold = "Helvetica-Bold"
+    font_name = FONT
+    font_bold = FONT_BOLD
     font_size = 7.5
     line_h = 0.35 * cm
     col_margin = 1.5 * cm
@@ -648,11 +675,11 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
             prefix = f"{short_label}: " if short_label else ""
             formatted = [",".join(map(str, a)) if isinstance(a, (list, tuple)) else str(a)
                          for a in antworten]
-            text = prefix + " · ".join(formatted)
+            text = prefix + " | ".join(formatted)
             # Truncate if too wide
             c.setFont(font_name, font_size)
             while c.stringWidth(text, font_name, font_size) > max_text_w and len(text) > 20:
-                text = text[:len(text) - 4] + "…"
+                text = text[:len(text) - 4] + "..."
             c.setFillColor(FARBEN["grau"])
             c.drawString(col_margin + 0.3 * cm, y, text)
             y -= line_h

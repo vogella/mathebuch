@@ -13,7 +13,7 @@ from reportlab.lib.units import cm
 from reportlab.lib.pagesizes import A4
 import math
 
-from layout import FARBEN, RAND_FARBEN
+from layout import FARBEN, RAND_FARBEN, FONT_BOLD
 
 W, H = A4
 
@@ -147,7 +147,7 @@ def draw_euli_mit_sprechblase(c, cx, cy, text, size=0.8):
 
     # Text
     c.setFillColor(FARBEN["dunkel"])
-    c.setFont("Helvetica-Bold", 9)
+    c.setFont(FONT_BOLD, 9)
     c.drawCentredString(bub_x + bub_w / 2, bub_y - 0.12 * cm, text)
     c.restoreState()
 

@@ -2783,3 +2783,155 @@ def draw_motivation(c, abschnitt, farb_key, start_y):
         text_y -= line_h
 
     return start_y - box_h - 0.4 * cm
+
+
+# ── Umkehraufgaben ────────────────────────────────────────
+
+def _draw_inverse_row(c, x, y, text, loesung, font_size, box_w, box_h):
+    """Helper to draw a row with an optional answer box."""
+    c.setFillColor(FARBEN["dunkel"])
+    c.drawString(x, y, text)
+    tw = c.stringWidth(text, FONT_BOLD, font_size)
+    if loesung is not None:
+        _draw_filled_answer_box(c, x + tw + 0.2 * cm, y - 0.25 * cm,
+                                loesung, w=box_w, h=box_h)
+    else:
+        draw_answer_box(c, x + tw + 0.2 * cm, y - 0.25 * cm,
+                        w=box_w, h=box_h)
+
+
+def draw_umkehraufgaben(c, abschnitt, farb_key, start_y):
+    """
+    Draws inverse operation exercises in groups.
+    """
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]
+    loesungen = abschnitt.get("loesungen", [])
+
+    farbe = FARBEN[farb_key]
+    dunkel = FARBEN["dunkel"]
+
+    cols = 2
+    col_w = (W - 3 * cm) / cols
+    row_h_inner = 1.1 * cm
+    group_h = 3 * row_h_inner + 0.9 * cm
+    ANSWER_BOX_W = 1.3 * cm
+    ANSWER_BOX_H = 1.0 * cm
+
+    row_y = start_y - 1.6 * cm - y_off
+
+    for idx, aufg in enumerate(aufgaben):
+        a, op, b, result = aufg
+        col = idx % cols
+        row = idx // cols
+        x0 = 1.8 * cm + col * col_w
+        y0 = row_y - row * group_h
+
+        # Draw a light rounded box around the problem group
+        c.setFillColor(FARBEN["bg"])
+        c.setStrokeColor(FARBEN["hellgrau"])
+        c.setLineWidth(1.0)
+        c.roundRect(x0 - 0.3 * cm, y0 - group_h + 0.5 * cm,
+                    col_w - 0.4 * cm, group_h - 0.2 * cm,
+                    radius=6, fill=1, stroke=1)
+
+        # Retrieve solution answers for the two blank rows
+        loes = loesungen[idx] if idx < len(loesungen) else None
+        loes1 = loes[0] if loes and len(loes) > 0 else None
+        loes2 = loes[1] if loes and len(loes) > 1 else None
+
+        y_row1 = y0 - 0.3 * cm
+        y_row2 = y0 - 0.3 * cm - row_h_inner
+        y_row3 = y0 - 0.3 * cm - 2 * row_h_inner
+
+        c.setFont(FONT_BOLD, 18)
+
+        if op == "+":
+            # Row 1: a + b = result (given)
+            c.setFillColor(dunkel)
+            c.drawString(x0, y_row1, "{} + {} = {}".format(a, b, result))
+            # Inverse rows
+            _draw_inverse_row(c, x0, y_row2, "{} \u2212 {} =".format(result, b),
+                              loes1, 18, ANSWER_BOX_W, ANSWER_BOX_H)
+            _draw_inverse_row(c, x0, y_row3, "{} \u2212 {} =".format(result, a),
+                              loes2, 18, ANSWER_BOX_W, ANSWER_BOX_H)
+        else:
+            # Row 1: a - b = result (given)
+            c.setFillColor(dunkel)
+            c.drawString(x0, y_row1, "{} \u2212 {} = {}".format(a, b, result))
+            # Inverse rows
+            _draw_inverse_row(c, x0, y_row2, "{} + {} =".format(result, b),
+                              loes1, 18, ANSWER_BOX_W, ANSWER_BOX_H)
+            _draw_inverse_row(c, x0, y_row3, "{} + {} =".format(b, result),
+                              loes2, 18, ANSWER_BOX_W, ANSWER_BOX_H)
+
+    total_rows = (len(aufgaben) + cols - 1) // cols
+    return row_y - total_rows * group_h - 0.3 * cm
+
+
+# ── Zahlen schreiben ──────────────────────────────────────
+
+def draw_zahlen_schreiben(c, abschnitt, farb_key, start_y):
+    """
+    Draws digit writing/tracing practice.
+    """
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]
+    farbe = FARBEN[farb_key]
+
+    model_size = 2.0 * cm
+    box_w = 1.6 * cm
+    box_h = 2.0 * cm
+    box_gap = 0.25 * cm
+    practice_count = 4
+
+    cols = 2
+    col_w = (W - 3 * cm) / cols
+    group_h = box_h + 0.9 * cm
+
+    row_y = start_y - 1.6 * cm - y_off
+
+    for idx, digit in enumerate(aufgaben):
+        col = idx % cols
+        row = idx // cols
+        x0 = 1.8 * cm + col * col_w
+        y0 = row_y - row * group_h
+
+        c.setFillColor(farbe)
+        c.setFont(FONT_BOLD, 11)
+        c.drawString(x0, y0 + 0.1 * cm, "Die {}:".format(digit))
+
+        c.setFillColor(FARBEN["antwort"])
+        c.setStrokeColor(farbe)
+        c.setLineWidth(2.0)
+        c.roundRect(x0, y0 - box_h, model_size, box_h, radius=6, fill=1, stroke=1)
+        c.setFillColor(FARBEN["grau"])
+        c.setFont(FONT_BOLD, 52)
+        c.drawCentredString(x0 + model_size / 2, y0 - box_h + 0.25 * cm, str(digit))
+
+        for p in range(practice_count):
+            bx = x0 + model_size + box_gap + p * (box_w + box_gap)
+            c.setFillColor(white)
+            c.setStrokeColor(FARBEN["hellgrau"])
+            c.setLineWidth(1.5)
+            c.roundRect(bx, y0 - box_h, box_w, box_h, radius=4, fill=1, stroke=1)
+
+            # Baseline
+            baseline_y = y0 - box_h + box_h * 0.3
+            c.setStrokeColor(FARBEN["hellgrau"])
+            c.setLineWidth(0.8)
+            c.line(bx + 0.15 * cm, baseline_y, bx + box_w - 0.15 * cm, baseline_y)
+
+            # Dotted midline using setDash
+            midline_y = y0 - box_h + box_h * 0.65
+            c.setLineWidth(0.5)
+            c.setDash(0.15 * cm, 0.15 * cm)
+            c.line(bx + 0.2 * cm, midline_y, bx + box_w - 0.2 * cm, midline_y)
+            c.setDash()  # Reset to solid line
+
+    total_rows = (len(aufgaben) + cols - 1) // cols
+    return row_y - total_rows * group_h - 0.3 * cm
