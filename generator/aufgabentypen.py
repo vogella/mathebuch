@@ -663,13 +663,18 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
 
         for ri, row in enumerate(rows):
             num_bricks = len(row)
+            # Add small gap between bricks
+            brick_gap = 0.1 * cm
+            effective_w = brick_w - brick_gap
+            effective_h = brick_h - brick_gap
+            
             row_w = num_bricks * brick_w
             rx = base_cx - row_w / 2
             ry = base_y + ri * brick_h
             row_col = row_colors[ri % len(row_colors)]
 
             for bi, val in enumerate(row):
-                bx = rx + bi * brick_w
+                bx = rx + bi * brick_w + brick_gap / 2
                 is_blank = val is None
                 # Check if this cell was blank in the Aufgabe wall
                 is_solution_cell = (is_loesung and
@@ -686,14 +691,14 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
                     c.setFillColor(row_col)
                     c.setStrokeColor(row_col)
                 c.setLineWidth(1.5)
-                c.roundRect(bx, ry, brick_w, brick_h, radius=4, fill=1, stroke=1)
+                c.roundRect(bx, ry + brick_gap / 2, effective_w, effective_h, radius=4, fill=1, stroke=1)
                 if val is not None:
                     if is_solution_cell:
                         c.setFillColor(FARBEN["gruen"])
                     else:
                         c.setFillColor(white)
                     c.setFont(FONT_BOLD, 16)
-                    c.drawCentredString(bx + brick_w/2, ry + brick_h/2 - 0.2*cm, str(val))
+                    c.drawCentredString(bx + effective_w/2, ry + effective_h/2 - 0.15*cm, str(val))
 
         # Remember this wall as reference for the next (Lösung) wall
         aufgabe_mauer = rows
@@ -1195,7 +1200,7 @@ def draw_zahlen_ordnen(c, abschnitt, farb_key, start_y):
             c.circle(x + 0.5*cm, y + 0.1*cm, 0.45*cm, fill=1, stroke=0)
             c.setFillColor(white)
             c.setFont(FONT_BOLD, 14)
-            c.drawCentredString(x + 0.5*cm, y - 0.08*cm, str(z))
+            c.drawCentredString(x + 0.5*cm, y - 0.1*cm, str(z))
             x += 1.2*cm
 
         # Arrow
@@ -1217,11 +1222,11 @@ def draw_zahlen_ordnen(c, abschnitt, farb_key, start_y):
             if loes is not None and i < len(loes):
                 c.setFillColor(FARBEN["gruen"])
                 c.setFont(FONT_BOLD, 16)
-                c.drawCentredString(bx + box_w/2, y + 0.05*cm, str(loes[i]))
+                c.drawCentredString(bx + box_w/2, y - 0.1*cm, str(loes[i]))
             if i < count - 1:
                 c.setFillColor(FARBEN["dunkel"])
                 c.setFont(FONT_BOLD, 16)
-                c.drawCentredString(bx + box_w + 0.25*cm, y + 0.05*cm, "<")
+                c.drawCentredString(bx + box_w + 0.25*cm, y - 0.1*cm, "<")
             bx += box_w + 0.5*cm
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
