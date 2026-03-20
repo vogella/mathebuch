@@ -2662,8 +2662,12 @@ def draw_motivation(c, abschnitt, farb_key, start_y):
     TEXT_SIZE = 12
 
     # Textbereich-Breite: Box abzüglich linkem Rand (Emoji + Border) und Padding
-    text_x = BOX_X + BORDER_W + 0.9 * cm + 0.3 * cm
-    text_max_w = BOX_W - BORDER_W - 0.9 * cm - 0.3 * cm - PADDING_H
+    EMOJI_LEFT_MARGIN = 0.9 * cm
+    BORDER_RIGHT_MARGIN = 0.3 * cm
+    TEXT_PADDING_H = PADDING_H
+
+    text_x = BOX_X + BORDER_W + EMOJI_LEFT_MARGIN + BORDER_RIGHT_MARGIN
+    text_max_w = BOX_W - BORDER_W - EMOJI_LEFT_MARGIN - BORDER_RIGHT_MARGIN - TEXT_PADDING_H
 
     # Texthöhe berechnen (Titel + umgebrochener Text)
     titel_h = (TITEL_SIZE + 4) / 72 * 2.54 * cm
