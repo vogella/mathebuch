@@ -6,7 +6,7 @@ import math
 from reportlab.lib.colors import HexColor, white
 from reportlab.lib.units import cm
 from reportlab.lib.pagesizes import A4
-from layout import FARBEN, draw_answer_box, draw_section_label
+from layout import FARBEN, draw_answer_box, draw_section_label, FONT, FONT_BOLD, FONT_ITALIC
 
 W, H = A4
 
@@ -2558,6 +2558,62 @@ def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
             row_y -= (len(zahlen) + 1) // 2 * row_h
 
     return row_y
+
+
+# ── Rechenquadrat 2×2 ────────────────────────────────────
+
+def draw_rechenquadrat_2x2(c, abschnitt, farb_key, start_y):
+    """2x2 calculation square with row and column sums."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    quadrate = abschnitt.get("quadrate", [])
+    if not quadrate:
+        return start_y - (2.5*cm + y_off)
+
+    cell_size = 1.3*cm
+    col_w = (W - 3*cm) / 3
+    row_y = start_y - 2.5*cm - y_off
+
+    for idx, q in enumerate(quadrate):
+        col = idx % 3
+        row = idx // 3
+        x0 = 1.5*cm + col * col_w + (col_w - 3.5*cell_size)/2
+        y0 = row_y - row * 4.5*cm
+
+        werte = q["werte"]   # [a, b, c, d] in 2x2 grid
+        summen = q["summen"] # [s_r1, s_r2, s_c1, s_c2]
+
+        for r in range(2):
+            for cl in range(2):
+                val = werte[r*2 + cl]
+                cx = x0 + cl * cell_size
+                cy = y0 - r * cell_size
+                c.setStrokeColor(FARBEN[farb_key])
+                c.setLineWidth(1.5)
+                c.rect(cx, cy, cell_size, cell_size, fill=0, stroke=1)
+                if val is not None:
+                    c.setFillColor(FARBEN["dunkel"])
+                    c.setFont(FONT_BOLD, 14)
+                    c.drawCentredString(cx + cell_size/2, cy + cell_size/2 - 0.15*cm, str(val))
+                else:
+                    draw_answer_box(c, cx + 0.1*cm, cy + 0.1*cm,
+                                    w=cell_size - 0.2*cm, h=cell_size - 0.2*cm)
+
+        c.setFillColor(FARBEN["grau"])
+        c.setFont(FONT_ITALIC, 11)
+        c.drawCentredString(x0 + 2.5*cell_size, y0 + cell_size/2 - 0.15*cm, str(summen[0]))
+        c.drawCentredString(x0 + 2.5*cell_size, y0 - cell_size/2 - 0.15*cm, str(summen[1]))
+        c.drawCentredString(x0 + cell_size/2,   y0 - 1.8*cell_size,          str(summen[2]))
+        c.drawCentredString(x0 + 1.5*cell_size, y0 - 1.8*cell_size,          str(summen[3]))
+
+        c.setDash(1, 2)
+        c.line(x0 + 2.1*cell_size, y0 + cell_size/2, x0 + 2.1*cell_size, y0 - 1.5*cell_size)
+        c.line(x0, y0 - 1.3*cell_size, x0 + 2.1*cell_size, y0 - 1.3*cell_size)
+        c.setDash()
+
+    total_rows = (len(quadrate) + 2) // 3
+    return row_y - total_rows * 4.5*cm + 1.5*cm
 
 
 # ── Muster fortsetzen ────────────────────────────────────

@@ -495,6 +495,14 @@ def _solve_gerade_ungerade(abschnitt):
     return []
 
 
+def _solve_rechenquadrat_2x2(abschnitt):
+    results = []
+    for q in abschnitt.get("quadrate", []):
+        res = q.get("loesung", [])
+        results.append(",".join(str(v) for v in res))
+    return results
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -625,7 +633,9 @@ def render_loesungsseiten(c, alle_kapitel, start_seite):
                 draw_page_number(c, start_seite + pages - 1, show_stars=False)
                 new_page()
             prefix = f"{short_label}: " if short_label else ""
-            text = prefix + " · ".join(antworten)
+            formatted = [",".join(map(str, a)) if isinstance(a, (list, tuple)) else str(a)
+                         for a in antworten]
+            text = prefix + " · ".join(formatted)
             # Truncate if too wide
             c.setFont(font_name, font_size)
             while c.stringWidth(text, font_name, font_size) > max_text_w and len(text) > 20:
