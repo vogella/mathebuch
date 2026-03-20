@@ -23,8 +23,7 @@ from layout import (draw_page_bg, draw_header, draw_emoji,
                     draw_page_number, FARBEN, RAND_FARBEN,
                     FONT, FONT_BOLD, FONT_ITALIC)
 from illustrationen import (draw_euli, draw_euli_mit_sprechblase,
-                            draw_separator_illustration,
-                            draw_eckverzierungen)
+                            draw_separator_illustration)
 from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_zahlenhaus, draw_rechenraupe,
                            draw_magisches_dreieck, draw_magische_dreiecke,
@@ -190,9 +189,6 @@ def render_trennseite(c, section):
 
     # Euli-Maskottchen unten auf der Trennseite
     draw_euli(c, W / 2, illust_y - 4.5 * cm, size=0.6)
-
-    # Eckverzierungen
-    draw_eckverzierungen(c, info["farbe"])
 
 
 def render_titelseite(c):
@@ -538,7 +534,6 @@ def render_kapitel(c, kapitel_data, seitennummer, audit=False):
             c.showPage()
         draw_page_bg(c)
         draw_header(c, titel, untertitel, emoji, farbe)
-        draw_eckverzierungen(c, farbe)
         y = H - 5.5*cm
         pages += 1
         seitennr_aktuell = seitennummer + pages - 1
