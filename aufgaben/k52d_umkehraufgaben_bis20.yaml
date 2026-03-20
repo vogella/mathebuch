@@ -14,3 +14,12 @@ abschnitte:
       - [11, "+", 8, 19]
       - [14, "+", 3, 17]
       - [15, "+", 4, 19]
+  - titel: "Finde die Umkehrung"
+    typ: "umkehraufgaben"
+    neue_seite: true
+    beschreibung: "Finde die passenden Aufgaben."
+    aufgaben:
+      - [18, "−", 6, 12]
+      - [17, "−", 5, 12]
+      - [19, "−", 8, 11]
+      - [20, "−", 10, 10]

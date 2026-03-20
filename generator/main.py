@@ -556,8 +556,9 @@ def render_kapitel(c, kapitel_data, seitennummer, audit=False):
             print(f"  Warnung: Unbekannter Typ '{typ}', wird übersprungen.", file=sys.stderr)
             continue
 
-        # Prüfe ob noch genug Platz ist (mindestens 4cm für einen Abschnitt)
-        if y < MIN_Y + 4*cm and i > 0:
+        # Prüfe ob noch genug Platz ist oder neue Seite erzwungen wird
+        erzwinge_neue_seite = abschnitt.get("neue_seite", False)
+        if i > 0 and (erzwinge_neue_seite or y < MIN_Y + 6.5*cm):
             neue_seite()
 
         # Trennlinie zwischen Abschnitten (nicht vor dem ersten auf der Seite)
