@@ -513,9 +513,10 @@ def zeichne_trennlinie(c, y):
 MIN_Y = 2.5 * cm   # Untere Seitengrenze
 
 
-def render_kapitel(c, kapitel_data, seitennummer):
+def render_kapitel(c, kapitel_data, seitennummer, audit=False):
     """Rendert ein Kapitel – bei Überlauf automatisch auf neue Seiten.
-    Gibt die Anzahl genutzter Seiten zurück."""
+    Gibt die Anzahl genutzter Seiten zurück.
+    Bei audit=True wird zusätzlich eine Liste von Überlauf-Verletzungen zurückgegeben."""
     kap  = kapitel_data["kapitel"]
     farbe = kap.get("farbe", "blau")
     ist_erklaerung = kap.get("erklaerungsseite", False)
@@ -524,6 +525,8 @@ def render_kapitel(c, kapitel_data, seitennummer):
     emoji = kap["emoji"]
 
     pages = 0
+    ueberlauf_liste = []
+    max_inhalt_hoehe = H - 5.5*cm - MIN_Y  # Verfügbare Höhe pro Seite
 
     def neue_seite():
         nonlocal y, pages, seitennr_aktuell
@@ -559,7 +562,35 @@ def render_kapitel(c, kapitel_data, seitennummer):
             zeichne_trennlinie(c, y + 0.5*cm)
             y -= 1.2*cm
 
+        y_vor = y
         y = fn(c, abschnitt, farbe, y)
+
+        if audit:
+            abschnitt_titel = abschnitt.get("titel", f"Abschnitt {i+1}")
+            abschnitt_hoehe = y_vor - y
+
+            # Prüfe Seitenüberlauf: y unterhalb MIN_Y
+            if y < MIN_Y:
+                ueberlauf_liste.append({
+                    "kapitel": titel,
+                    "abschnitt": abschnitt_titel,
+                    "index": i,
+                    "seite": seitennr_aktuell,
+                    "y_position": y,
+                    "typ": "ueberlauf",
+                })
+
+            # Prüfe atomaren Überlauf: Abschnitt passt auf keine Seite
+            if abschnitt_hoehe > max_inhalt_hoehe:
+                ueberlauf_liste.append({
+                    "kapitel": titel,
+                    "abschnitt": abschnitt_titel,
+                    "index": i,
+                    "seite": seitennr_aktuell,
+                    "abschnitt_hoehe": abschnitt_hoehe,
+                    "max_hoehe": max_inhalt_hoehe,
+                    "typ": "atomar",
+                })
 
         # Falls der Abschnitt unter die Seitengrenze gezeichnet hat,
         # merken wir uns das – der nächste Abschnitt kommt auf eine neue Seite
@@ -567,6 +598,9 @@ def render_kapitel(c, kapitel_data, seitennummer):
             pass  # Nächster Durchlauf prüft und bricht um
 
     draw_page_number(c, seitennr_aktuell, show_stars=not ist_erklaerung)
+
+    if audit:
+        return pages, ueberlauf_liste
     return pages
 
 
@@ -576,6 +610,8 @@ def main():
                         help="Ausgabepfad für die PDF-Datei")
     parser.add_argument("--aufgaben", default="../aufgaben",
                         help="Ordner mit den YAML-Aufgabendateien")
+    parser.add_argument("--audit-layout", action="store_true",
+                        help="Prüft alle Kapitel auf Layout-Überläufe und gibt einen Bericht aus")
     args = parser.parse_args()
 
     # Skript-Verzeichnis als Basis
@@ -608,10 +644,44 @@ def main():
     probe_buf = io.BytesIO()
     probe_c = canvas.Canvas(probe_buf, pagesize=A4)
     seiten_pro_kapitel = []
+    alle_ueberlaufe = []
     for i, (dateiname, data) in enumerate(alle_kapitel):
-        n_pages = render_kapitel(probe_c, data, 1)  # Seitennummer egal
+        if args.audit_layout:
+            n_pages, ueberlaufe = render_kapitel(probe_c, data, 1, audit=True)
+            alle_ueberlaufe.extend(ueberlaufe)
+        else:
+            n_pages = render_kapitel(probe_c, data, 1)
         probe_c.showPage()
         seiten_pro_kapitel.append(n_pages)
+
+    # Audit-Bericht ausgeben und ggf. beenden
+    if args.audit_layout:
+        print("=== Layout-Audit ===", file=sys.stderr)
+        if alle_ueberlaufe:
+            for v in alle_ueberlaufe:
+                if v["typ"] == "atomar":
+                    print(
+                        f'FEHLER: Kapitel "{v["kapitel"]}" → Abschnitt "{v["abschnitt"]}" '
+                        f'(Seite ~{v["seite"]})',
+                        file=sys.stderr)
+                    print(
+                        f'  Atomarer Überlauf: Abschnittshöhe {v["abschnitt_hoehe"]/cm:.1f} cm '
+                        f'> verfügbare {v["max_hoehe"]/cm:.1f} cm',
+                        file=sys.stderr)
+                else:
+                    print(
+                        f'FEHLER: Kapitel "{v["kapitel"]}" → Abschnitt "{v["abschnitt"]}" '
+                        f'(Seite ~{v["seite"]})',
+                        file=sys.stderr)
+                    print(
+                        f'  Überlauf: y = {v["y_position"]/cm:.1f} cm '
+                        f'(unterhalb MIN_Y = {MIN_Y/cm:.1f} cm)',
+                        file=sys.stderr)
+            print(f"\n{len(alle_ueberlaufe)} Überlauf(e) gefunden. Exit-Code 1.", file=sys.stderr)
+            sys.exit(1)
+        else:
+            print("Keine Überläufe gefunden. Alles in Ordnung!", file=sys.stderr)
+            sys.exit(0)
 
     # Probe-TOC um Seitenanzahl des Inhaltsverzeichnisses zu ermitteln
     # Vorläufige Seitennummern mit geschätztem Offset berechnen
