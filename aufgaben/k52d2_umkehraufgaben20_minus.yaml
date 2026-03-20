@@ -1,0 +1,16 @@
+kapitel:
+  titel: "Umkehraufgaben bis 20"
+  untertitel: "Finde die passenden Aufgaben."
+  emoji: "🌀"
+  farbe: "orange"
+  zahlenraum: 20
+
+abschnitte:
+  - titel: "Finde die Umkehrung"
+    typ: "umkehraufgaben"
+    beschreibung: "Finde die passenden Aufgaben."
+    aufgaben:
+      - [18, "−", 6, 12]
+      - [17, "−", 5, 12]
+      - [19, "−", 8, 11]
+      - [20, "−", 10, 10]

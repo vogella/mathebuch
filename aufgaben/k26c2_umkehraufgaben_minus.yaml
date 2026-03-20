@@ -1,0 +1,16 @@
+kapitel:
+  titel: "Umkehraufgaben bis 10"
+  untertitel: "Finde die passende Plusaufgabe zu jeder Minusaufgabe!"
+  emoji: "🔄"
+  farbe: "blau"
+  zahlenraum: 10
+
+abschnitte:
+  - titel: "Von Minus zu Plus"
+    typ: "umkehraufgaben"
+    beschreibung: "Finde die passende Plusaufgabe zu jeder Minusaufgabe."
+    aufgaben:
+      - [9, "−", 4, 5]
+      - [8, "−", 3, 5]
+      - [7, "−", 6, 1]
+      - [10, "−", 2, 8]
