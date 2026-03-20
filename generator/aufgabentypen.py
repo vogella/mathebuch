@@ -1136,17 +1136,17 @@ def draw_zahlenstrahl(c, abschnitt, farb_key, start_y):
             val = werte[i] if i < len(werte) else von + i
             strahl_loes = strahl.get("loesungen", [])
             if val is None:
-                # Blank answer box (1.4cm × 1.2cm, centered on tick)
+                # Blank answer box (1.0cm × 1.0cm, centered on tick)
                 c.setFillColor(FARBEN["antwort"])
                 c.setStrokeColor(FARBEN[farb_key])
                 c.setLineWidth(1)
-                c.roundRect(tx - 0.7*cm, y - 1.4*cm, 1.4*cm, 1.2*cm,
+                c.roundRect(tx - 0.5*cm, y - 1.2*cm, 1.0*cm, 1.0*cm,
                             radius=3, fill=1, stroke=1)
                 # Show solution if available
                 if i < len(strahl_loes) and strahl_loes[i] is not None:
                     c.setFillColor(FARBEN["gruen"])
-                    c.setFont(FONT_BOLD, 12)
-                    c.drawCentredString(tx, y - 0.95*cm, str(strahl_loes[i]))
+                    c.setFont(FONT_BOLD, 10)
+                    c.drawCentredString(tx, y - 0.85*cm, str(strahl_loes[i]))
             else:
                 c.setFillColor(FARBEN["dunkel"])
                 c.setFont(FONT_BOLD, 12)
@@ -1335,11 +1335,11 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
 
         c.setFillColor(FARBEN["dunkel"])
         c.drawString(x, y, str(ziel))
-        x += c.stringWidth(str(ziel), FONT_BOLD, 16) + 0.4 * cm
-
-        # "Follows" arrow
-        draw_follows_arrow(c, x, y, size=0.6*cm, color=FARBEN[farb_key])
-        x += 0.9 * cm
+        
+        # "Follows" arrow at fixed position
+        arrow_x = 9.5 * cm
+        draw_follows_arrow(c, arrow_x, y, size=0.6*cm, color=FARBEN[farb_key])
+        x = arrow_x + 0.9 * cm
 
         # ── Continuation on the SAME line: zahl passt [___] mal in die ziel. ──
         c.setFillColor(FARBEN["dunkel"])
@@ -2012,7 +2012,7 @@ def draw_textaufgaben(c, abschnitt, farb_key, start_y):
 
 def draw_wuerfel_zuordnen(c, abschnitt, farb_key, start_y):
     """Connect numbers on the left with matching dice on the right.
-    For 'doppel' mode, two dice per row (sum must match the number)."""
+    Uses two columns to fit more exercises and reduces gap."""
 
     draw_section_label(c, abschnitt["titel"], farb_key, start_y)
     y_off = _draw_beschreibung(c, abschnitt, start_y)
@@ -2021,66 +2021,75 @@ def draw_wuerfel_zuordnen(c, abschnitt, farb_key, start_y):
     doppel = abschnitt.get("doppel", False)
     loesungen = abschnitt.get("loesungen", [])
 
-    n = len(aufgaben)
+    # Split into two columns
+    halb = (len(aufgaben) + 1) // 2
+    col1_tasks = aufgaben[:halb]
+    col2_tasks = aufgaben[halb:]
+    col1_loes = loesungen[:halb] if loesungen else []
+    col2_loes = loesungen[halb:] if loesungen else []
+
     row_h = 1.8*cm
     base_y = start_y - 1.5*cm - y_off
 
-    # Left side: numbers; Right side: dice (shuffled order)
-    # Build pairs: index -> dice value(s)
-    items = []
-    for aufg in aufgaben:
-        if doppel:
-            items.append(tuple(aufg))  # (a, b)
-        else:
-            items.append((aufg,))
+    def _draw_zuordnung_column(x_offset, tasks, loes_present):
+        n = len(tasks)
+        items = []
+        for aufg in tasks:
+            if doppel:
+                items.append(tuple(aufg))
+            else:
+                items.append((aufg,))
 
-    # Shuffle right side for the exercise
-    shuffled_indices = list(range(n))
-    # Use a fixed seed based on content for reproducibility
-    seed = sum(sum(t) for t in items)
-    _rnd.seed(seed)
-    _rnd.shuffle(shuffled_indices)
+        # Shuffle right side
+        shuffled_indices = list(range(n))
+        seed = sum(sum(t) for t in items) + int(x_offset) # offset makes seeds different
+        _rnd.seed(seed)
+        _rnd.shuffle(shuffled_indices)
 
-    left_x = 2.5*cm
-    right_x = W - 5.5*cm if doppel else W - 4*cm
-    dice_size = 1.3*cm
+        left_x = x_offset
+        # Reduced gap: dice closer to numbers
+        right_x = x_offset + (3.5*cm if doppel else 2.5*cm)
+        dice_size = 1.3*cm
 
-    # Draw left side: numbers
-    for i in range(n):
-        y = base_y - i * row_h
-        c.setFillColor(FARBEN["dunkel"])
-        c.setFont(FONT_BOLD, 20)
-        if doppel:
-            num = items[i][0] + items[i][1]
-        else:
-            num = items[i][0]
-        c.drawCentredString(left_x, y - dice_size * 0.4, str(num))
-
-    # Draw right side: dice (shuffled)
-    for i in range(n):
-        si = shuffled_indices[i]
-        y = base_y - i * row_h
-        if doppel:
-            a, b = items[si]
-            _draw_würfel(c, right_x, y - dice_size, a, dice_size)
-            _draw_würfel(c, right_x + dice_size + 0.3*cm, y - dice_size, b, dice_size)
-        else:
-            val = items[si][0]
-            _draw_würfel(c, right_x, y - dice_size, val, dice_size)
-
-    # Draw solution lines if loesungen present
-    if loesungen:
-        c.setStrokeColor(FARBEN["gruen"])
-        c.setLineWidth(1.5)
+        # Draw left side: numbers
         for i in range(n):
-            # Find where item i ended up on right side
-            right_pos = shuffled_indices.index(i)
-            ly = base_y - i * row_h - dice_size * 0.3
-            ry = base_y - right_pos * row_h - dice_size * 0.3
-            c.line(left_x + 1.0*cm + 3, ly,
-                   (right_x - 0.3*cm) - 3, ry)
+            y = base_y - i * row_h
+            c.setFillColor(FARBEN["dunkel"])
+            c.setFont(FONT_BOLD, 20)
+            if doppel:
+                num = items[i][0] + items[i][1]
+            else:
+                num = items[i][0]
+            c.drawCentredString(left_x, y - dice_size * 0.4, str(num))
 
-    return base_y - n * row_h - 0.3*cm
+        # Draw right side: dice (shuffled)
+        for i in range(n):
+            si = shuffled_indices[i]
+            y = base_y - i * row_h
+            if doppel:
+                a, b = items[si]
+                _draw_würfel(c, right_x, y - dice_size, a, dice_size)
+                _draw_würfel(c, right_x + dice_size + 0.3*cm, y - dice_size, b, dice_size)
+            else:
+                val = items[si][0]
+                _draw_würfel(c, right_x, y - dice_size, val, dice_size)
+
+        # Draw solution lines
+        if loes_present:
+            c.setStrokeColor(FARBEN["gruen"])
+            c.setLineWidth(1.5)
+            for i in range(n):
+                right_pos = shuffled_indices.index(i)
+                ly = base_y - i * row_h - dice_size * 0.3
+                ry = base_y - right_pos * row_h - dice_size * 0.3
+                c.line(left_x + 0.8*cm, ly, right_x - 0.2*cm, ry)
+
+    # Draw both columns
+    _draw_zuordnung_column(2.0*cm, col1_tasks, len(col1_loes) > 0)
+    if col2_tasks:
+        _draw_zuordnung_column(11.5*cm, col2_tasks, len(col2_loes) > 0)
+
+    return base_y - halb * row_h - 0.3*cm
 
 
 # ── Zahlenkreis ──────────────────────────────────────────
