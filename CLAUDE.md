@@ -16,6 +16,11 @@ pip install reportlab pyyaml
 # Generate PDF (run from repo root)
 cd generator && python3 main.py
 
+# Layout Audit (Verify content fits on pages)
+# Prerequisites: Ubuntu/Debian fonts
+# sudo apt-get install -y fonts-sil-andika
+python3 main.py --audit-layout
+
 # Custom output path (run from generator/)
 python3 main.py --output ../output/custom.pdf
 ```
@@ -27,6 +32,15 @@ Default output: `output/mathebuch_klasse1.pdf`. No test framework — verify by 
 cd generator && python3 main.py
 ```
 A successful build prints `✓ PDF gespeichert: ...` at the end. Any Python error means the change broke something and must be fixed before committing.
+
+## Layout Verification Workflow
+
+To run the layout audit independently using a git worktree:
+1. `git worktree add ../mathebuch-audit <branch-name>`
+2. `cd ../mathebuch-audit && python3 -m venv .venv && source .venv/bin/activate`
+3. `pip install reportlab pyyaml`
+4. `cd generator && python3 main.py --audit-layout`
+5. Cleanup: `cd ../.. && git worktree remove mathebuch-audit`
 
 ## Architecture
 
