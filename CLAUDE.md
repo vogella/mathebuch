@@ -22,6 +22,12 @@ python3 main.py --output ../output/custom.pdf
 
 Default output: `output/mathebuch_klasse1.pdf`. No test framework — verify by generating the PDF and inspecting visually.
 
+**After every code change, run the PDF generator to confirm the book still builds without errors:**
+```bash
+cd generator && python3 main.py
+```
+A successful build prints `✓ PDF gespeichert: ...` at the end. Any Python error means the change broke something and must be fixed before committing.
+
 ## Architecture
 
 **Two-pass PDF rendering pipeline:**
