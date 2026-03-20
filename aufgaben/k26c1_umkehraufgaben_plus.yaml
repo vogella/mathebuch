@@ -1,5 +1,5 @@
 kapitel:
-  titel: "Umkehraufgaben"
+  titel: "Umkehraufgaben bis 10"
   untertitel: "Finde die passende Minusaufgabe zu jeder Plusaufgabe!"
   emoji: "🔄"
   farbe: "blau"
@@ -14,11 +14,3 @@ abschnitte:
       - [2, "+", 6, 8]
       - [5, "+", 2, 7]
       - [1, "+", 9, 10]
-  - titel: "Von Minus zu Plus"
-    typ: "umkehraufgaben"
-    beschreibung: "Finde die passende Plusaufgabe zu jeder Minusaufgabe."
-    aufgaben:
-      - [9, "−", 4, 5]
-      - [8, "−", 3, 5]
-      - [7, "−", 6, 1]
-      - [10, "−", 2, 8]
