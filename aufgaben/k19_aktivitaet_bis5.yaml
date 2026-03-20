@@ -35,3 +35,9 @@ abschnitte:
       - 'Bei „Ungerade" nennt es die Zahlen, bei denen die beiden nicht gleich viele'
       - "bekommen: 1, 3, 5"
       - "Wer am schnellsten alle Zahlen aufsagt, gewinnt einen Punkt!"
+
+  - typ: motivation
+    modus: "fakt"
+    emoji: "🔢"
+    titel: "Wusstest du?"
+    text: "Die Zahl 0 ist sehr besonders – sie bedeutet: nichts da! Wer hat die Null erfunden? Die Menschen in Indien vor über 1500 Jahren!"

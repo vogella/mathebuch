@@ -22,3 +22,9 @@ abschnitte:
       - 10
       - 0
       - 7
+
+  - typ: motivation
+    modus: "aufgabe"
+    emoji: "👏"
+    titel: "Mini-Aufgabe"
+    text: "Klatsche laut bis 10 und bei jeder geraden Zahl (2, 4, 6, 8, 10) stampfe mit dem Fuß!"

@@ -2620,3 +2620,85 @@ def draw_muster_fortsetzen(c, abschnitt, farb_key, start_y):
 
     total_rows = len(aufgaben)
     return row_y - total_rows * row_h - 0.3 * cm
+
+
+# ── Motivation / Lob / Fakten ──────────────────────────────
+
+def draw_motivation(c, abschnitt, farb_key, start_y):
+    """Zeichnet eine motivierende Callout-Box (Lob, Fakt oder Mini-Aufgabe).
+
+    YAML-Format:
+        typ: motivation
+        modus: "lob"   # oder "fakt" oder "aufgabe"
+        emoji: "⭐"
+        titel: "Super gemacht!"
+        text: "Du machst das toll! Weiter so!"
+    """
+    from layout import draw_emoji
+
+    modus = abschnitt.get("modus", "lob")
+    emoji = abschnitt.get("emoji", "⭐")
+    titel = abschnitt.get("titel", "")
+    text = abschnitt.get("text", "")
+
+    # Farbschema je nach Modus
+    if modus == "fakt":
+        bg_color = HexColor("#E6F4FF")
+        border_color = FARBEN["blau"]
+    elif modus == "aufgabe":
+        bg_color = HexColor("#E6FFE6")
+        border_color = FARBEN["gruen"]
+    else:  # "lob" und Standard
+        bg_color = HexColor("#FFF9E6")
+        border_color = FARBEN["orange"]
+
+    BOX_W = 15 * cm
+    BOX_X = (W - BOX_W) / 2
+    BORDER_W = 0.35 * cm
+    PADDING_H = 0.5 * cm
+    PADDING_V = 0.45 * cm
+    EMOJI_SIZE = 24
+    TITEL_SIZE = 14
+    TEXT_SIZE = 12
+
+    # Textbereich-Breite: Box abzüglich linkem Rand (Emoji + Border) und Padding
+    text_x = BOX_X + BORDER_W + 0.9 * cm + 0.3 * cm
+    text_max_w = BOX_W - BORDER_W - 0.9 * cm - 0.3 * cm - PADDING_H
+
+    # Texthöhe berechnen (Titel + umgebrochener Text)
+    titel_h = (TITEL_SIZE + 4) / 72 * 2.54 * cm
+    text_lines = _wrap_text(c, text, FONT, TEXT_SIZE, text_max_w) if text else []
+    line_h = (TEXT_SIZE + 3) / 72 * 2.54 * cm
+    text_block_h = len(text_lines) * line_h
+
+    box_h = PADDING_V + titel_h + (0.2 * cm if text_lines else 0) + text_block_h + PADDING_V
+
+    # Hintergrund-Rechteck
+    c.setFillColor(bg_color)
+    c.setStrokeColor(border_color)
+    c.setLineWidth(0)
+    c.roundRect(BOX_X, start_y - box_h, BOX_W, box_h, radius=8, fill=1, stroke=0)
+
+    # Linker farbiger Rand
+    c.setFillColor(border_color)
+    c.roundRect(BOX_X, start_y - box_h, BORDER_W, box_h, radius=4, fill=1, stroke=0)
+
+    # Emoji links
+    emoji_cx = BOX_X + BORDER_W + 0.55 * cm
+    emoji_cy = start_y - box_h / 2
+    draw_emoji(c, emoji, emoji_cx, emoji_cy, EMOJI_SIZE)
+
+    # Titel (fett)
+    titel_y = start_y - PADDING_V - titel_h * 0.75
+    c.setFillColor(FARBEN["dunkel"])
+    c.setFont(FONT_BOLD, TITEL_SIZE)
+    c.drawString(text_x, titel_y, titel)
+
+    # Beschreibungstext (normal, umgebrochen)
+    text_y = titel_y - titel_h * 0.5 - (0.15 * cm if text_lines else 0)
+    c.setFont(FONT, TEXT_SIZE)
+    for line in text_lines:
+        c.drawString(text_x, text_y, line)
+        text_y -= line_h
+
+    return start_y - box_h - 0.4 * cm
