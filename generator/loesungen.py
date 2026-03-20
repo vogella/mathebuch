@@ -443,22 +443,35 @@ def _solve_zehneruebergang(abschnitt):
 
 
 def _solve_muster_fortsetzen(abschnitt):
+    # If explicit solutions are provided, use them
+    loesungen = abschnitt.get("loesungen", [])
+    if loesungen:
+        results = []
+        for res in loesungen:
+            parts = []
+            for v in res:
+                if isinstance(v, str) and ":" in v:
+                    shape, color = v.split(":")
+                    parts.append(f"{shape[0]}{color[0]}")
+                else:
+                    parts.append(str(v))
+            results.append(",".join(parts))
+        return results
+
+    # Otherwise, calculate from the pattern
     results = []
     for aufg in abschnitt["aufgaben"]:
         muster = aufg.get("muster") or aufg.get("elemente", [])
-        # Find the constant difference from the known (non-None) values
-        known = [(i, v) for i, v in enumerate(muster) if v is not None]
+        # Find the constant difference from the known (non-None) numeric values
+        known = [(i, v) for i, v in enumerate(muster) if v is not None and isinstance(v, (int, float))]
         if len(known) >= 2:
-            # Calculate difference based on distance between known values
             idx1, v1 = known[0]
             idx2, v2 = known[1]
             diff = (v2 - v1) // (idx2 - idx1)
         else:
-            # Muster kann nicht eindeutig bestimmt werden, wenn weniger als 2 bekannte Werte vorhanden sind.
             results.append("")
             continue
 
-        # Lücken vorwärts und rückwärts ausfüllen
         filled = list(muster)
         ref_idx, ref_val = known[0]
         for i in range(len(filled)):
