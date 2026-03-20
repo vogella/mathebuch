@@ -16,18 +16,59 @@ abschnitte:
       - [10, "-", null, 4]
       - [7, "-", 4, null]
 
+  - typ: lückenaufgaben
+    titel: "B  Einfache Minusaufgaben"
+    beschreibung: "Rechne aus!"
+    aufgaben:
+      - [8, "-", 1, null]
+      - [9, "-", 2, null]
+      - [7, "-", 3, null]
+      - [6, "-", 4, null]
+      - [10, "-", 5, null]
+      - [5, "-", 4, null]
+      - [9, "-", 8, null]
+      - [10, "-", 2, null]
+
+  - typ: lückenaufgaben
+    titel: "C  Ergänze bis 10"
+    neue_seite: true
+    beschreibung: "Was fehlt bis 10?"
+    aufgaben:
+      - [1, "+", null, 10]
+      - [3, "+", null, 10]
+      - [5, "+", null, 10]
+      - [7, "+", null, 10]
+      - [9, "+", null, 10]
+      - [2, "+", null, 10]
+      - [4, "+", null, 10]
+      - [6, "+", null, 10]
+
+  - typ: lückenaufgaben
+    titel: "D  Was steht vorne?"
+    aufgaben:
+      - [null, "+", 2, 10]
+      - [null, "+", 4, 10]
+      - [null, "+", 6, 10]
+      - [null, "+", 8, 10]
+      - [null, "+", 1, 10]
+      - [null, "+", 3, 10]
+      - [null, "+", 5, 10]
+      - [null, "+", 7, 10]
+
   - typ: zahlenhaus
-    titel: "B  Zahlenhaus"
+    titel: "E  Zahlenhaus"
+    neue_seite: true
     beschreibung: "Finde zwei Zahlen für das Dach."
     dachzahlen: [8, 9, 10]
 
   - typ: rechenraupe
-    titel: "C  Rechenraupe"
+    titel: "F  Rechenraupe"
     start: 10
     schritte: ["-2", "-3", "+4"]
 
   - typ: lückenaufgaben
-    titel: "D  Mix-Aufgaben"
+    titel: "G  Mix-Aufgaben"
+    neue_seite: true
     beschreibung: "Rechne Plus und Minus!"
     aufgaben:
       - [4, "+", 4, null]
@@ -38,5 +79,3 @@ abschnitte:
       - [8, "-", 6, null]
       - [5, "+", 5, null]
       - [10, "-", 5, null]
-      - [1, "+", 9, null]
-      - [10, "-", 1, null]

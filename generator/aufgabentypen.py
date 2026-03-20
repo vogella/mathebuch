@@ -147,51 +147,44 @@ def _draw_aufgabe_row(c, x, y, aufg, farb_key, loesung=None):
     dunkel = FARBEN["dunkel"]
 
     c.setFont(FONT_BOLD, 20)
-    x0 = x
-
+    
     # a
     if a is not None:
         c.setFillColor(dunkel)
-        c.drawCentredString(x0 + 0.6*cm, y, str(a))
-        x0 += 1.5*cm
+        c.drawCentredString(x + 0.6*cm, y, str(a))
     else:
         if loesung is not None:
-            _draw_filled_answer_box(c, x0, y - 0.25*cm, loesung[0])
+            _draw_filled_answer_box(c, x, y - 0.4*cm, loesung[0])
         else:
-            draw_answer_box(c, x0, y - 0.25*cm)
-        x0 += 1.9*cm
+            draw_answer_box(c, x, y - 0.4*cm)
 
     # Operator
     c.setFillColor(op_col)
-    c.drawCentredString(x0, y, str(op))
-    x0 += 1.1*cm
+    c.drawCentredString(x + 2.1*cm, y, str(op))
 
     # b
     if b is not None:
         c.setFillColor(dunkel)
-        c.drawCentredString(x0 + 0.6*cm, y, str(b))
-        x0 += 1.5*cm
+        c.drawCentredString(x + 3.6*cm, y, str(b))
     else:
         if loesung is not None:
-            _draw_filled_answer_box(c, x0, y - 0.25*cm, loesung[1])
+            _draw_filled_answer_box(c, x + 3.0*cm, y - 0.4*cm, loesung[1])
         else:
-            draw_answer_box(c, x0, y - 0.25*cm)
-        x0 += 2.3*cm
+            draw_answer_box(c, x + 3.0*cm, y - 0.4*cm)
 
     # =
     c.setFillColor(op_col)
-    c.drawCentredString(x0, y, "=")
-    x0 += 1.0*cm
+    c.drawCentredString(x + 5.3*cm, y, "=")
 
     # Ergebnis
     if ergebnis is not None:
         c.setFillColor(dunkel)
-        c.drawCentredString(x0 + 0.6*cm, y, str(ergebnis))
+        c.drawCentredString(x + 6.4*cm, y, str(ergebnis))
     else:
         if loesung is not None:
-            _draw_filled_answer_box(c, x0, y - 0.25*cm, loesung[2])
+            _draw_filled_answer_box(c, x + 5.8*cm, y - 0.4*cm, loesung[2])
         else:
-            draw_answer_box(c, x0, y - 0.25*cm)
+            draw_answer_box(c, x + 5.8*cm, y - 0.4*cm)
 
 
 # ── Zahlenhaus ─────────────────────────────────────────────
@@ -247,7 +240,7 @@ def draw_zahlenhaus(c, abschnitt, farb_key, start_y):
 
 
 def _draw_ein_zahlenhaus(c, cx, ty, roof_num, loesung=None):
-    roof_size = 1.4*cm
+    roof_size = 1.6*cm
     # Dach
     c.setFillColor(FARBEN["orange"])
     path = c.beginPath()
