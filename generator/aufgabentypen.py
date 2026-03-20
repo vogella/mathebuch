@@ -6,7 +6,8 @@ import math
 from reportlab.lib.colors import HexColor, white
 from reportlab.lib.units import cm
 from reportlab.lib.pagesizes import A4
-from layout import FARBEN, draw_answer_box, draw_section_label, FONT, FONT_BOLD, FONT_ITALIC, FONT_MONO
+from layout import (FARBEN, draw_answer_box, draw_section_label, 
+                    draw_follows_arrow, FONT, FONT_BOLD, FONT_ITALIC, FONT_MONO)
 
 W, H = A4
 
@@ -86,7 +87,18 @@ def draw_erklaerung(c, abschnitt, farb_key, start_y):
             # Bold example line
             c.setFillColor(FARBEN["dunkel"])
             c.setFont(FONT_BOLD, 11)
-            c.drawString(2.5*cm, y, zeile.strip().strip('*').strip())
+            text = zeile.strip().strip('*').strip()
+            if "➔" in text:
+                parts = text.split("➔")
+                tx = 2.5*cm
+                for i, p in enumerate(parts):
+                    c.drawString(tx, y, p)
+                    tx += c.stringWidth(p, FONT_BOLD, 11)
+                    if i < len(parts) - 1:
+                        draw_follows_arrow(c, tx + 0.1*cm, y - 0.15*cm, size=0.45*cm, color=FARBEN["grau"])
+                        tx += 0.75*cm
+            else:
+                c.drawString(2.5*cm, y, text)
             y -= 0.6*cm
         elif zeile.strip().startswith("[") or "▼" in zeile:
             # Monospaced grid lines or arrows
@@ -98,7 +110,19 @@ def draw_erklaerung(c, abschnitt, farb_key, start_y):
         else:
             c.setFillColor(FARBEN["dunkel"])
             c.setFont(FONT, 10)
-            c.drawString(2.5*cm, y, zeile)
+            text = zeile
+            # If the line contains our special arrow symbol, draw it manually
+            if "➔" in text:
+                parts = text.split("➔")
+                tx = 2.5*cm
+                for i, p in enumerate(parts):
+                    c.drawString(tx, y, p)
+                    tx += c.stringWidth(p, FONT, 10)
+                    if i < len(parts) - 1:
+                        draw_follows_arrow(c, tx + 0.1*cm, y - 0.15*cm, size=0.4*cm, color=FARBEN["grau"])
+                        tx += 0.7*cm
+            else:
+                c.drawString(2.5*cm, y, text)
             y -= 0.55*cm
 
     return y - 0.3*cm
@@ -1252,10 +1276,8 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
         x += c.stringWidth(str(ziel), FONT_BOLD, 16) + 0.4 * cm
 
         # "Follows" arrow
-        c.setFillColor(FARBEN[farb_key])
-        c.setFont(FONT_BOLD, 18)
-        c.drawString(x, y, "➔")
-        x += 0.8 * cm
+        draw_follows_arrow(c, x, y, size=0.6*cm, color=FARBEN[farb_key])
+        x += 0.9 * cm
 
         # ── Continuation on the SAME line: zahl passt [___] mal in die ziel. ──
         c.setFillColor(FARBEN["dunkel"])
@@ -2390,10 +2412,10 @@ def draw_dungeon_abenteuer(c, abschnitt, farb_key, start_y):
         tx += c.stringWidth(txt, FONT_BOLD, 10) + 0.3 * cm
 
         for i, op in enumerate(pfad):
-            c.setFont(FONT, 10)
-            c.drawString(tx, cy + 0.1 * cm, "➔")
+            draw_follows_arrow(c, tx, cy - 0.05 * cm, size=0.35 * cm, color=FARBEN["grau"])
             tx += 0.5 * cm
             c.setFont(FONT_BOLD, 10)
+            c.setFillColor(FARBEN["dunkel"])
             c.drawString(tx, cy + 0.1 * cm, op)
             tx += c.stringWidth(op, FONT_BOLD, 10) + 0.2 * cm
 

@@ -150,11 +150,11 @@ def draw_section_label(c, text, farb_key, y):
     c.roundRect(1.5*cm, y, 10*cm, 0.8*cm, radius=6, fill=1, stroke=0)
     c.setFillColor(white)
     c.setFont(FONT_BOLD, 12)
-    c.drawString(2*cm, y + 0.18*cm, text)
+    c.drawString(2.0*cm, y + 0.22*cm, text)
 
 
 def draw_answer_box(c, x, y, w=2.0*cm, h=1.5*cm):
-    """Hellblaues Antwortfeld."""
+    """Zeichnet ein hellblaues Feld für die Lösung."""
     c.setFillColor(FARBEN["antwort"])
     c.setStrokeColor(FARBEN["blau"])
     c.setLineWidth(1.5)
@@ -200,3 +200,29 @@ def draw_page_number(c, n, show_stars=True):
         # Kleiner Pokal neben den Sternen
         from illustrationen import draw_mini_pokal
         draw_mini_pokal(c, W - 7.5*cm, 2.0*cm, size=0.8)
+
+
+def draw_follows_arrow(c, x, y, size=0.6*cm, color=None):
+    """Draws a 'follows' arrow (==>) manually using lines and a triangle."""
+    if color:
+        c.setStrokeColor(color)
+        c.setFillColor(color)
+    
+    c.setLineWidth(2.5)
+    # The arrow is composed of two parallel lines and a triangle tip
+    # Vertical center is at 'y + 0.15*cm' to roughly align with text baseline center
+    base_y = y + 0.18*cm
+    
+    # Draw double line part
+    c.line(x, base_y - 0.06*cm, x + size * 0.6, base_y - 0.06*cm)
+    c.line(x, base_y + 0.06*cm, x + size * 0.6, base_y + 0.06*cm)
+    
+    # Draw triangle tip
+    tip_x = x + size
+    tip_y = base_y
+    path = c.beginPath()
+    path.moveTo(x + size * 0.5, base_y + size * 0.3)
+    path.lineTo(tip_x, tip_y)
+    path.lineTo(x + size * 0.5, base_y - size * 0.3)
+    path.close()
+    c.drawPath(path, fill=1, stroke=1)
