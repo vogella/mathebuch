@@ -447,8 +447,10 @@ def draw_magische_dreiecke(c, abschnitt, farb_key, start_y):
 
 # ── Magisches Quadrat ─────────────────────────────────────
 
-def _draw_ein_quadrat(c, gx, gy, werte, zielsumme, farb_key, cell=1.8*cm, label=None):
-    """Draws a single 3x3 magic square grid at position (gx, gy) bottom-left."""
+def _draw_ein_quadrat(c, gx, gy, werte, zielsumme, farb_key, cell=1.8*cm, label=None, original_werte=None):
+    """Draws a single 3x3 magic square grid at position (gx, gy) bottom-left.
+    If original_werte is provided, it's used to determine which cells are 'answers'.
+    """
     grid_w = 3 * cell
     node_colors = [
         FARBEN["yellow"], FARBEN["blau"],   FARBEN["gruen"],
@@ -461,12 +463,33 @@ def _draw_ein_quadrat(c, gx, gy, werte, zielsumme, farb_key, cell=1.8*cm, label=
         col = idx % 3
         cx = gx + col * cell
         cy = gy + (2 - row) * cell
+        
+        # A cell is a 'blank' if it is currently None
         is_blank = val is None
-        c.setFillColor(node_colors[idx] if not is_blank else FARBEN["antwort"])
-        c.setStrokeColor(FARBEN[farb_key])
+        
+        # A cell is a 'solution' if original_werte was None at this index
+        is_solution = (original_werte is not None and 
+                       idx < len(original_werte) and 
+                       original_werte[idx] is None)
+
+        if is_blank or is_solution:
+            c.setFillColor(FARBEN["antwort"])
+            c.setStrokeColor(FARBEN[farb_key])
+        else:
+            c.setFillColor(node_colors[idx])
+            c.setStrokeColor(FARBEN[farb_key])
+
         c.setLineWidth(1.5)
         c.roundRect(cx, cy, cell, cell, radius=5, fill=1, stroke=1)
-        c.setFillColor(white if not is_blank else FARBEN["blau"])
+        
+        # Text color: green for solutions, white for given, blue for '?'
+        if is_solution:
+            c.setFillColor(FARBEN["gruen"])
+        elif not is_blank:
+            c.setFillColor(white)
+        else:
+            c.setFillColor(FARBEN["blau"])
+
         c.setFont(FONT_BOLD, 18)
         lbl = str(val) if val is not None else "?"
         c.drawCentredString(cx + cell/2, cy + cell/2 - 0.2*cm, lbl)
@@ -513,7 +536,8 @@ def draw_magisches_quadrat(c, abschnitt, farb_key, start_y):
         label2 = paar.get("label_rechts", "Lösung")
         werte2 = paar["werte"]
         _draw_ein_quadrat(c, gx1, gy, werte, zielsumme, farb_key, cell_s, label1)
-        _draw_ein_quadrat(c, gx2, gy, werte2, zielsumme, farb_key, cell_s, label2)
+        # Pass 'werte' as 'original_werte' for the solution quadrat
+        _draw_ein_quadrat(c, gx2, gy, werte2, zielsumme, farb_key, cell_s, label2, original_werte=werte)
         return gy - 1.5*cm
     else:
         gx = 2.5*cm
@@ -1480,9 +1504,31 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
         col_spacing = (W - 6*cm) / max(num_cols - 1, 1)
 
         # "Start" label
-        c.setFillColor(FARBEN[farb_key])
+        c.setFillColor(FARBEN["gruen"] if loes else FARBEN[farb_key])
         c.setFont(FONT_BOLD, 10)
         c.drawCentredString(1.8*cm, grid_top - grid_h / 2 + 0.1*cm, "Start")
+
+        # Solution path (drawn behind circles)
+        if loes:
+            c.setStrokeColor(FARBEN["gruen"])
+            c.setLineWidth(3)
+            # Line from Start to first column
+            sy = grid_top - (loes[0] + 0.5) * (grid_h / len(spalten[0]))
+            c.line(2.3*cm, grid_top - grid_h / 2, 3*cm - node_r, sy)
+            
+            # Lines between columns
+            for ci in range(num_cols - 1):
+                sy = grid_top - (loes[ci] + 0.5) * (grid_h / len(spalten[ci]))
+                ny = grid_top - (loes[ci+1] + 0.5) * (grid_h / len(spalten[ci+1]))
+                cx1 = 3*cm + ci * col_spacing
+                cx2 = 3*cm + (ci + 1) * col_spacing
+                c.line(cx1 + node_r, sy, cx2 - node_r, ny)
+            
+            # Line to Ziel
+            last_x = 3*cm + (num_cols - 1) * col_spacing
+            last_y = grid_top - (loes[-1] + 0.5) * (grid_h / len(spalten[-1]))
+            target_x = last_x + 2*cm
+            c.line(last_x + node_r, last_y, target_x - 0.8*cm, grid_top - grid_h/2)
 
         for ci, spalte in enumerate(spalten):
             if not spalte:
@@ -1492,13 +1538,21 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
             for ri, val in enumerate(spalte):
                 cy = grid_top - (ri + 0.5) * (grid_h / len(spalte))
                 # Node circle
-                c.setFillColor(col_color)
-                c.circle(col_x, cy, node_r, fill=1, stroke=0)
+                is_on_path = (loes and ci < len(loes) and loes[ci] == ri)
+                if is_on_path:
+                    c.setFillColor(FARBEN["gruen"])
+                    c.setStrokeColor(FARBEN["gruen"])
+                    c.setLineWidth(2)
+                    c.circle(col_x, cy, node_r, fill=1, stroke=1)
+                else:
+                    c.setFillColor(col_color)
+                    c.circle(col_x, cy, node_r, fill=1, stroke=0)
+                
                 c.setFillColor(white)
                 c.setFont(FONT_BOLD, 14)
                 c.drawCentredString(col_x, cy - 0.15*cm, str(val))
 
-            # Arrows to next column
+            # Arrows to next column (background)
             if ci < num_cols - 1:
                 next_spalte = spalten[ci + 1]
                 next_x = 3*cm + (ci + 1) * col_spacing
@@ -1506,14 +1560,17 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
                     sy = grid_top - (ri + 0.5) * (grid_h / len(spalte))
                     for nri in range(len(next_spalte)):
                         ny = grid_top - (nri + 0.5) * (grid_h / len(next_spalte))
-                        c.setStrokeColor(FARBEN["hellgrau"])
-                        c.setLineWidth(1)
-                        c.line(col_x + node_r, sy, next_x - node_r, ny)
+                        # Only draw gray line if not part of solution path
+                        is_sol_line = (loes and ci < len(loes)-1 and loes[ci] == ri and loes[ci+1] == nri)
+                        if not is_sol_line:
+                            c.setStrokeColor(FARBEN["hellgrau"])
+                            c.setLineWidth(1)
+                            c.line(col_x + node_r, sy, next_x - node_r, ny)
 
         # Target sum label (no answer box)
         target_x = 3*cm + (num_cols - 1) * col_spacing + 2*cm
         target_y = grid_top - grid_h / 2
-        c.setFillColor(FARBEN[farb_key])
+        c.setFillColor(FARBEN["gruen"] if loes else FARBEN[farb_key])
         c.setFont(FONT_BOLD, 14)
         c.drawCentredString(target_x, target_y + 0.5*cm, "Ziel:")
         c.drawCentredString(target_x, target_y - 0.2*cm, str(zielsumme))
@@ -2528,9 +2585,9 @@ def draw_zehneruebergang(c, abschnitt, farb_key, start_y):
 
         # First blank: step1 (how much to reach 10)
         if loes is not None:
-            _draw_filled_answer_box(c, x, y - 0.25 * cm, loes[0], w=box_w, h=box_h)
+            _draw_filled_answer_box(c, x, y - 0.55 * cm, loes[0], w=box_w, h=box_h)
         else:
-            draw_answer_box(c, x, y - 0.25 * cm, w=box_w, h=box_h)
+            draw_answer_box(c, x, y - 0.55 * cm, w=box_w, h=box_h)
         x += box_w + 0.3 * cm
 
         # op
@@ -2540,9 +2597,9 @@ def draw_zehneruebergang(c, abschnitt, farb_key, start_y):
 
         # Second blank: step2 (remainder)
         if loes is not None:
-            _draw_filled_answer_box(c, x, y - 0.25 * cm, loes[1], w=box_w, h=box_h)
+            _draw_filled_answer_box(c, x, y - 0.55 * cm, loes[1], w=box_w, h=box_h)
         else:
-            draw_answer_box(c, x, y - 0.25 * cm, w=box_w, h=box_h)
+            draw_answer_box(c, x, y - 0.55 * cm, w=box_w, h=box_h)
         x += box_w + 0.3 * cm
 
         # =
@@ -2552,9 +2609,9 @@ def draw_zehneruebergang(c, abschnitt, farb_key, start_y):
 
         # Third blank: final result
         if loes is not None:
-            _draw_filled_answer_box(c, x, y - 0.25 * cm, loes[2], w=box_w, h=box_h)
+            _draw_filled_answer_box(c, x, y - 0.55 * cm, loes[2], w=box_w, h=box_h)
         else:
-            draw_answer_box(c, x, y - 0.25 * cm, w=box_w, h=box_h)
+            draw_answer_box(c, x, y - 0.55 * cm, w=box_w, h=box_h)
 
     return row_y - len(aufgaben) * row_h - 0.5 * cm
 
