@@ -19,3 +19,29 @@ abschnitte:
       - "Die 5 steht"
       - "immer in"
       - "der Mitte!"
+
+  - typ: magisches_quadrat
+    titel: "B  Leichtes Magisches Quadrat – Summe 15"
+    beschreibung: "Sechs Zahlen sind schon eingetragen. Welche drei fehlen noch?"
+    zielsumme: 15
+    # Reihenfolge: Zeile für Zeile von oben links nach unten rechts
+    # Lösung: 4,9,2 / 3,5,7 / 8,1,6
+    werte: [4, 9, null, 3, 5, 7, null, null, 6]
+    tipp_zeilen:
+      - "Jede Reihe,"
+      - "Spalte und"
+      - "Diagonale"
+      - "ergibt 15!"
+
+  - typ: magisches_quadrat
+    titel: "C  Schwieriges Magisches Quadrat – Summe 15"
+    beschreibung: "Nur zwei Zahlen sind gegeben. Kannst du das Quadrat lösen?"
+    zielsumme: 15
+    # Reihenfolge: Zeile für Zeile von oben links nach unten rechts
+    # Lösung: 6,7,2 / 1,5,9 / 8,3,4
+    werte: [null, null, null, null, 5, null, null, null, 4]
+    tipp_zeilen:
+      - "Probiere aus!"
+      - "Die 5 steht"
+      - "immer in"
+      - "der Mitte."
