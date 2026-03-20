@@ -32,7 +32,4 @@ abschnitte:
     titel: "Textaufgaben"
     zeilen:
       - "Lies genau und überlege: Musst du plus (+) oder minus (-) rechnen?"
-      - "Schreibe die Rechnung und die Antwort auf."
-      - ""
-      - "**Beispiel: Anna hat 3 Äpfel. Ben gibt ihr 4 dazu. Wie viele sind es?**"
-      - "**Rechnung: 3 + 4 = 7    Antwort: 7 Äpfel**"
+      - "**Beispiel: Anna hat 3 Äpfel. Ben gibt ihr 4 dazu → 3 + 4 = 7 Äpfel**"

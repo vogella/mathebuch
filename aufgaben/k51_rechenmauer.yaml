@@ -19,10 +19,6 @@ abschnitte:
         - [null, null, null]
         - [null, null]
         - [null]
-      - - [2, 4, 3, 1]
-        - [null, null, null]
-        - [null, null]
-        - [null]
 
   - typ: rechenmauer
     titel: "B  Schwieriger – finde die fehlenden Zahlen!"
@@ -30,12 +26,4 @@ abschnitte:
       - - [null, 3, null, 2]
         - [null, null, null]
         - [null, 8]
-        - [null]
-      - - [4, null, 2, null]
-        - [null, null, null]
-        - [null, null]
-        - [15]
-      - - [null, null, 3, 5]
-        - [null, null, null]
-        - [9, null]
         - [null]

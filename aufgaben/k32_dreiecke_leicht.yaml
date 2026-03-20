@@ -8,8 +8,7 @@ kapitel:
 abschnitte:
   - typ: magisches_dreieck
     titel: "A  Magisches Dreieck – Summe 9"
-    beschreibung: "Jede Seite soll die Summe 9 ergeben. Fülle die leeren Felder! Es gibt mehrere Möglichkeiten die Zahlen in das Dreieck einzusetzen, finde eine davon."
-    hinweis: "Benutze die Zahlen 1–6. Keine Zahl zweimal!"
+    beschreibung: "Jede Seite soll die Summe 9 ergeben. Benutze die Zahlen 1–6."
     # Reihenfolge: oben, links-unten, rechts-unten, Mitte-links, Mitte-unten, Mitte-rechts
     # Lösung: 1,2,3,6,4,5 → 1+6+2=9, 2+4+3=9, 1+5+3=9
     werte: [1, null, 3, 6, null, null]
@@ -20,14 +19,8 @@ abschnitte:
 
   - typ: magische_dreiecke
     titel: "B  Drei kleine Dreiecke"
-    beschreibung: "Fülle jedes Dreieck aus! Jede Seite ergibt die angegebene Summe. Es gibt mehrere Möglichkeiten, finde eine davon."
+    beschreibung: "Fülle das Dreieck aus! Jede Seite ergibt die angegebene Summe."
     dreiecke:
       # Summe 9: 1,2,3 + 6,4,5
       - zielsumme: 9
         werte: [1, 2, 3, null, null, null]
-      # Summe 10: 1,3,5 + 6,2,4
-      - zielsumme: 10
-        werte: [1, null, null, null, null, null]
-      # Summe 12: 4,5,6 + 3,1,2
-      - zielsumme: 12
-        werte: [null, null, 6, null, null, null]

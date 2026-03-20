@@ -25,9 +25,7 @@ abschnitte:
     beschreibung: "Male das Muster weiter."
     aufgaben:
       - elemente: ["kreis:rot", "kreis:blau", "kreis:rot", "kreis:blau", null, null]
-      - elemente: ["quadrat:gelb", "quadrat:gelb", "quadrat:blau", "quadrat:gelb", "quadrat:gelb", null]
       - elemente: ["dreieck:rot", "kreis:gruen", "dreieck:rot", "kreis:gruen", null, null]
     loesungen:
       - ["kreis:rot", "kreis:blau"]
-      - ["quadrat:blau"]
       - ["dreieck:rot", "kreis:gruen"]
