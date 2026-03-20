@@ -25,3 +25,9 @@ abschnitte:
       - "## 🧦 Socken-Sortierer"
       - "Such dir 10 Socken und sortiere sie zu Paaren. Wie viele"
       - "Paare hast du am Ende?"
+
+  - typ: motivation
+    modus: "fakt"
+    emoji: "🔢"
+    titel: "Wusstest du?"
+    text: "Schmetterlinge haben genau 6 Beine. Wie viele Beine haben 2 Schmetterlinge zusammen?"

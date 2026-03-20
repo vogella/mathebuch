@@ -33,3 +33,9 @@ abschnitte:
       - [16, "halb"]
       - [18, "halb"]
       - [20, "halb"]
+
+  - typ: motivation
+    modus: "aufgabe"
+    emoji: "🤸"
+    titel: "Beweg dich!"
+    text: "Mach 5 Hampelmänner! Dann nochmal 5 – das sind zusammen 10! Verdoppeln macht Spaß!"

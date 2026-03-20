@@ -530,10 +530,11 @@ SOLVER = {
     "gerade_ungerade":    _solve_gerade_ungerade,
     "rechenquadrat_2x2":  _solve_rechenquadrat_2x2,
     "muster_fortsetzen":  _solve_muster_fortsetzen,
+    "motivation":         lambda ab: [],
 }
 
 # Types to skip (explanation, visual-only)
-SKIP_TYPES = {"erklaerung", "wuerfel_zuordnen"}
+SKIP_TYPES = {"erklaerung", "wuerfel_zuordnen", "motivation"}
 
 
 # ── Rendering ─────────────────────────────────────────────

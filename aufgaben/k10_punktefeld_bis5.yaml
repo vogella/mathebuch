@@ -23,3 +23,9 @@ abschnitte:
       - 1
       - 3
       - 4
+
+  - typ: motivation
+    modus: "lob"
+    emoji: "⭐"
+    titel: "Super gemacht!"
+    text: "Du hast die Punkte gezählt – das war toll! Weiter so!"

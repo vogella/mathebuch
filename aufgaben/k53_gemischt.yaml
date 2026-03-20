@@ -30,3 +30,9 @@ abschnitte:
       - "4, 5 und 6."
       - "Keine Zahl"
       - "zweimal!"
+
+  - typ: motivation
+    modus: "lob"
+    emoji: "🏆"
+    titel: "Fast geschafft!"
+    text: "Du bist schon so weit gekommen! Das Rechnen bis 20 sitzt schon richtig gut bei dir!"
