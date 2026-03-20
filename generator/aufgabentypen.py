@@ -154,9 +154,9 @@ def _draw_aufgabe_row(c, x, y, aufg, farb_key, loesung=None):
         c.drawCentredString(x + 0.6*cm, y, str(a))
     else:
         if loesung is not None:
-            _draw_filled_answer_box(c, x, y - 0.4*cm, loesung[0])
+            _draw_filled_answer_box(c, x, y - 0.55*cm, loesung[0])
         else:
-            draw_answer_box(c, x, y - 0.4*cm)
+            draw_answer_box(c, x, y - 0.55*cm)
 
     # Operator
     c.setFillColor(op_col)
@@ -168,9 +168,9 @@ def _draw_aufgabe_row(c, x, y, aufg, farb_key, loesung=None):
         c.drawCentredString(x + 3.6*cm, y, str(b))
     else:
         if loesung is not None:
-            _draw_filled_answer_box(c, x + 3.0*cm, y - 0.4*cm, loesung[1])
+            _draw_filled_answer_box(c, x + 3.0*cm, y - 0.55*cm, loesung[1])
         else:
-            draw_answer_box(c, x + 3.0*cm, y - 0.4*cm)
+            draw_answer_box(c, x + 3.0*cm, y - 0.55*cm)
 
     # =
     c.setFillColor(op_col)
@@ -182,9 +182,9 @@ def _draw_aufgabe_row(c, x, y, aufg, farb_key, loesung=None):
         c.drawCentredString(x + 6.4*cm, y, str(ergebnis))
     else:
         if loesung is not None:
-            _draw_filled_answer_box(c, x + 5.8*cm, y - 0.4*cm, loesung[2])
+            _draw_filled_answer_box(c, x + 5.8*cm, y - 0.55*cm, loesung[2])
         else:
-            draw_answer_box(c, x + 5.8*cm, y - 0.4*cm)
+            draw_answer_box(c, x + 5.8*cm, y - 0.55*cm)
 
 
 # ── Zahlenhaus ─────────────────────────────────────────────
@@ -889,10 +889,10 @@ def draw_kettenaufgaben(c, abschnitt, farb_key, start_y):
 
         ans_x = eq_x + 1.0*cm
         if idx < len(loesungen):
-            _draw_filled_answer_box(c, ans_x, y - 0.25*cm,
+            _draw_filled_answer_box(c, ans_x, y - 0.55*cm,
                                     loesungen[idx], w=1.6*cm, h=1.5*cm)
         else:
-            draw_answer_box(c, ans_x, y - 0.25*cm, w=1.6*cm, h=1.5*cm)
+            draw_answer_box(c, ans_x, y - 0.55*cm, w=1.6*cm, h=1.5*cm)
 
     return row_y - halb * row_h - 0.3*cm
 
@@ -927,10 +927,10 @@ def draw_tauschaufgaben(c, abschnitt, farb_key, start_y):
         c.setFillColor(FARBEN[farb_key])
         c.drawCentredString(x + 3.0*cm, y, "=")
         if summe is not None:
-            _draw_filled_answer_box(c, x + 3.5*cm, y - 0.25*cm, summe,
+            _draw_filled_answer_box(c, x + 3.5*cm, y - 0.55*cm, summe,
                                     w=1.6*cm, h=1.5*cm)
         else:
-            draw_answer_box(c, x + 3.5*cm, y - 0.25*cm, w=1.6*cm, h=1.5*cm)
+            draw_answer_box(c, x + 3.5*cm, y - 0.55*cm, w=1.6*cm, h=1.5*cm)
 
         # Right side: b + a = ___
         x2 = 10*cm
@@ -943,10 +943,10 @@ def draw_tauschaufgaben(c, abschnitt, farb_key, start_y):
         c.setFillColor(FARBEN[farb_key])
         c.drawCentredString(x2 + 3.0*cm, y, "=")
         if summe is not None:
-            _draw_filled_answer_box(c, x2 + 3.5*cm, y - 0.25*cm, summe,
+            _draw_filled_answer_box(c, x2 + 3.5*cm, y - 0.55*cm, summe,
                                     w=1.6*cm, h=1.5*cm)
         else:
-            draw_answer_box(c, x2 + 3.5*cm, y - 0.25*cm, w=1.6*cm, h=1.5*cm)
+            draw_answer_box(c, x2 + 3.5*cm, y - 0.55*cm, w=1.6*cm, h=1.5*cm)
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
 
@@ -986,10 +986,10 @@ def draw_verdoppeln_halbieren(c, abschnitt, farb_key, start_y):
             c.setFillColor(FARBEN[farb_key])
             c.drawCentredString(x + 3.0*cm, y, "=")
             if loes is not None:
-                _draw_filled_answer_box(c, x + 3.5*cm, y - 0.4*cm, loes,
+                _draw_filled_answer_box(c, x + 3.5*cm, y - 0.55*cm, loes,
                                         w=1.6*cm, h=1.5*cm)
             else:
-                draw_answer_box(c, x + 3.5*cm, y - 0.4*cm, w=1.6*cm, h=1.5*cm)
+                draw_answer_box(c, x + 3.5*cm, y - 0.55*cm, w=1.6*cm, h=1.5*cm)
         else:  # halb
             c.setFillColor(FARBEN["dunkel"])
             c.drawString(x, y, str(zahl))
@@ -998,10 +998,10 @@ def draw_verdoppeln_halbieren(c, abschnitt, farb_key, start_y):
             c.setFont(FONT_BOLD, 18)
             c.drawString(x + text_w + 0.3*cm, y, "÷ 2 =")
             if loes is not None:
-                _draw_filled_answer_box(c, x + text_w + 2.5*cm, y - 0.4*cm,
+                _draw_filled_answer_box(c, x + text_w + 2.5*cm, y - 0.55*cm,
                                         loes, w=1.6*cm, h=1.5*cm)
             else:
-                draw_answer_box(c, x + text_w + 2.5*cm, y - 0.4*cm,
+                draw_answer_box(c, x + text_w + 2.5*cm, y - 0.55*cm,
                                 w=1.6*cm, h=1.5*cm)
 
     total_rows = (len(aufgaben) + cols - 1) // cols
@@ -1249,7 +1249,13 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
 
         c.setFillColor(FARBEN["dunkel"])
         c.drawString(x, y, str(ziel))
-        x += c.stringWidth(str(ziel), FONT_BOLD, 16) + 1.0 * cm
+        x += c.stringWidth(str(ziel), FONT_BOLD, 16) + 0.4 * cm
+
+        # "Follows" arrow
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont(FONT_BOLD, 18)
+        c.drawString(x, y, "➔")
+        x += 0.8 * cm
 
         # ── Continuation on the SAME line: zahl passt [___] mal in die ziel. ──
         c.setFillColor(FARBEN["dunkel"])
@@ -1264,10 +1270,11 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
 
         BOX_W = 1.3 * cm
         BOX_H = 1.1 * cm
+        # Centering for 1.1cm box: dy = h/2 - 0.1 = 0.55 - 0.1 = 0.45
         if loes is not None:
-            _draw_filled_answer_box(c, x, y - 0.4 * cm, loes, w=BOX_W, h=BOX_H)
+            _draw_filled_answer_box(c, x, y - 0.45 * cm, loes, w=BOX_W, h=BOX_H)
         else:
-            draw_answer_box(c, x, y - 0.4 * cm, w=BOX_W, h=BOX_H)
+            draw_answer_box(c, x, y - 0.45 * cm, w=BOX_W, h=BOX_H)
         x += BOX_W + 0.2 * cm
 
         c.setFillColor(FARBEN["grau"])
