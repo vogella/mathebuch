@@ -7,7 +7,8 @@ from reportlab.lib.colors import HexColor, white
 from reportlab.lib.units import cm
 from reportlab.lib.pagesizes import A4
 from layout import (FARBEN, draw_answer_box, draw_section_label, 
-                    draw_follows_arrow, FONT, FONT_BOLD, FONT_ITALIC, FONT_MONO)
+                    draw_follows_arrow, draw_rotation_arrow, draw_emoji, 
+                    FONT, FONT_BOLD, FONT_ITALIC, FONT_MONO)
 
 W, H = A4
 
@@ -69,6 +70,39 @@ def _draw_beschreibung(c, abschnitt, start_y):
 
 # ── Erklärung ─────────────────────────────────────────────
 
+def _draw_text_with_emojis(c, x, y, text, font_name, font_size, color):
+    """Draws text that may contain emojis by rendering them one by one."""
+    import re
+    # Simple regex for finding emojis (basic range check)
+    # This covers many common emojis but not all complex ones.
+    emoji_pattern = re.compile(r'[\U00010000-\U0010ffff]')
+    
+    c.setFillColor(color)
+    c.setFont(font_name, font_size)
+    
+    last_idx = 0
+    curr_x = x
+    for match in emoji_pattern.finditer(text):
+        # Text before emoji
+        part = text[last_idx:match.start()]
+        if part:
+            c.drawString(curr_x, y, part)
+            curr_x += c.stringWidth(part, font_name, font_size)
+        
+        # The emoji itself
+        emoji_char = match.group()
+        # Draw emoji slightly shifted to align vertically
+        draw_emoji(c, emoji_char, curr_x + font_size * 0.4, y + font_size * 0.3, font_size * 1.1)
+        curr_x += font_size * 1.0
+        
+        last_idx = match.end()
+    
+    # Remaining text
+    part = text[last_idx:]
+    if part:
+        c.drawString(curr_x, y, part)
+
+
 def draw_erklaerung(c, abschnitt, farb_key, start_y):
     """Draws an explanation block with title and text lines."""
     draw_section_label(c, abschnitt["titel"], farb_key, start_y)
@@ -77,28 +111,29 @@ def draw_erklaerung(c, abschnitt, farb_key, start_y):
     y = start_y - 1.2*cm
 
     for zeile in zeilen:
+        if not zeile.strip():
+            y -= 0.3*cm
+            continue
+
         if zeile.startswith("##"):
             # Sub-heading
-            c.setFillColor(FARBEN[farb_key])
-            c.setFont(FONT_BOLD, 12)
-            c.drawString(2*cm, y, zeile[2:].strip())
+            text = zeile[2:].strip()
+            _draw_text_with_emojis(c, 2*cm, y, text, FONT_BOLD, 12, FARBEN[farb_key])
             y -= 0.7*cm
         elif zeile.startswith("**"):
             # Bold example line
-            c.setFillColor(FARBEN["dunkel"])
-            c.setFont(FONT_BOLD, 11)
             text = zeile.strip().strip('*').strip()
             if "➔" in text:
                 parts = text.split("➔")
                 tx = 2.5*cm
                 for i, p in enumerate(parts):
-                    c.drawString(tx, y, p)
-                    tx += c.stringWidth(p, FONT_BOLD, 11)
+                    _draw_text_with_emojis(c, tx, y, p, FONT_BOLD, 11, FARBEN["dunkel"])
+                    tx += c.stringWidth(p, FONT_BOLD, 11) # Note: stringWidth skips emojis usually, but good enough for now
                     if i < len(parts) - 1:
                         draw_follows_arrow(c, tx + 0.1*cm, y - 0.15*cm, size=0.45*cm, color=FARBEN["grau"])
                         tx += 0.75*cm
             else:
-                c.drawString(2.5*cm, y, text)
+                _draw_text_with_emojis(c, 2.5*cm, y, text, FONT_BOLD, 11, FARBEN["dunkel"])
             y -= 0.6*cm
         elif zeile.strip().startswith("[") or "▼" in zeile:
             # Monospaced grid lines or arrows
@@ -108,21 +143,19 @@ def draw_erklaerung(c, abschnitt, farb_key, start_y):
             c.drawString(3.5*cm, y, zeile.strip())
             y -= 0.55*cm
         else:
-            c.setFillColor(FARBEN["dunkel"])
-            c.setFont(FONT, 10)
             text = zeile
             # If the line contains our special arrow symbol, draw it manually
             if "➔" in text:
                 parts = text.split("➔")
                 tx = 2.5*cm
                 for i, p in enumerate(parts):
-                    c.drawString(tx, y, p)
+                    _draw_text_with_emojis(c, tx, y, p, FONT, 10, FARBEN["dunkel"])
                     tx += c.stringWidth(p, FONT, 10)
                     if i < len(parts) - 1:
                         draw_follows_arrow(c, tx + 0.1*cm, y - 0.15*cm, size=0.4*cm, color=FARBEN["grau"])
                         tx += 0.7*cm
             else:
-                c.drawString(2.5*cm, y, text)
+                _draw_text_with_emojis(c, 2.5*cm, y, text, FONT, 10, FARBEN["dunkel"])
             y -= 0.55*cm
 
     return y - 0.3*cm
@@ -1461,14 +1494,6 @@ def draw_muster_fortsetzen(c, abschnitt, farb_key, start_y):
             ex = 2.5*cm + ei * spacing
             _draw_muster_element(c, ex, y0, element_size, elem, farb_key)
 
-        # Draw arrow or indicator for "continue"
-        c.setStrokeColor(FARBEN["hellgrau"])
-        c.setLineWidth(1)
-        last_x = 2.5*cm + (len(elemente) - 0.5) * spacing
-        c.line(last_x + 0.2*cm, y0, last_x + 1.0*cm, y0)
-        c.line(last_x + 1.0*cm, y0, last_x + 0.7*cm, y0 + 0.2*cm)
-        c.line(last_x + 1.0*cm, y0, last_x + 0.7*cm, y0 - 0.2*cm)
-
     return row_y - len(aufgaben) * row_h - 0.5*cm
 
 
@@ -2082,6 +2107,10 @@ def draw_zahlenkreis(c, abschnitt, farb_key, start_y):
         
         radius_kreis = 1.6*cm
         node_r = 0.5*cm
+
+        # Rotation arrow in the center
+        draw_rotation_arrow(c, cx, cy, radius=0.6*cm, start_angle=45, extent=270, 
+                            color=FARBEN["hellgrau"])
         
         num_nodes = len(aufg)
         task_loes = loesungen[idx] if idx < len(loesungen) else None

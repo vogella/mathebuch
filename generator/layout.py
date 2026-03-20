@@ -226,3 +226,35 @@ def draw_follows_arrow(c, x, y, size=0.6*cm, color=None):
     path.lineTo(x + size * 0.5, base_y - size * 0.3)
     path.close()
     c.drawPath(path, fill=1, stroke=1)
+
+
+def draw_rotation_arrow(c, cx, cy, radius, start_angle, extent, color=None):
+    """Draws a curved rotation arrow along an arc."""
+    if color:
+        c.setStrokeColor(color)
+        c.setFillColor(color)
+    
+    c.setLineWidth(1.5)
+    # Draw the arc
+    c.arc(cx - radius, cy - radius, cx + radius, cy + radius,
+          startAng=start_angle, extent=extent)
+    
+    # Draw arrow tip at the end of the arc
+    # Calculate end position
+    end_angle_rad = math.radians(start_angle + extent)
+    tx = cx + radius * math.cos(end_angle_rad)
+    ty = cy + radius * math.sin(end_angle_rad)
+    
+    # Simple triangle tip oriented tangent to the circle
+    c.saveState()
+    c.translate(tx, ty)
+    c.rotate(start_angle + extent + 90) # Rotate to be tangent
+    
+    tip_size = 0.25*cm
+    path = c.beginPath()
+    path.moveTo(-tip_size/2, 0)
+    path.lineTo(tip_size/2, 0)
+    path.lineTo(0, tip_size)
+    path.close()
+    c.drawPath(path, fill=1, stroke=1)
+    c.restoreState()
