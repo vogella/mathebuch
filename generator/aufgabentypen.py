@@ -1320,12 +1320,13 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
         c.drawString(px, y2, "passt")
         px += passt_w + 0.2*cm
 
-        box_w = 1.6*cm
+        BOX_W = 1.6*cm
+        BOX_H = 0.9*cm
         if loes is not None:
-            _draw_filled_answer_box(c, px, y2 - 0.3*cm, loes, w=box_w, h=0.9*cm)
+            _draw_filled_answer_box(c, px, y2 - 0.3*cm, loes, w=BOX_W, h=BOX_H)
         else:
-            draw_answer_box(c, px, y2 - 0.3*cm, w=box_w, h=0.9*cm)
-        px += box_w + 0.2*cm
+            draw_answer_box(c, px, y2 - 0.3*cm, w=BOX_W, h=BOX_H)
+        px += BOX_W + 0.2*cm
 
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 14)
