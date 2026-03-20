@@ -19,7 +19,7 @@ cd generator && python3 main.py
 # Layout Audit (Verify content fits on pages)
 # Prerequisites: Ubuntu/Debian fonts
 # sudo apt-get install -y fonts-sil-andika
-python3 main.py --audit-layout
+cd generator && python3 main.py --audit-layout
 
 # Custom output path (run from generator/)
 python3 main.py --output ../output/custom.pdf
@@ -40,7 +40,7 @@ To run the layout audit independently using a git worktree:
 2. `cd ../mathebuch-audit && python3 -m venv .venv && source .venv/bin/activate`
 3. `pip install reportlab pyyaml`
 4. `cd generator && python3 main.py --audit-layout`
-5. Cleanup: `cd ../.. && git worktree remove mathebuch-audit`
+5. Cleanup: Return to your original repository directory and run `git worktree remove ../mathebuch-audit`
 
 ## Architecture
 

@@ -54,7 +54,7 @@ python3 main.py
 python3 main.py --output ../output/mein_mathebuch.pdf
 
 # Optional: Run layout audit (Verify content fits on pages)
-python3 main.py --audit-layout
+cd generator && python3 main.py --audit-layout
 ```
 
 ## 🛠️ Development Conventions
@@ -83,4 +83,4 @@ To run the layout audit independently using a git worktree:
 2. `cd ../mathebuch-audit && python3 -m venv .venv && source .venv/bin/activate`
 3. `pip install reportlab pyyaml`
 4. `cd generator && python3 main.py --audit-layout`
-5. Cleanup: `cd ../.. && git worktree remove mathebuch-audit`
+5. Cleanup: Return to your original repository directory and run `git worktree remove ../mathebuch-audit`
