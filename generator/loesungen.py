@@ -445,7 +445,7 @@ def _solve_zehneruebergang(abschnitt):
 def _solve_muster_fortsetzen(abschnitt):
     results = []
     for aufg in abschnitt["aufgaben"]:
-        muster = aufg["muster"]
+        muster = aufg.get("muster") or aufg.get("elemente", [])
         # Find the constant difference from the known (non-None) values
         known = [(i, v) for i, v in enumerate(muster) if v is not None]
         if len(known) >= 2:
