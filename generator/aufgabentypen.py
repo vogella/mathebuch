@@ -1291,7 +1291,144 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
     return row_y - len(aufgaben) * row_h - 0.3*cm
 
 
-# ── Rechenweg-Labyrinth ──────────────────────────────────
+def draw_rechenquadrat_2x2(c, abschnitt, farb_key, start_y):
+    """2x2 calculation square with row and column sums."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    quadrate = abschnitt.get("quadrate", [])
+    if not quadrate:
+        return start_y - (2.5*cm + y_off)
+
+    cell_size = 1.3*cm
+    col_w = (W - 3*cm) / 3
+    row_y = start_y - 2.5*cm - y_off
+
+    for idx, q in enumerate(quadrate):
+        col = idx % 3
+        row = idx // 3
+        x0 = 1.5*cm + col * col_w + (col_w - 3.5*cell_size)/2
+        y0 = row_y - row * 4.5*cm
+
+        werte = q["werte"]  # [a, b, c, d] in 2x2 grid
+        summen = q["summen"] # [s_r1, s_r2, s_c1, s_c2]
+
+        # Draw 2x2 grid
+        for r in range(2):
+            for cl in range(2):
+                val = werte[r*2 + cl]
+                cx = x0 + cl * cell_size
+                cy = y0 - r * cell_size
+                c.setStrokeColor(FARBEN[farb_key])
+                c.setLineWidth(1.5)
+                c.rect(cx, cy, cell_size, cell_size, fill=0, stroke=1)
+
+                if val is not None:
+                    c.setFillColor(FARBEN["dunkel"])
+                    c.setFont(FONT_BOLD, 14)
+                    c.drawCentredString(cx + cell_size/2, cy + cell_size/2 - 0.15*cm, str(val))
+                else:
+                    draw_answer_box(c, cx + 0.1*cm, cy + 0.1*cm, w=cell_size-0.2*cm, h=cell_size-0.2*cm)
+
+        # Draw sums
+        c.setFillColor(FARBEN["grau"])
+        c.setFont(FONT_ITALIC, 11)
+        # Row sums
+        c.drawCentredString(x0 + 2.5*cell_size, y0 + cell_size/2 - 0.15*cm, str(summen[0]))
+        c.drawCentredString(x0 + 2.5*cell_size, y0 - cell_size/2 - 0.15*cm, str(summen[1]))
+        # Col sums
+        c.drawCentredString(x0 + cell_size/2, y0 - 1.8*cell_size, str(summen[2]))
+        c.drawCentredString(x0 + 1.5*cell_size, y0 - 1.8*cell_size, str(summen[3]))
+
+        # Helper lines/equals
+        c.setDash(1, 2)
+        c.line(x0 + 2.1*cell_size, y0 + cell_size/2, x0 + 2.1*cell_size, y0 - 1.5*cell_size)
+        c.line(x0, y0 - 1.3*cell_size, x0 + 2.1*cell_size, y0 - 1.3*cell_size)
+        c.setDash()
+
+    total_rows = (len(quadrate) + 2) // 3
+    return row_y - total_rows * 4.5*cm + 1.5*cm
+
+
+def _draw_muster_element(c, x, y, size, element, farb_key):
+    if element is None:
+        draw_answer_box(c, x - size/2, y - size/2, w=size, h=size)
+        return
+
+    if isinstance(element, (int, float)):
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont(FONT_BOLD, 14)
+        c.drawCentredString(x, y - 0.15*cm, str(element))
+        return
+
+    if ":" in element:
+        shape, color_name = element.split(":")
+        color_map = {
+            "rot": FARBEN["pink"],
+            "blau": FARBEN["blau"],
+            "gelb": FARBEN["yellow"],
+            "gruen": FARBEN["gruen"],
+            "orange": FARBEN["orange"],
+            "lila": FARBEN["purple"]
+        }
+        c.setFillColor(color_map.get(color_name, FARBEN[farb_key]))
+        c.setStrokeColor(FARBEN["dunkel"])
+        c.setLineWidth(1)
+
+        r = size * 0.4
+        if shape == "kreis":
+            c.circle(x, y, r, fill=1, stroke=1)
+        elif shape == "quadrat":
+            c.rect(x - r, y - r, 2*r, 2*r, fill=1, stroke=1)
+        elif shape == "dreieck":
+            p = c.beginPath()
+            p.moveTo(x, y + r)
+            p.lineTo(x - r, y - r)
+            p.lineTo(x + r, y - r)
+            p.close()
+            c.drawPath(p, fill=1, stroke=1)
+    else:
+        # Fallback for plain text
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont(FONT_BOLD, 12)
+        c.drawCentredString(x, y - 0.15*cm, str(element))
+
+
+def draw_muster_fortsetzen(c, abschnitt, farb_key, start_y):
+    """Pattern continuation: numbers or shapes."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt.get("aufgaben", [])
+    if not aufgaben:
+        return start_y - (2.5*cm + y_off)
+
+    row_h = 2.2*cm
+    row_y = start_y - 2.0*cm - y_off
+    element_size = 1.0*cm
+    spacing = 1.4*cm
+
+    for idx, aufg in enumerate(aufgaben):
+        y0 = row_y - idx * row_h
+        elemente = aufg.get("elemente") or aufg.get("muster", [])
+
+        for ei, elem in enumerate(elemente):
+            ex = 2.5*cm + ei * spacing
+            _draw_muster_element(c, ex, y0, element_size, elem, farb_key)
+
+        # Draw arrow or indicator for "continue"
+        c.setStrokeColor(FARBEN["hellgrau"])
+        c.setLineWidth(1)
+        last_x = 2.5*cm + (len(elemente) - 0.5) * spacing
+        c.line(last_x + 0.2*cm, y0, last_x + 1.0*cm, y0)
+        c.line(last_x + 1.0*cm, y0, last_x + 0.7*cm, y0 + 0.2*cm)
+        c.line(last_x + 1.0*cm, y0, last_x + 0.7*cm, y0 - 0.2*cm)
+
+    return row_y - len(aufgaben) * row_h - 0.5*cm
+
+
+# ── Rechenweg Labyrinth ─────────────────────────────────────
+
 
 def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
     """Grid-based path puzzle: pick one number per column, find the path
@@ -2560,122 +2697,6 @@ def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
     return row_y
 
 
-# ── Rechenquadrat 2×2 ────────────────────────────────────
-
-def draw_rechenquadrat_2x2(c, abschnitt, farb_key, start_y):
-    """2x2 calculation square with row and column sums."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
-    y_off = _draw_beschreibung(c, abschnitt, start_y)
-
-    quadrate = abschnitt.get("quadrate", [])
-    if not quadrate:
-        return start_y - (2.5*cm + y_off)
-
-    cell_size = 1.3*cm
-    col_w = (W - 3*cm) / 3
-    row_y = start_y - 2.5*cm - y_off
-
-    for idx, q in enumerate(quadrate):
-        col = idx % 3
-        row = idx // 3
-        x0 = 1.5*cm + col * col_w + (col_w - 3.5*cell_size)/2
-        y0 = row_y - row * 4.5*cm
-
-        werte = q["werte"]   # [a, b, c, d] in 2x2 grid
-        summen = q["summen"] # [s_r1, s_r2, s_c1, s_c2]
-
-        for r in range(2):
-            for cl in range(2):
-                val = werte[r*2 + cl]
-                cx = x0 + cl * cell_size
-                cy = y0 - r * cell_size
-                c.setStrokeColor(FARBEN[farb_key])
-                c.setLineWidth(1.5)
-                c.rect(cx, cy, cell_size, cell_size, fill=0, stroke=1)
-                if val is not None:
-                    c.setFillColor(FARBEN["dunkel"])
-                    c.setFont(FONT_BOLD, 14)
-                    c.drawCentredString(cx + cell_size/2, cy + cell_size/2 - 0.15*cm, str(val))
-                else:
-                    draw_answer_box(c, cx + 0.1*cm, cy + 0.1*cm,
-                                    w=cell_size - 0.2*cm, h=cell_size - 0.2*cm)
-
-        c.setFillColor(FARBEN["grau"])
-        c.setFont(FONT_ITALIC, 11)
-        c.drawCentredString(x0 + 2.5*cell_size, y0 + cell_size/2 - 0.15*cm, str(summen[0]))
-        c.drawCentredString(x0 + 2.5*cell_size, y0 - cell_size/2 - 0.15*cm, str(summen[1]))
-        c.drawCentredString(x0 + cell_size/2,   y0 - 1.8*cell_size,          str(summen[2]))
-        c.drawCentredString(x0 + 1.5*cell_size, y0 - 1.8*cell_size,          str(summen[3]))
-
-        c.setDash(1, 2)
-        c.line(x0 + 2.1*cell_size, y0 + cell_size/2, x0 + 2.1*cell_size, y0 - 1.5*cell_size)
-        c.line(x0, y0 - 1.3*cell_size, x0 + 2.1*cell_size, y0 - 1.3*cell_size)
-        c.setDash()
-
-    total_rows = (len(quadrate) + 2) // 3
-    return row_y - total_rows * 4.5*cm + 1.5*cm
-
-
-# ── Muster fortsetzen ────────────────────────────────────
-
-def draw_muster_fortsetzen(c, abschnitt, farb_key, start_y):
-    """Draws pattern continuation exercises: students fill in missing values."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
-    y_off = _draw_beschreibung(c, abschnitt, start_y)
-
-    aufgaben = abschnitt["aufgaben"]
-    box_w = 1.6 * cm
-    box_h = 1.5 * cm
-    gap = 0.3 * cm
-    row_h = 2.3 * cm
-    row_y = start_y - 1.8 * cm - y_off
-
-    for idx, aufg in enumerate(aufgaben):
-        muster = aufg.get("muster") or aufg.get("elemente", [])
-        x0 = 1.8 * cm
-        y0 = row_y - idx * row_h
-
-        # Task number
-        c.setFillColor(FARBEN["dunkel"])
-        c.setFont("Helvetica-Bold", 11)
-        c.drawString(x0 - 0.3 * cm, y0 - box_h / 2 - 0.15 * cm,
-                     f"{idx + 1})")
-
-        for j, val in enumerate(muster):
-            bx = x0 + 0.5 * cm + j * (box_w + gap)
-            is_blank = val is None
-
-            if is_blank:
-                # Answer box for blanks
-                c.setFillColor(FARBEN["antwort"])
-                c.setStrokeColor(FARBEN[farb_key])
-                c.setLineWidth(1.5)
-                c.roundRect(bx, y0 - box_h, box_w, box_h,
-                            radius=5, fill=1, stroke=1)
-            else:
-                # Filled box with value
-                c.setFillColor(FARBEN[farb_key])
-                c.setStrokeColor(FARBEN[farb_key])
-                c.setLineWidth(1.5)
-                c.roundRect(bx, y0 - box_h, box_w, box_h,
-                            radius=5, fill=1, stroke=1)
-                c.setFillColor(white)
-                c.setFont("Helvetica-Bold", 16)
-                c.drawCentredString(bx + box_w / 2,
-                                    y0 - box_h / 2 - 0.2 * cm,
-                                    str(val))
-
-            # Arrow between boxes (except after last)
-            if j < len(muster) - 1:
-                arrow_x = bx + box_w + 0.02 * cm
-                arrow_y = y0 - box_h / 2
-                c.setStrokeColor(FARBEN["hellgrau"])
-                c.setLineWidth(1.5)
-                c.line(arrow_x, arrow_y,
-                       arrow_x + gap - 0.04 * cm, arrow_y)
-
-    total_rows = len(aufgaben)
-    return row_y - total_rows * row_h - 0.3 * cm
 
 
 # ── Motivation / Lob / Fakten ──────────────────────────────
