@@ -123,7 +123,7 @@ def draw_lückenaufgaben(c, abschnitt, farb_key, start_y):
     loes2 = loesungen[halb:]
 
     row_y = start_y - 1.5*cm - y_off
-    row_h = 1.5*cm
+    row_h = 1.8*cm
 
     for i, aufg in enumerate(col1):
         _draw_aufgabe_row(c, 1.8*cm, row_y - i * row_h, aufg, farb_key, loes1[i])
@@ -578,7 +578,7 @@ def draw_würfelzählen(c, abschnitt, farb_key, start_y):
                 op_char = task_ops[di - 1] if di - 1 < len(task_ops) else default_op
                 c.setFillColor(FARBEN[farb_key])
                 c.setFont(FONT_BOLD, 18)
-                c.drawCentredString(cx + 0.4*cm, y0 - dice_size * 0.6, op_char)
+                c.drawCentredString(cx + 0.4*cm, y0 - dice_size / 2 - 0.2*cm, op_char)
                 cx += 0.8*cm
             _draw_würfel(c, cx, y0 - dice_size, wert, dice_size)
             cx += dice_size
@@ -586,13 +586,15 @@ def draw_würfelzählen(c, abschnitt, farb_key, start_y):
         # Equals sign and answer box
         c.setFillColor(FARBEN[farb_key])
         c.setFont(FONT_BOLD, 18)
-        c.drawCentredString(cx + 0.5*cm, y0 - dice_size * 0.6, "=")
+        c.drawCentredString(cx + 0.5*cm, y0 - dice_size / 2 - 0.2*cm, "=")
         loesungen = abschnitt.get("loesungen", [])
+        box_h = 1.5*cm
+        box_y = y0 - dice_size + (dice_size - box_h) / 2
         if idx < len(loesungen):
-            _draw_filled_answer_box(c, cx + 0.9*cm, y0 - dice_size * 0.85,
-                                    loesungen[idx], w=1.6*cm, h=1.5*cm)
+            _draw_filled_answer_box(c, cx + 0.9*cm, box_y,
+                                    loesungen[idx], w=1.6*cm, h=box_h)
         else:
-            draw_answer_box(c, cx + 0.9*cm, y0 - dice_size * 0.85, w=1.6*cm, h=1.5*cm)
+            draw_answer_box(c, cx + 0.9*cm, box_y, w=1.6*cm, h=box_h)
 
     total_rows = (len(aufgaben) + cols - 1) // cols
     return row_y - total_rows * row_h - 0.3*cm

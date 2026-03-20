@@ -17,7 +17,6 @@ abschnitte:
       - [16, "+", null, 20]
       - [17, "+", null, 20]
       - [18, "+", null, 20]
-      - [19, "+", null, 20]
 
   - typ: lückenaufgaben
     titel: "B  Andersherum – was steht vorne?"
@@ -30,7 +29,6 @@ abschnitte:
       - [null, "+", 6, 20]
       - [null, "+", 7, 20]
       - [null, "+", 8, 20]
-      - [null, "+", 9, 20]
 
   - typ: lückenaufgaben
     titel: "C  Gemischt – Ergänze bis 20!"
