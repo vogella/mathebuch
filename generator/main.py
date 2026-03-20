@@ -254,7 +254,8 @@ def render_titelseite(c):
                     radius=8, fill=1, stroke=1)
 
     # Malblock: "Male dich selbst!" (reduzierte Größe ~8cm)
-    mal_y = felder_y - len(felder) * (field_h + field_gap) - 1.0 * cm
+    # Mehr Platz nach oben
+    mal_y = felder_y - len(felder) * (field_h + field_gap) - 2.5 * cm
     c.setFillColor(FARBEN["dunkel"])
     c.setFont(FONT_BOLD, 14)
     c.drawString(2.5 * cm, mal_y + 0.2 * cm, "Male dich selbst:")
@@ -368,8 +369,10 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
         
         if ist_erkl:
             group_name = "💡 So funktioniert's!"
+            group_emoji = "📖"
         else:
             group_name = _get_group_for_chapter(dateiname)
+            group_emoji = kap.get("emoji", "⭐")
             if not group_name:
                 zr = kap.get("zahlenraum", 20)
                 group_name = f"Rechnen bis {zr}"
@@ -379,7 +382,7 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
             grouped_entries.append({
                 "titel": group_name,
                 "seite": seite_nr,
-                "emoji": kap.get("emoji", "⭐"),
+                "emoji": group_emoji,
                 "farbe": kap.get("farbe", "blau"),
                 "zahlenraum": kap.get("zahlenraum", 20),
                 "ist_erkl": ist_erkl
