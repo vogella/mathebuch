@@ -17,8 +17,6 @@ abschnitte:
       - [6, "doppelt"]
       - [7, "doppelt"]
       - [8, "doppelt"]
-      - [9, "doppelt"]
-      - [10, "doppelt"]
 
   - typ: verdoppeln_halbieren
     titel: "B  Halbiere die Zahl!"
@@ -31,8 +29,7 @@ abschnitte:
       - [12, "halb"]
       - [14, "halb"]
       - [16, "halb"]
-      - [18, "halb"]
-      - [20, "halb"]
+
 
   - typ: motivation
     modus: "aufgabe"
