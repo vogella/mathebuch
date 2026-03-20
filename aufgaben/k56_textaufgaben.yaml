@@ -12,11 +12,9 @@ abschnitte:
       - text: "Anna hat 3 Äpfel. Ben gibt ihr 4 Äpfel dazu. Wie viele Äpfel hat Anna jetzt?"
         hinweis: "Tipp: Zusammenzählen!"
       - text: "Im Bus sitzen 8 Kinder. An der Haltestelle steigen 3 Kinder aus. Wie viele Kinder sitzen noch im Bus?"
-      - text: "Mama kauft 5 Brötchen und 4 Croissants. Wie viele Teile hat sie insgesamt?"
       - text: "Tom hat 10 Buntstifte. Er verschenkt 6 an seine Freundin. Wie viele Buntstifte hat Tom noch?"
       - text: "Auf dem Spielplatz sind 7 Mädchen und 5 Jungen. Wie viele Kinder spielen insgesamt?"
-      - text: "Lisa sammelt 9 Kastanien. 4 davon verliert sie auf dem Weg. Wie viele Kastanien hat sie noch?"
-    loesungen: [7, 5, 9, 4, 12, 5]
+    loesungen: [7, 5, 4, 12]
 
   - typ: textaufgaben
     titel: "B  Im Supermarkt"
@@ -28,12 +26,6 @@ abschnitte:
         antwort: 8
       - text: "In einer Packung sind 12 Eier. 3 Eier sind kaputt. Wie viele sind noch ganz?"
         antwort: 9
-      - text: "Ein Lutscher kostet 1 Euro. Wie viel kosten 5 Lutscher?"
-        antwort: 5
-      - text: "Mama kauft 7 Birnen. 4 davon sind schon reif. Wie viele sind noch nicht reif?"
-        antwort: 3
-      - text: "Ein Brot kostet 3 Euro. Wie viel kosten 2 Brote?"
-        antwort: 6
 
   - typ: textaufgaben
     titel: "C  Im Spielzeugladen"

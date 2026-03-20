@@ -1,6 +1,6 @@
 kapitel:
   titel: "So funktioniert's!"
-  untertitel: "Punktefeld, Nachbarzahlen, Lückenaufgaben"
+  untertitel: "Punktefeld und Lückenaufgaben"
   emoji: "📖"
   farbe: "blau"
   zahlenraum: 20
@@ -23,20 +23,10 @@ abschnitte:
       - 4
     loesungen: [4]
 
-  - typ: nachbarzahlen
-    titel: "Nachbarzahlen"
-    beschreibung: "Schreibe die Zahlen davor und danach auf."
-    aufgaben:
-      - [null, 5, null]
-    loesungen:
-      - [4, null, 6]
-
   - typ: lückenaufgaben
     titel: "Lückenaufgaben"
     beschreibung: "Finde die fehlende Zahl für das blaue Kästchen."
     aufgaben:
       - [3, "+", 5, null]
-      - [12, "-", null, 8]
     loesungen:
       - [null, null, 8]
-      - [null, 4, null]

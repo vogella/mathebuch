@@ -21,12 +21,6 @@ abschnitte:
     start: 2
     schritte: ["+3", "+1", "+4"]
 
-  - typ: rechenraupe
-    titel: ""
-    start: 2
-    schritte: ["+3", "+1", "+4"]
-    loesungen: [5, 6, 10]
-
   - typ: rechenmauer
     titel: "Rechenmauer"
     beschreibung: "Zwei Steine nebeneinander ergeben den Stein darüber."

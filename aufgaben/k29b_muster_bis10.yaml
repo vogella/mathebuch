@@ -26,8 +26,6 @@ abschnitte:
     aufgaben:
       - elemente: ["kreis:rot", "quadrat:blau", "kreis:rot", "quadrat:blau", null, null]
       - elemente: ["dreieck:gruen", "dreieck:gruen", "kreis:gelb", "dreieck:gruen", "dreieck:gruen", null]
-      - elemente: ["quadrat:orange", "kreis:orange", "quadrat:orange", "kreis:orange", null, null]
     loesungen:
       - ["kreis:rot", "quadrat:blau"]
       - ["kreis:gelb"]
-      - ["quadrat:orange", "kreis:orange"]

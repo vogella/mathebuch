@@ -36,7 +36,4 @@ abschnitte:
           - {name: "Saft", preis: 4}
           - {name: "Keks", preis: 2}
         frage: "Du bezahlst mit 10€. Wie viel Rückgeld?"
-      - artikel:
-          - {name: "Ball", preis: 7}
-        frage: "Du bezahlst mit 10€. Wie viel Rückgeld?"
-    loesungen: [2, 4, 3]
+    loesungen: [2, 4]
