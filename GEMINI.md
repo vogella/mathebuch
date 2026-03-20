@@ -52,6 +52,9 @@ python3 main.py
 
 # Optional: Specify custom output path
 python3 main.py --output ../output/mein_mathebuch.pdf
+
+# Optional: Run layout audit (Verify content fits on pages)
+python3 main.py --audit-layout
 ```
 
 ## 🛠️ Development Conventions
@@ -72,3 +75,12 @@ python3 main.py --output ../output/mein_mathebuch.pdf
 - **Page Size:** A4 (21cm x 29.7cm).
 - **Safe Zone:** Content should respect `MIN_Y` (2.5 cm) to avoid overlapping the page number footer.
 - **Header:** Reserved area at the top (~4cm) for titles and emojis.
+
+## 🧪 Layout Verification Workflow
+
+To run the layout audit independently using a git worktree:
+1. `git worktree add ../mathebuch-audit <branch-name>`
+2. `cd ../mathebuch-audit && python3 -m venv .venv && source .venv/bin/activate`
+3. `pip install reportlab pyyaml`
+4. `cd generator && python3 main.py --audit-layout`
+5. Cleanup: `cd ../.. && git worktree remove mathebuch-audit`
