@@ -6,7 +6,7 @@ import math
 from reportlab.lib.colors import HexColor, white
 from reportlab.lib.units import cm
 from reportlab.lib.pagesizes import A4
-from layout import FARBEN, draw_answer_box, draw_section_label, FONT, FONT_BOLD, FONT_ITALIC
+from layout import FARBEN, draw_answer_box, draw_section_label, FONT, FONT_BOLD, FONT_ITALIC, FONT_MONO
 
 W, H = A4
 
@@ -88,6 +88,13 @@ def draw_erklaerung(c, abschnitt, farb_key, start_y):
             c.setFont(FONT_BOLD, 11)
             c.drawString(2.5*cm, y, zeile.strip().strip('*').strip())
             y -= 0.6*cm
+        elif zeile.strip().startswith("[") or "▼" in zeile:
+            # Monospaced grid lines or arrows
+            c.setFillColor(FARBEN["dunkel"])
+            c.setFont(FONT_MONO, 11)
+            # Extra indentation for the grid to keep it separate
+            c.drawString(3.5*cm, y, zeile.strip())
+            y -= 0.55*cm
         else:
             c.setFillColor(FARBEN["dunkel"])
             c.setFont(FONT, 10)

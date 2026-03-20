@@ -34,6 +34,7 @@ pdfmetrics.registerFontFamily(
 FONT = "Andika"
 FONT_BOLD = "Andika-Bold"
 FONT_ITALIC = "Andika-Italic"
+FONT_MONO = "Courier-Bold"
 
 # ── Emoji-Rendering via Pillow ────────────────────────────────
 _EMOJI_FONT_PATH = os.environ.get("MATHEBUCH_EMOJI_FONT", "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf")
