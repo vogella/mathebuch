@@ -194,12 +194,19 @@ def _solve_zahlenstrahl(abschnitt):
     results = []
     for strahl in abschnitt["strahlen"]:
         von = strahl["von"]
+        bis = strahl["bis"]
         werte = strahl.get("werte", [])
-        missing = []
-        for i, val in enumerate(werte):
+        
+        sequence = []
+        for i in range(bis - von + 1):
+            val = werte[i] if i < len(werte) else None
+            num = von + i
             if val is None:
-                missing.append(str(von + i))
-        results.append(",".join(missing))
+                # Missing value in the original task, show in brackets in solution
+                sequence.append(f"({num})")
+            else:
+                sequence.append(str(num))
+        results.append(" ".join(sequence))
     return results
 
 

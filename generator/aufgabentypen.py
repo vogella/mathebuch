@@ -35,15 +35,9 @@ def _draw_zerlegung_part(c, cx, cy, circle_r, val, is_blank, is_loesung, farb_ke
         c.setStrokeColor(FARBEN[farb_key])
         c.setLineWidth(1.5)
         c.circle(cx, cy, circle_r, fill=1, stroke=1)
-    elif is_loesung:
-        c.setFillColor(FARBEN["antwort"])
-        c.setStrokeColor(FARBEN[farb_key])
-        c.setLineWidth(1.5)
-        c.circle(cx, cy, circle_r, fill=1, stroke=1)
-        c.setFillColor(FARBEN["gruen"])
-        c.setFont(FONT_BOLD, 16)
-        c.drawCentredString(cx, cy - 0.2*cm, str(val))
     else:
+        # Both for regular given numbers and for the solution part (is_loesung),
+        # use the chapter color as background.
         c.setFillColor(FARBEN[farb_key])
         c.circle(cx, cy, circle_r, fill=1, stroke=0)
         c.setFillColor(white)
@@ -990,10 +984,10 @@ def draw_verdoppeln_halbieren(c, abschnitt, farb_key, start_y):
             c.setFillColor(FARBEN[farb_key])
             c.drawCentredString(x + 3.0*cm, y, "=")
             if loes is not None:
-                _draw_filled_answer_box(c, x + 3.5*cm, y - 0.25*cm, loes,
+                _draw_filled_answer_box(c, x + 3.5*cm, y - 0.4*cm, loes,
                                         w=1.6*cm, h=1.5*cm)
             else:
-                draw_answer_box(c, x + 3.5*cm, y - 0.25*cm, w=1.6*cm, h=1.5*cm)
+                draw_answer_box(c, x + 3.5*cm, y - 0.4*cm, w=1.6*cm, h=1.5*cm)
         else:  # halb
             c.setFillColor(FARBEN["dunkel"])
             c.drawString(x, y, str(zahl))
@@ -1002,10 +996,10 @@ def draw_verdoppeln_halbieren(c, abschnitt, farb_key, start_y):
             c.setFont(FONT_BOLD, 18)
             c.drawString(x + text_w + 0.3*cm, y, "÷ 2 =")
             if loes is not None:
-                _draw_filled_answer_box(c, x + text_w + 2.5*cm, y - 0.25*cm,
+                _draw_filled_answer_box(c, x + text_w + 2.5*cm, y - 0.4*cm,
                                         loes, w=1.6*cm, h=1.5*cm)
             else:
-                draw_answer_box(c, x + text_w + 2.5*cm, y - 0.25*cm,
+                draw_answer_box(c, x + text_w + 2.5*cm, y - 0.4*cm,
                                 w=1.6*cm, h=1.5*cm)
 
     total_rows = (len(aufgaben) + cols - 1) // cols
@@ -1211,82 +1205,73 @@ def draw_zahlen_ordnen(c, abschnitt, farb_key, start_y):
 
 def draw_vervielfachen(c, abschnitt, farb_key, start_y):
     """How many times must you add a number to itself to reach a target?
-    Line 1: zahl + [addition chain box] = ziel
-    Line 2: zahl passt [___] mal in die ziel."""
+    Shows addition chain and 'how many times fits' in a single line."""
     draw_section_label(c, abschnitt["titel"], farb_key, start_y)
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of [zahl, ziel]
     loesungen = abschnitt.get("loesungen", [])
-    line_gap = 1.1*cm   # vertical gap between line 1 and line 2
-    row_h = 2.5*cm      # total height per exercise (two lines + spacing)
-    row_y = start_y - 1.5*cm - y_off
+    row_h = 1.7 * cm      # total height per exercise
+    row_y = start_y - 1.5 * cm - y_off
 
     for idx, aufg in enumerate(aufgaben):
         zahl, ziel = aufg
         loes = loesungen[idx] if idx < len(loesungen) else None
-        x = 1.5*cm
+        x = 1.3 * cm
         y = row_y - idx * row_h
 
         # ── Line 1: zahl + [___________] = ziel ──
         c.setFillColor(FARBEN["dunkel"])
         c.setFont(FONT_BOLD, 16)
-        c.drawCentredString(x + 0.4*cm, y, str(zahl))
+        c.drawString(x, y, str(zahl))
+        x += c.stringWidth(str(zahl), FONT_BOLD, 16) + 0.2 * cm
 
         c.setFillColor(FARBEN[farb_key])
-        c.drawCentredString(x + 1.1*cm, y, "+")
+        c.drawString(x, y, "+")
+        x += c.stringWidth("+", FONT_BOLD, 16) + 0.2 * cm
 
-        plus_box_w = 4.0*cm
-        draw_answer_box(c, x + 1.5*cm, y - 0.65*cm, w=plus_box_w, h=1.5*cm)
+        plus_box_w = 4.0 * cm
+        plus_box_h = 1.3 * cm
+        draw_answer_box(c, x, y - 0.5 * cm, w=plus_box_w, h=plus_box_h)
         if loes is not None:
             addition_text = (" + ".join([str(zahl)] * (loes - 1)))
             c.setFillColor(FARBEN["gruen"])
             c.setFont(FONT_BOLD, 11)
-            c.drawCentredString(x + 1.5*cm + plus_box_w / 2,
-                                y - 0.05*cm, addition_text)
+            c.drawCentredString(x + plus_box_w / 2, y + 0.1 * cm, addition_text)
+        x += plus_box_w + 0.3 * cm
 
         c.setFillColor(FARBEN[farb_key])
         c.setFont(FONT_BOLD, 16)
-        eq1_x = x + 1.5*cm + plus_box_w + 0.3*cm
-        c.drawCentredString(eq1_x, y, "=")
+        c.drawString(x, y, "=")
+        x += c.stringWidth("=", FONT_BOLD, 16) + 0.3 * cm
 
         c.setFillColor(FARBEN["dunkel"])
-        c.drawCentredString(eq1_x + 0.8*cm, y, str(ziel))
+        c.drawString(x, y, str(ziel))
+        x += c.stringWidth(str(ziel), FONT_BOLD, 16) + 1.0 * cm
 
-        # ── Line 2: zahl passt [___] mal in die ziel. ──
-        y2 = y - line_gap
-        px = x  # start x for "passt" line
-
+        # ── Continuation on the SAME line: zahl passt [___] mal in die ziel. ──
         c.setFillColor(FARBEN["dunkel"])
         c.setFont(FONT_BOLD, 16)
-        zahl_w = c.stringWidth(str(zahl), FONT_BOLD, 16)
-        c.drawString(px, y2, str(zahl))
-        px += zahl_w + 0.2*cm
+        c.drawString(x, y, str(zahl))
+        x += c.stringWidth(str(zahl), FONT_BOLD, 16) + 0.2 * cm
 
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 14)
-        passt_w = c.stringWidth("passt", FONT, 14)
-        c.drawString(px, y2, "passt")
-        px += passt_w + 0.2*cm
+        c.drawString(x, y, "passt")
+        x += c.stringWidth("passt", FONT, 14) + 0.2 * cm
 
-        BOX_W = 1.6*cm
-        BOX_H = 0.9*cm
+        BOX_W = 1.3 * cm
+        BOX_H = 1.1 * cm
         if loes is not None:
-            _draw_filled_answer_box(c, px, y2 - 0.3*cm, loes, w=BOX_W, h=BOX_H)
+            _draw_filled_answer_box(c, x, y - 0.4 * cm, loes, w=BOX_W, h=BOX_H)
         else:
-            draw_answer_box(c, px, y2 - 0.3*cm, w=BOX_W, h=BOX_H)
-        px += BOX_W + 0.2*cm
+            draw_answer_box(c, x, y - 0.4 * cm, w=BOX_W, h=BOX_H)
+        x += BOX_W + 0.2 * cm
 
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 14)
-        mal_text = f"mal in die"
-        mal_w = c.stringWidth(mal_text, FONT, 14)
-        c.drawString(px, y2, mal_text)
-        px += mal_w + 0.2*cm
-
-        c.setFillColor(FARBEN["dunkel"])
-        c.setFont(FONT_BOLD, 16)
-        c.drawString(px, y2, f"{ziel}.")
+        mal_text = "mal hinein."
+        c.drawString(x, y, mal_text)
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
 
