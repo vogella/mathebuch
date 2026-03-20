@@ -132,7 +132,7 @@ def draw_lückenaufgaben(c, abschnitt, farb_key, start_y):
     return row_y - halb * row_h - 0.5*cm   # nächste freie Y-Position
 
 
-def _draw_filled_answer_box(c, x, y, text, w=1.6*cm, h=1.1*cm):
+def _draw_filled_answer_box(c, x, y, text, w=2.0*cm, h=1.5*cm):
     """Answer box with a solution value shown inside."""
     draw_answer_box(c, x, y, w, h)
     c.setFillColor(FARBEN["gruen"])
@@ -259,8 +259,8 @@ def _draw_ein_zahlenhaus(c, cx, ty, roof_num, loesung=None):
     c.setFont(FONT_BOLD, 18)
     c.drawCentredString(cx, ty - roof_size * 0.65, str(roof_num))
     # Felder
-    box_w = 1.3*cm
-    box_h = 1.1*cm
+    box_w = 1.6*cm
+    box_h = 1.5*cm
     bx = cx - roof_size
     by = ty - roof_size * 0.9 - box_h
     colors = [FARBEN["antwort"], FARBEN["hellorange"]]
@@ -589,9 +589,9 @@ def draw_würfelzählen(c, abschnitt, farb_key, start_y):
         loesungen = abschnitt.get("loesungen", [])
         if idx < len(loesungen):
             _draw_filled_answer_box(c, cx + 0.9*cm, y0 - dice_size * 0.85,
-                                    loesungen[idx], w=1.3*cm, h=1.1*cm)
+                                    loesungen[idx], w=1.6*cm, h=1.5*cm)
         else:
-            draw_answer_box(c, cx + 0.9*cm, y0 - dice_size * 0.85, w=1.3*cm, h=1.1*cm)
+            draw_answer_box(c, cx + 0.9*cm, y0 - dice_size * 0.85, w=1.6*cm, h=1.5*cm)
 
     total_rows = (len(aufgaben) + cols - 1) // cols
     return row_y - total_rows * row_h - 0.3*cm
@@ -866,15 +866,15 @@ def draw_kettenaufgaben(c, abschnitt, farb_key, start_y):
     halb = (len(aufgaben) + 1) // 2
     col_w = (W - 3*cm) / 2
     row_y = start_y - 1.5*cm - y_off
-    row_h = 1.5*cm
+    row_h = 2.0*cm
 
     for idx, kette in enumerate(aufgaben):
         col = 0 if idx < halb else 1
         row = idx if idx < halb else idx - halb
-        
+
         x0 = 1.8*cm + col * col_w
         y = row_y - row * row_h
-        
+
         # Number the exercise
         c.setFillColor(FARBEN[farb_key])
         c.setFont(FONT_BOLD, 12)
@@ -890,13 +890,13 @@ def draw_kettenaufgaben(c, abschnitt, farb_key, start_y):
         eq_x = x0 + 1.0*cm + text_w + 0.5*cm
         c.setFillColor(FARBEN[farb_key])
         c.drawString(eq_x, y, "=")
-        
+
         ans_x = eq_x + 1.0*cm
         if idx < len(loesungen):
             _draw_filled_answer_box(c, ans_x, y - 0.25*cm,
-                                    loesungen[idx], w=1.6*cm, h=1.1*cm)
+                                    loesungen[idx], w=1.6*cm, h=1.5*cm)
         else:
-            draw_answer_box(c, ans_x, y - 0.25*cm, w=1.6*cm, h=1.1*cm)
+            draw_answer_box(c, ans_x, y - 0.25*cm, w=1.6*cm, h=1.5*cm)
 
     return row_y - halb * row_h - 0.3*cm
 
@@ -911,7 +911,7 @@ def draw_tauschaufgaben(c, abschnitt, farb_key, start_y):
     aufgaben = abschnitt["aufgaben"]  # list of [a, b]
     loesungen = abschnitt.get("loesungen", [])
     row_y = start_y - 1.5*cm - y_off
-    row_h = 1.5*cm
+    row_h = 2.0*cm
 
     for idx, aufg in enumerate(aufgaben):
         a, b = aufg
@@ -932,9 +932,9 @@ def draw_tauschaufgaben(c, abschnitt, farb_key, start_y):
         c.drawCentredString(x + 3.0*cm, y, "=")
         if summe is not None:
             _draw_filled_answer_box(c, x + 3.5*cm, y - 0.25*cm, summe,
-                                    w=1.3*cm, h=1.1*cm)
+                                    w=1.6*cm, h=1.5*cm)
         else:
-            draw_answer_box(c, x + 3.5*cm, y - 0.25*cm, w=1.3*cm, h=1.1*cm)
+            draw_answer_box(c, x + 3.5*cm, y - 0.25*cm, w=1.6*cm, h=1.5*cm)
 
         # Right side: b + a = ___
         x2 = 10*cm
@@ -948,9 +948,9 @@ def draw_tauschaufgaben(c, abschnitt, farb_key, start_y):
         c.drawCentredString(x2 + 3.0*cm, y, "=")
         if summe is not None:
             _draw_filled_answer_box(c, x2 + 3.5*cm, y - 0.25*cm, summe,
-                                    w=1.3*cm, h=1.1*cm)
+                                    w=1.6*cm, h=1.5*cm)
         else:
-            draw_answer_box(c, x2 + 3.5*cm, y - 0.25*cm, w=1.3*cm, h=1.1*cm)
+            draw_answer_box(c, x2 + 3.5*cm, y - 0.25*cm, w=1.6*cm, h=1.5*cm)
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
 
@@ -966,7 +966,7 @@ def draw_verdoppeln_halbieren(c, abschnitt, farb_key, start_y):
     loesungen = abschnitt.get("loesungen", [])
     cols = 2
     col_w = (W - 3*cm) / cols
-    row_h = 1.5*cm
+    row_h = 2.0*cm
     halb_count = (len(aufgaben) + 1) // 2
     row_y = start_y - 1.5*cm - y_off
 
@@ -991,9 +991,9 @@ def draw_verdoppeln_halbieren(c, abschnitt, farb_key, start_y):
             c.drawCentredString(x + 3.0*cm, y, "=")
             if loes is not None:
                 _draw_filled_answer_box(c, x + 3.5*cm, y - 0.25*cm, loes,
-                                        w=1.3*cm, h=1.1*cm)
+                                        w=1.6*cm, h=1.5*cm)
             else:
-                draw_answer_box(c, x + 3.5*cm, y - 0.25*cm, w=1.3*cm, h=1.1*cm)
+                draw_answer_box(c, x + 3.5*cm, y - 0.25*cm, w=1.6*cm, h=1.5*cm)
         else:  # halb
             c.setFillColor(FARBEN["dunkel"])
             c.drawString(x, y, str(zahl))
@@ -1003,10 +1003,10 @@ def draw_verdoppeln_halbieren(c, abschnitt, farb_key, start_y):
             c.drawString(x + text_w + 0.3*cm, y, "÷ 2 =")
             if loes is not None:
                 _draw_filled_answer_box(c, x + text_w + 2.5*cm, y - 0.25*cm,
-                                        loes, w=1.3*cm, h=1.1*cm)
+                                        loes, w=1.6*cm, h=1.5*cm)
             else:
                 draw_answer_box(c, x + text_w + 2.5*cm, y - 0.25*cm,
-                                w=1.3*cm, h=1.1*cm)
+                                w=1.6*cm, h=1.5*cm)
 
     total_rows = (len(aufgaben) + cols - 1) // cols
     return row_y - total_rows * row_h - 0.3*cm
@@ -1020,7 +1020,7 @@ def draw_zahlenstrahl(c, abschnitt, farb_key, start_y):
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     strahlen = abschnitt["strahlen"]  # list of {von, bis, werte}
-    row_h = 2.5*cm
+    row_h = 3.0*cm
     row_y = start_y - 1.5*cm - y_off
     line_x = 2*cm
     line_w = W - 4*cm
@@ -1054,21 +1054,21 @@ def draw_zahlenstrahl(c, abschnitt, farb_key, start_y):
             val = werte[i] if i < len(werte) else von + i
             strahl_loes = strahl.get("loesungen", [])
             if val is None:
-                # Blank answer box
+                # Blank answer box (1.4cm × 1.2cm, centered on tick)
                 c.setFillColor(FARBEN["antwort"])
                 c.setStrokeColor(FARBEN[farb_key])
                 c.setLineWidth(1)
-                c.roundRect(tx - 0.5*cm, y - 1.0*cm, 1.0*cm, 0.7*cm,
+                c.roundRect(tx - 0.7*cm, y - 1.4*cm, 1.4*cm, 1.2*cm,
                             radius=3, fill=1, stroke=1)
                 # Show solution if available
                 if i < len(strahl_loes) and strahl_loes[i] is not None:
                     c.setFillColor(FARBEN["gruen"])
                     c.setFont(FONT_BOLD, 12)
-                    c.drawCentredString(tx, y - 0.75*cm, str(strahl_loes[i]))
+                    c.drawCentredString(tx, y - 0.95*cm, str(strahl_loes[i]))
             else:
                 c.setFillColor(FARBEN["dunkel"])
                 c.setFont(FONT_BOLD, 12)
-                c.drawCentredString(tx, y - 0.8*cm, str(val))
+                c.drawCentredString(tx, y - 0.9*cm, str(val))
 
     return row_y - len(strahlen) * row_h - 0.3*cm
 
@@ -1089,7 +1089,7 @@ def draw_punktefeld(c, abschnitt, farb_key, start_y):
     grid_col_w = (W - 3*cm) / grid_cols
     dot_r = 0.3*cm
     cell = 0.8*cm
-    row_h = rows_frame * cell + 2.0*cm
+    row_h = rows_frame * cell + 2.5*cm
     row_y = start_y - 1.5*cm - y_off
 
     # muster mode: dots are scattered, not sequential
@@ -1132,14 +1132,14 @@ def draw_punktefeld(c, abschnitt, farb_key, start_y):
         frame_bottom = y0 - rows_frame * cell
         loesungen = abschnitt.get("loesungen", [])
         if idx < len(loesungen):
-            _draw_filled_answer_box(c, x0 + 0.5*cm, frame_bottom - 1.0*cm,
-                                    loesungen[idx], w=1.3*cm, h=0.9*cm)
+            _draw_filled_answer_box(c, x0 + 0.5*cm, frame_bottom - 1.7*cm,
+                                    loesungen[idx], w=1.6*cm, h=1.5*cm)
         else:
-            draw_answer_box(c, x0 + 0.5*cm, frame_bottom - 1.0*cm,
-                            w=1.3*cm, h=0.9*cm)
+            draw_answer_box(c, x0 + 0.5*cm, frame_bottom - 1.7*cm,
+                            w=1.6*cm, h=1.5*cm)
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 9)
-        c.drawString(x0 + 2.0*cm, frame_bottom - 0.6*cm, "Punkte")
+        c.drawString(x0 + 2.3*cm, frame_bottom - 1.0*cm, "Punkte")
 
     total_rows = (len(aufgaben) + grid_cols - 1) // grid_cols
     return row_y - total_rows * row_h - 0.3*cm
@@ -1154,10 +1154,10 @@ def draw_zahlen_ordnen(c, abschnitt, farb_key, start_y):
 
     aufgaben = abschnitt["aufgaben"]  # list of lists of numbers
     loesungen = abschnitt.get("loesungen", [])
-    row_h = 2.2*cm
+    row_h = 2.5*cm
     row_y = start_y - 1.5*cm - y_off
-    box_w = 1.3*cm
-    box_h = 1.1*cm
+    box_w = 1.6*cm
+    box_h = 1.5*cm
 
     for idx, zahlen in enumerate(aufgaben):
         y = row_y - idx * row_h
@@ -1192,16 +1192,16 @@ def draw_zahlen_ordnen(c, abschnitt, farb_key, start_y):
             c.setFillColor(FARBEN["antwort"])
             c.setStrokeColor(FARBEN[farb_key])
             c.setLineWidth(1.5)
-            c.roundRect(bx, y - 0.4*cm, box_w, box_h, radius=4, fill=1, stroke=1)
+            c.roundRect(bx, y - 0.7*cm, box_w, box_h, radius=4, fill=1, stroke=1)
             # Show solution in green if available
             if loes is not None and i < len(loes):
                 c.setFillColor(FARBEN["gruen"])
                 c.setFont(FONT_BOLD, 16)
-                c.drawCentredString(bx + box_w/2, y - 0.05*cm, str(loes[i]))
+                c.drawCentredString(bx + box_w/2, y + 0.05*cm, str(loes[i]))
             if i < count - 1:
                 c.setFillColor(FARBEN["dunkel"])
                 c.setFont(FONT_BOLD, 16)
-                c.drawCentredString(bx + box_w + 0.25*cm, y - 0.05*cm, "<")
+                c.drawCentredString(bx + box_w + 0.25*cm, y + 0.05*cm, "<")
             bx += box_w + 0.5*cm
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
@@ -1237,7 +1237,7 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
         c.drawCentredString(x + 1.1*cm, y, "+")
 
         plus_box_w = 4.0*cm
-        draw_answer_box(c, x + 1.5*cm, y - 0.3*cm, w=plus_box_w, h=0.9*cm)
+        draw_answer_box(c, x + 1.5*cm, y - 0.65*cm, w=plus_box_w, h=1.5*cm)
         if loes is not None:
             addition_text = (" + ".join([str(zahl)] * (loes - 1)))
             c.setFillColor(FARBEN["gruen"])
@@ -1609,7 +1609,7 @@ def draw_zahlenraetsel(c, abschnitt, farb_key, start_y):
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT_BOLD, 11)
         c.drawCentredString(box_x + 0.75*cm, box_cy + 1.0*cm, "Ich bin:")
-        draw_answer_box(c, box_x, box_cy - 0.3*cm, w=1.5*cm, h=1.0*cm)
+        draw_answer_box(c, box_x, box_cy - 0.3*cm, w=2.0*cm, h=1.5*cm)
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
 
@@ -1661,7 +1661,7 @@ def draw_einkaufen(c, abschnitt, farb_key, start_y):
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 9)
         c.drawString(2.8*cm, q_y - 0.7*cm, "Antwort:")
-        draw_answer_box(c, 5*cm, q_y - 1.0*cm, w=1.8*cm, h=0.9*cm)
+        draw_answer_box(c, 5*cm, q_y - 1.0*cm, w=2.0*cm, h=1.5*cm)
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
 
@@ -1701,7 +1701,7 @@ def draw_kalender_raetsel(c, abschnitt, farb_key, start_y):
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 9)
         c.drawString(2.8*cm, box_y + 0.3*cm, "Antwort:")
-        draw_answer_box(c, 5*cm, box_y, w=2.5*cm, h=0.9*cm)
+        draw_answer_box(c, 5*cm, box_y, w=2.5*cm, h=1.5*cm)
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
 
@@ -1756,11 +1756,11 @@ def draw_textaufgaben(c, abschnitt, farb_key, start_y):
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 9)
         c.drawString(2.8*cm, bottom + 0.3*cm, "Rechnung:")
-        draw_answer_box(c, 5.0*cm, bottom, w=4*cm, h=0.9*cm)
+        draw_answer_box(c, 5.0*cm, bottom, w=4*cm, h=1.5*cm)
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 9)
         c.drawString(10*cm, bottom + 0.3*cm, "Antwort:")
-        draw_answer_box(c, 12*cm, bottom, w=6*cm, h=0.9*cm)
+        draw_answer_box(c, 12*cm, bottom, w=6*cm, h=1.5*cm)
 
         # Advance y dynamically based on actual content height
         y = bottom - 0.5*cm
@@ -2173,14 +2173,14 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
 
         # Draw answer box next to task
         task_text_w = c.stringWidth(f"Rechne: {aufgabe_text} = ?", FONT_BOLD, 11)
-        draw_answer_box(c, 2.3 * cm + task_text_w, cy - 0.15 * cm, w=1.2 * cm, h=0.8 * cm)
+        draw_answer_box(c, 2.3 * cm + task_text_w, cy - 0.4 * cm, w=1.6 * cm, h=1.5 * cm)
         if loes and a_idx < len(loes):
             c.setFillColor(FARBEN["gruen"])
             c.setFont(FONT_BOLD, 12)
-            c.drawCentredString(2.3 * cm + task_text_w + 0.6 * cm,
+            c.drawCentredString(2.3 * cm + task_text_w + 0.8 * cm,
                                 cy + 0.05 * cm, str(loes[a_idx]))
 
-        cy -= 0.7 * cm  # space below task text
+        cy -= 1.2 * cm  # space below task text (increased for taller answer box)
         gy = cy - grid_h
 
         # Entrance arrow
@@ -2323,12 +2323,12 @@ def draw_zehneruebergang(c, abschnitt, farb_key, start_y):
     aufgaben = abschnitt["aufgaben"]
     loesungen = abschnitt.get("loesungen", [None] * len(aufgaben))
     row_y = start_y - 1.5 * cm - y_off
-    row_h = 1.8 * cm
+    row_h = 2.2 * cm
 
     dunkel = FARBEN["dunkel"]
     op_col = FARBEN[farb_key]
-    box_w = 1.4 * cm
-    box_h = 1.0 * cm
+    box_w = 1.6 * cm
+    box_h = 1.5 * cm
 
     for idx, aufg in enumerate(aufgaben):
         a, op, b = aufg
@@ -2497,27 +2497,27 @@ def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
             loes = loesungen[ai] if ai < len(loesungen) else None
             
             x = 2*cm
-            box_w = 1.2*cm
-            box_h = 1.0*cm
-            
+            box_w = 1.4*cm
+            box_h = 1.2*cm
+
             # Draw start numbers
             c.setFont(FONT_BOLD, 16)
             for z in start_zahlen:
                 c.setFillColor(FARBEN[farb_key])
-                c.roundRect(x, row_y - 0.5*cm, box_w, box_h, radius=4, fill=1, stroke=0)
+                c.roundRect(x, row_y - 0.6*cm, box_w, box_h, radius=4, fill=1, stroke=0)
                 c.setFillColor(white)
                 c.drawCentredString(x + box_w/2, row_y - 0.15*cm, str(z))
                 x += box_w + 0.3*cm
-            
+
             # Draw blanks
             for i in range(n_blanks):
                 if loes and i < len(loes):
-                    _draw_filled_answer_box(c, x, row_y - 0.5*cm, str(loes[i]), w=box_w, h=box_h)
+                    _draw_filled_answer_box(c, x, row_y - 0.6*cm, str(loes[i]), w=box_w, h=box_h)
                 else:
-                    draw_answer_box(c, x, row_y - 0.5*cm, w=box_w, h=box_h)
+                    draw_answer_box(c, x, row_y - 0.6*cm, w=box_w, h=box_h)
                 x += box_w + 0.3*cm
-                
-            row_y -= 1.8*cm
+
+            row_y -= 2.0*cm
 
     elif modus == "paare":
         # Visual representation: 2 columns of pairs
@@ -2553,7 +2553,7 @@ def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
                 c.setFillColor(FARBEN["grau"])
                 c.setFont(FONT, 10)
                 c.drawString(cx + 4.5 * cm, cy, "Gerade?")
-                draw_answer_box(c, cx + 6.0 * cm, cy - 0.3 * cm, w=0.8 * cm, h=0.7 * cm)
+                draw_answer_box(c, cx + 6.0 * cm, cy - 0.6 * cm, w=1.4 * cm, h=1.2 * cm)
                 
             row_y -= (len(zahlen) + 1) // 2 * row_h
 
@@ -2568,14 +2568,14 @@ def draw_muster_fortsetzen(c, abschnitt, farb_key, start_y):
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]
-    box_w = 1.4 * cm
-    box_h = 1.2 * cm
+    box_w = 1.6 * cm
+    box_h = 1.5 * cm
     gap = 0.3 * cm
-    row_h = 2.0 * cm
+    row_h = 2.3 * cm
     row_y = start_y - 1.8 * cm - y_off
 
     for idx, aufg in enumerate(aufgaben):
-        muster = aufg["muster"]
+        muster = aufg.get("muster") or aufg.get("elemente", [])
         x0 = 1.8 * cm
         y0 = row_y - idx * row_h
 

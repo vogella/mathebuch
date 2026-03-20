@@ -152,7 +152,7 @@ def draw_section_label(c, text, farb_key, y):
     c.drawString(2*cm, y + 0.18*cm, text)
 
 
-def draw_answer_box(c, x, y, w=1.6*cm, h=1.1*cm):
+def draw_answer_box(c, x, y, w=2.0*cm, h=1.5*cm):
     """Hellblaues Antwortfeld."""
     c.setFillColor(FARBEN["antwort"])
     c.setStrokeColor(FARBEN["blau"])
