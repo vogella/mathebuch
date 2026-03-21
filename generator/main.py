@@ -600,8 +600,10 @@ def render_fortschritt_seite(c, alle_kapitel):
         c.setFont(FONT, 10)
         titel = kap["titel"]
         max_w = star_col_x - titel_col_x - 0.3 * cm
-        while c.stringWidth(titel, FONT, 10) > max_w and len(titel) > 5:
-            titel = titel[:-2] + "…"
+        if c.stringWidth(titel, FONT, 10) > max_w:
+            while c.stringWidth(titel + "…", FONT, 10) > max_w and len(titel) > 4:
+                titel = titel[:-1]
+            titel = titel + "…"
         c.drawString(titel_col_x, y, titel)
 
         # Star checkbox (empty circle to color in)
