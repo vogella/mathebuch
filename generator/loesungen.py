@@ -654,6 +654,16 @@ def _solve_bonbon_fabrik(abschnitt):
     return results
 
 
+def _solve_einkaufen_euro_cent(abschnitt):
+    results = []
+    for aufg in abschnitt["aufgaben"]:
+        artikel = aufg["artikel"]
+        euro_sum = sum(a["euro"] for a in artikel)
+        cent_sum = sum(a["cent"] for a in artikel)
+        results.append(f"{euro_sum}€ {cent_sum}ct")
+    return results
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -696,6 +706,7 @@ SOLVER = {
     "formen_zaehlen":     _solve_formen_zaehlen,
     "symmetrie":          _solve_symmetrie,
     "bonbon_fabrik":       _solve_bonbon_fabrik,
+    "einkaufen_euro_cent": _solve_einkaufen_euro_cent,
 }
 
 # Types to skip (explanation, visual-only)
