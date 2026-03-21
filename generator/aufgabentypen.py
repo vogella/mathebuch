@@ -2546,7 +2546,7 @@ def draw_dungeon_abenteuer(c, abschnitt, farb_key, start_y):
         tx += c.stringWidth(txt, FONT_BOLD, 10) + 0.3 * cm
 
         for i, op in enumerate(pfad):
-            draw_follows_arrow(c, tx, cy - 0.05 * cm, size=0.35 * cm, color=FARBEN["grau"])
+            draw_follows_arrow(c, tx, cy + 0.05 * cm, size=0.35 * cm, color=FARBEN["grau"])
             tx += 0.5 * cm
             c.setFont(FONT_BOLD, 10)
             c.setFillColor(FARBEN["dunkel"])
