@@ -27,6 +27,7 @@ abschnitte:
           - [2, 7]
 
   - typ: rechenweg_labyrinth
+    neue_seite: true
     titel: "Rechen-Labyrinth – Lösung"
     beschreibung: "Die richtigen Zahlen sind grün markiert und mit dicken Linien verbunden."
     aufgaben:

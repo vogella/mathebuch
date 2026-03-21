@@ -135,6 +135,16 @@ def draw_erklaerung(c, abschnitt, farb_key, start_y):
     """Draws an explanation block with title and text lines."""
     draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
 
+    # Optional illustration (e.g. "hand", "hand:3")
+    illus = abschnitt.get("illustration")
+    if illus:
+        from illustrationen import draw_hand
+        parts = illus.split(":")
+        name = parts[0]
+        arg = int(parts[1]) if len(parts) > 1 else 5
+        if name == "hand":
+            draw_hand(c, W - 3*cm, start_y - 1.8*cm, num_fingers=arg, size=1.2)
+
     zeilen = abschnitt.get("zeilen", [])
     y = start_y - 1.2*cm
 

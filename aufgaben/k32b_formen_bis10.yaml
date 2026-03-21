@@ -53,6 +53,7 @@ abschnitte:
             farbe: "gruen"
 
   - typ: symmetrie
+    neue_seite: true
     titel: "C  Spiegelbild – Einfach"
     schwierigkeit: 1
     beschreibung: "Male die fehlenden Kästchen aus, damit beide Seiten gleich aussehen."
