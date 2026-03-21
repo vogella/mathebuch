@@ -1134,6 +1134,9 @@ def draw_zahlenstrahl(c, abschnitt, farb_key, start_y):
                line_x + line_w, y)
 
         step = line_w / (count - 1) if count > 1 else line_w
+        # Scale box size to fit: leave a small gap between adjacent boxes
+        box_size = min(1.0*cm, step - 0.1*cm)
+        box_font = 12 if box_size >= 0.8*cm else 9
         for i in range(count):
             tx = line_x + i * step
             # Tick mark
@@ -1144,21 +1147,23 @@ def draw_zahlenstrahl(c, abschnitt, farb_key, start_y):
             val = werte[i] if i < len(werte) else von + i
             strahl_loes = strahl.get("loesungen", [])
             if val is None:
-                # Blank answer box (1.0cm × 1.0cm, centered on tick)
+                # Blank answer box centered on tick, scaled to fit
+                half = box_size / 2
                 c.setFillColor(FARBEN["antwort"])
                 c.setStrokeColor(FARBEN[farb_key])
                 c.setLineWidth(1)
-                c.roundRect(tx - 0.5*cm, y - 1.2*cm, 1.0*cm, 1.0*cm,
+                c.roundRect(tx - half, y - 0.2*cm - box_size, box_size, box_size,
                             radius=3, fill=1, stroke=1)
                 # Show solution if available
                 if i < len(strahl_loes) and strahl_loes[i] is not None:
                     c.setFillColor(FARBEN["gruen"])
-                    c.setFont(FONT_BOLD, 10)
-                    c.drawCentredString(tx, y - 0.85*cm, str(strahl_loes[i]))
+                    c.setFont(FONT_BOLD, box_font)
+                    c.drawCentredString(tx, y - 0.2*cm - half - 0.15*cm,
+                                        str(strahl_loes[i]))
             else:
                 c.setFillColor(FARBEN["dunkel"])
-                c.setFont(FONT_BOLD, 12)
-                c.drawCentredString(tx, y - 0.9*cm, str(val))
+                c.setFont(FONT_BOLD, box_font)
+                c.drawCentredString(tx, y - 0.2*cm - box_size/2 - 0.15*cm, str(val))
 
     return row_y - len(strahlen) * row_h - 0.3*cm
 
