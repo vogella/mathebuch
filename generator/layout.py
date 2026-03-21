@@ -273,11 +273,8 @@ def draw_rotation_arrow(c, cx, cy, radius, start_angle, extent, color=None):
     # Simple triangle tip oriented tangent to the circle
     c.saveState()
     c.translate(tx, ty)
-    # Flip tip direction for clockwise (negative extent) vs counter-clockwise
-    if extent >= 0:
-        c.rotate(start_angle + extent + 90)
-    else:
-        c.rotate(start_angle + extent - 90)
+    # Orient tip tangent to arc direction
+    c.rotate(start_angle + extent - 90)
 
     tip_size = 0.25*cm
     path = c.beginPath()
