@@ -1991,6 +1991,63 @@ def draw_einkaufen(c, abschnitt, farb_key, start_y):
     return row_y - len(aufgaben) * row_h - 0.3*cm
 
 
+# ── Einkaufen Euro und Cent ─────────────────────────────
+
+def draw_einkaufen_euro_cent(c, abschnitt, farb_key, start_y):
+    """Shopping exercises where students add Euro and Cent separately."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]
+    row_y = start_y - 1.5*cm - y_off
+    row_h = 3.8*cm
+
+    for idx, aufg in enumerate(aufgaben):
+        artikel = aufg["artikel"]  # list of {name, euro, cent}
+        y = row_y - idx * row_h
+
+        # Number
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont(FONT_BOLD, 12)
+        c.drawString(1.8*cm, y, f"{idx + 1}.")
+
+        # Price tags with Euro,Cent format
+        tag_x = 2.8*cm
+        for art in artikel:
+            name = art["name"]
+            euro = art["euro"]
+            cent = art["cent"]
+            preis_str = f"{name} {euro},{cent:02d}€"
+            tag_w = c.stringWidth(preis_str, FONT_BOLD, 11) + 0.8*cm
+            c.setFillColor(FARBEN["yellow"])
+            c.roundRect(tag_x, y - 0.3*cm, tag_w, 0.9*cm, radius=5, fill=1, stroke=0)
+            c.setFillColor(FARBEN["dunkel"])
+            c.setFont(FONT_BOLD, 11)
+            c.drawString(tag_x + 0.3*cm, y - 0.05*cm, preis_str)
+            tag_x += tag_w + 0.4*cm
+
+        # Answer row: ___ Euro und ___ Cent
+        ans_y = y - 1.6*cm
+        ax = 2.8*cm
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont(FONT, 11)
+        c.drawString(ax, ans_y + 0.3*cm, "Das sind zusammen")
+        ax += c.stringWidth("Das sind zusammen ", FONT, 11)
+        draw_answer_box(c, ax, ans_y - 0.1*cm, w=1.4*cm, h=1.0*cm)
+        ax += 1.6*cm
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont(FONT, 11)
+        c.drawString(ax, ans_y + 0.3*cm, "Euro und")
+        ax += c.stringWidth("Euro und ", FONT, 11)
+        draw_answer_box(c, ax, ans_y - 0.1*cm, w=1.4*cm, h=1.0*cm)
+        ax += 1.6*cm
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont(FONT, 11)
+        c.drawString(ax, ans_y + 0.3*cm, "Cent.")
+
+    return row_y - len(aufgaben) * row_h - 0.3*cm
+
+
 # ── Kalender-Rätsel ─────────────────────────────────────
 
 def draw_kalender_raetsel(c, abschnitt, farb_key, start_y):

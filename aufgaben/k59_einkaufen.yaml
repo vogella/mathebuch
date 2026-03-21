@@ -43,3 +43,47 @@ abschnitte:
           - {name: "Keks", preis: 2}
         frage: "Du bezahlst mit 10€. Wie viel Rückgeld?"
     loesungen: [2, 4]
+
+  - typ: einkaufen_euro_cent
+    neue_seite: true
+    titel: "C  Euro und Cent zusammenrechnen"
+    beschreibung: "Rechne Euro und Cent getrennt zusammen!"
+    aufgaben:
+      - artikel:
+          - {name: "Apfel", euro: 1, cent: 8}
+          - {name: "Birne", euro: 2, cent: 3}
+      - artikel:
+          - {name: "Brötchen", euro: 0, cent: 9}
+          - {name: "Butter", euro: 3, cent: 5}
+      - artikel:
+          - {name: "Milch", euro: 1, cent: 6}
+          - {name: "Joghurt", euro: 2, cent: 4}
+      - artikel:
+          - {name: "Saft", euro: 3, cent: 7}
+          - {name: "Keks", euro: 1, cent: 2}
+      - artikel:
+          - {name: "Banane", euro: 0, cent: 5}
+          - {name: "Traube", euro: 1, cent: 9}
+
+  - typ: einkaufen_euro_cent
+    neue_seite: true
+    titel: "D  Drei Sachen einkaufen"
+    beschreibung: "Rechne Euro und Cent getrennt zusammen!"
+    schwierigkeit: 1
+    aufgaben:
+      - artikel:
+          - {name: "Ei", euro: 0, cent: 8}
+          - {name: "Mehl", euro: 1, cent: 3}
+          - {name: "Zucker", euro: 2, cent: 4}
+      - artikel:
+          - {name: "Apfel", euro: 1, cent: 2}
+          - {name: "Birne", euro: 2, cent: 5}
+          - {name: "Banane", euro: 0, cent: 7}
+      - artikel:
+          - {name: "Brot", euro: 3, cent: 1}
+          - {name: "Käse", euro: 2, cent: 6}
+          - {name: "Wurst", euro: 1, cent: 3}
+      - artikel:
+          - {name: "Milch", euro: 1, cent: 4}
+          - {name: "Saft", euro: 2, cent: 3}
+          - {name: "Wasser", euro: 0, cent: 8}
