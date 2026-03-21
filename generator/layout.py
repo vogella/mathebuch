@@ -169,6 +169,7 @@ def draw_section_label(c, text, farb_key, y, schwierigkeit=0):
     if schwierigkeit and 1 <= schwierigkeit <= 3:
         star_x = 11.8*cm
         star_cy = y + 0.4*cm
+        c.setFillColor(FARBEN["yellow"])
         for i in range(schwierigkeit):
             _draw_star_shape(c, star_x + i * 0.5*cm, star_cy, 0.16*cm, 0.07*cm)
         # Leere Sterne für die restlichen

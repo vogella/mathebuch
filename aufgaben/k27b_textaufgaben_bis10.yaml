@@ -28,6 +28,7 @@ abschnitte:
         antwort: 10
       - text: "Beim Fußball stehen 5 Spieler auf dem Feld. Noch 3 kommen dazu. Wie viele Spieler sind es jetzt?"
         antwort: 8
+    loesungen: [6, 10, 8]
 
   - typ: textaufgaben
     titel: "C  Auf dem Bauernhof"
@@ -42,3 +43,4 @@ abschnitte:
         antwort: 3
       - text: "Der Bauer sammelt 4 Eier am Morgen und 6 Eier am Abend. Wie viele Eier hat er insgesamt?"
         antwort: 10
+    loesungen: [4, 7, 3, 10]
