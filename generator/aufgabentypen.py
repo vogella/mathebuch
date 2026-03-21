@@ -2062,16 +2062,20 @@ def draw_wuerfel_zuordnen(c, abschnitt, farb_key, start_y):
         right_x = x_offset + (3.5*cm if doppel else 2.5*cm)
         dice_size = 1.3*cm
 
-        # Draw left side: numbers
+        # Draw left side: numbers and right side: dice, both aligned to same center
         for i in range(n):
             y = base_y - i * row_h
+            # Vertical center of this row's dice
+            center_y = y - dice_size / 2
+
+            # Number (centered vertically with dice)
             c.setFillColor(FARBEN["dunkel"])
             c.setFont(FONT_BOLD, 20)
             if doppel:
                 num = items[i][0] + items[i][1]
             else:
                 num = items[i][0]
-            c.drawCentredString(left_x, y - dice_size * 0.4, str(num))
+            c.drawCentredString(left_x, center_y - 0.15*cm, str(num))
 
         # Draw right side: dice (shuffled)
         for i in range(n):
@@ -2091,8 +2095,8 @@ def draw_wuerfel_zuordnen(c, abschnitt, farb_key, start_y):
             c.setLineWidth(1.5)
             for i in range(n):
                 right_pos = shuffled_indices.index(i)
-                ly = base_y - i * row_h - dice_size * 0.3
-                ry = base_y - right_pos * row_h - dice_size * 0.3
+                ly = base_y - i * row_h - dice_size / 2
+                ry = base_y - right_pos * row_h - dice_size / 2
                 c.line(left_x + 0.8*cm, ly, right_x - 0.2*cm, ry)
 
     # Draw both columns
@@ -2451,21 +2455,21 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
         cy -= 1.2 * cm  # space below task text (increased for taller answer box)
         gy = cy - grid_h
 
-        # Entrance arrow (drawn triangle + label)
+        # Entrance arrow (drawn triangle centered on entrance column + label)
         entrance_col = aufg.get("eingang", 0)
         ex = gx + entrance_col * cell + cell / 2
         c.setFillColor(FARBEN[farb_key])
         c.setFont(FONT_BOLD, 9)
         tri_size = 0.2 * cm
-        label_y = cy + 0.35 * cm
-        tri_cx = ex - c.stringWidth("Eingang", FONT_BOLD, 9) / 2 - 0.25 * cm
+        label_y = cy + 0.55 * cm
+        # Triangle pointing down, centered on entrance column
         p = c.beginPath()
-        p.moveTo(tri_cx - tri_size, label_y + 0.2 * cm)
-        p.lineTo(tri_cx + tri_size, label_y + 0.2 * cm)
-        p.lineTo(tri_cx, label_y - 0.1 * cm)
+        p.moveTo(ex - tri_size, cy + 0.35 * cm)
+        p.lineTo(ex + tri_size, cy + 0.35 * cm)
+        p.lineTo(ex, cy + 0.08 * cm)
         p.close()
         c.drawPath(p, fill=1, stroke=0)
-        c.drawString(tri_cx + tri_size + 0.1 * cm, label_y, "Eingang")
+        c.drawCentredString(ex, label_y, "Eingang")
 
         # Draw grid
         for ri, row in enumerate(grid):
@@ -2488,21 +2492,18 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
                 c.drawCentredString(x0 + cell / 2, y0 + cell / 2 - 0.15 * cm,
                                     str(val))
 
-        # Exit arrow (drawn triangle + label)
+        # Exit arrow (drawn triangle centered on exit column + label)
         exit_col = aufg.get("ausgang", cols - 1)
         ax = gx + exit_col * cell + cell / 2
         c.setFillColor(FARBEN[farb_key])
         c.setFont(FONT_BOLD, 9)
-        exit_label_y = gy - 0.35 * cm
-        c.drawString(ax - c.stringWidth("Ausgang", FONT_BOLD, 9) / 2 - 0.25 * cm,
-                     exit_label_y, "Ausgang")
-        tri_cx2 = ax + c.stringWidth("Ausgang", FONT_BOLD, 9) / 2 + 0.15 * cm
         p2 = c.beginPath()
-        p2.moveTo(tri_cx2 - tri_size, exit_label_y + 0.2 * cm)
-        p2.lineTo(tri_cx2 + tri_size, exit_label_y + 0.2 * cm)
-        p2.lineTo(tri_cx2, exit_label_y - 0.1 * cm)
+        p2.moveTo(ax - tri_size, gy - 0.08 * cm)
+        p2.lineTo(ax + tri_size, gy - 0.08 * cm)
+        p2.lineTo(ax, gy - 0.35 * cm)
         p2.close()
         c.drawPath(p2, fill=1, stroke=0)
+        c.drawCentredString(ax, gy - 0.6 * cm, "Ausgang")
 
         cy = gy - 0.9 * cm
 
@@ -2592,21 +2593,18 @@ def draw_dungeon_abenteuer(c, abschnitt, farb_key, start_y):
                 c.setFont(FONT_BOLD, 13)
                 c.drawCentredString(x0 + cell / 2, y0 + cell / 2 - 0.15 * cm, str(val))
 
-        # Exit arrow (drawn triangle + label)
+        # Exit arrow (drawn triangle centered on exit column + label)
         exit_col = aufg.get("ausgang", cols - 1)
         ax = gx + exit_col * cell + cell / 2
         c.setFillColor(FARBEN[farb_key])
         c.setFont(FONT_BOLD, 9)
-        exit_label_y = gy - 0.35 * cm
-        c.drawString(ax - c.stringWidth("Ausgang", FONT_BOLD, 9) / 2 - 0.25 * cm,
-                     exit_label_y, "Ausgang")
-        tri_cx2 = ax + c.stringWidth("Ausgang", FONT_BOLD, 9) / 2 + 0.15 * cm
         p2 = c.beginPath()
-        p2.moveTo(tri_cx2 - tri_size, exit_label_y + 0.2 * cm)
-        p2.lineTo(tri_cx2 + tri_size, exit_label_y + 0.2 * cm)
-        p2.lineTo(tri_cx2, exit_label_y - 0.1 * cm)
+        p2.moveTo(ax - tri_size, gy - 0.08 * cm)
+        p2.lineTo(ax + tri_size, gy - 0.08 * cm)
+        p2.lineTo(ax, gy - 0.35 * cm)
         p2.close()
         c.drawPath(p2, fill=1, stroke=0)
+        c.drawCentredString(ax, gy - 0.6 * cm, "Ausgang")
 
         cy = gy - 0.9 * cm
 
