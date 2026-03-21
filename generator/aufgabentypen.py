@@ -103,6 +103,31 @@ def _draw_text_with_emojis(c, x, y, text, font_name, font_size, color):
         c.drawString(curr_x, y, part)
 
 
+def _draw_dungeon_arrow(c, cx, y_base, label, color, direction="down"):
+    """Draw a small triangle arrow with label, centered on cx.
+    direction='down' points downward, 'up' would point upward."""
+    tri_size = 0.2 * cm
+    c.setFillColor(color)
+    if direction == "down":
+        p = c.beginPath()
+        p.moveTo(cx - tri_size, y_base + 0.27 * cm)
+        p.lineTo(cx + tri_size, y_base + 0.27 * cm)
+        p.lineTo(cx, y_base)
+        p.close()
+        c.drawPath(p, fill=1, stroke=0)
+        c.setFont(FONT_BOLD, 9)
+        c.drawCentredString(cx, y_base + 0.4 * cm, label)
+    else:
+        p = c.beginPath()
+        p.moveTo(cx - tri_size, y_base)
+        p.lineTo(cx + tri_size, y_base)
+        p.lineTo(cx, y_base + 0.27 * cm)
+        p.close()
+        c.drawPath(p, fill=1, stroke=0)
+        c.setFont(FONT_BOLD, 9)
+        c.drawCentredString(cx, y_base - 0.25 * cm, label)
+
+
 def draw_erklaerung(c, abschnitt, farb_key, start_y):
     """Draws an explanation block with title and text lines."""
     draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
@@ -691,8 +716,8 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
     count = len(mauern)
     spacing = (W - 3*cm) / count
     # Scale brick size to fit: widest wall determines max bricks per row
-    max_bricks = max(max(len(row) for row in m) for m in mauern)
-    brick_w = min(2.0*cm, (spacing - 0.4*cm) / max_bricks)
+    max_bricks = max((max((len(row) for row in m), default=0) for m in mauern), default=1)
+    brick_w = min(2.0*cm, (spacing - 0.4*cm) / max(max_bricks, 1))
     brick_h = min(1.4*cm, brick_w * 0.7)
 
     # Row colors: bottom row gets the first color, each row up gets the next
@@ -2462,18 +2487,7 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
         # Entrance arrow (drawn triangle centered on entrance column + label)
         entrance_col = aufg.get("eingang", 0)
         ex = gx + entrance_col * cell + cell / 2
-        c.setFillColor(FARBEN[farb_key])
-        c.setFont(FONT_BOLD, 9)
-        tri_size = 0.2 * cm
-        label_y = cy + 0.55 * cm
-        # Triangle pointing down, centered on entrance column
-        p = c.beginPath()
-        p.moveTo(ex - tri_size, cy + 0.35 * cm)
-        p.lineTo(ex + tri_size, cy + 0.35 * cm)
-        p.lineTo(ex, cy + 0.08 * cm)
-        p.close()
-        c.drawPath(p, fill=1, stroke=0)
-        c.drawCentredString(ex, label_y, "Eingang")
+        _draw_dungeon_arrow(c, ex, cy, "Eingang", FARBEN[farb_key], direction="down")
 
         # Draw grid
         for ri, row in enumerate(grid):
@@ -2499,15 +2513,7 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
         # Exit arrow (drawn triangle centered on exit column + label)
         exit_col = aufg.get("ausgang", cols - 1)
         ax = gx + exit_col * cell + cell / 2
-        c.setFillColor(FARBEN[farb_key])
-        c.setFont(FONT_BOLD, 9)
-        p2 = c.beginPath()
-        p2.moveTo(ax - tri_size, gy - 0.08 * cm)
-        p2.lineTo(ax + tri_size, gy - 0.08 * cm)
-        p2.lineTo(ax, gy - 0.35 * cm)
-        p2.close()
-        c.drawPath(p2, fill=1, stroke=0)
-        c.drawCentredString(ax, gy - 0.6 * cm, "Ausgang")
+        _draw_dungeon_arrow(c, ax, gy, "Ausgang", FARBEN[farb_key], direction="up")
 
         cy = gy - 0.9 * cm
 
@@ -2560,21 +2566,9 @@ def draw_dungeon_abenteuer(c, abschnitt, farb_key, start_y):
         cy -= 0.7 * cm
         gy = cy - grid_h
 
-        # Entrance arrow (drawn triangle + label)
+        # Entrance arrow
         ex = gx + entrance_col * cell + cell / 2
-        c.setFillColor(FARBEN[farb_key])
-        c.setFont(FONT_BOLD, 9)
-        label_y = cy + 0.35 * cm
-        # Draw downward triangle
-        tri_size = 0.2 * cm
-        tri_cx = ex - c.stringWidth("Eingang", FONT_BOLD, 9) / 2 - 0.25 * cm
-        p = c.beginPath()
-        p.moveTo(tri_cx - tri_size, label_y + 0.2 * cm)
-        p.lineTo(tri_cx + tri_size, label_y + 0.2 * cm)
-        p.lineTo(tri_cx, label_y - 0.1 * cm)
-        p.close()
-        c.drawPath(p, fill=1, stroke=0)
-        c.drawString(tri_cx + tri_size + 0.1 * cm, label_y, "Eingang")
+        _draw_dungeon_arrow(c, ex, cy, "Eingang", FARBEN[farb_key], direction="down")
 
         # Draw grid
         for ri, row in enumerate(grid):
@@ -2600,15 +2594,7 @@ def draw_dungeon_abenteuer(c, abschnitt, farb_key, start_y):
         # Exit arrow (drawn triangle centered on exit column + label)
         exit_col = aufg.get("ausgang", cols - 1)
         ax = gx + exit_col * cell + cell / 2
-        c.setFillColor(FARBEN[farb_key])
-        c.setFont(FONT_BOLD, 9)
-        p2 = c.beginPath()
-        p2.moveTo(ax - tri_size, gy - 0.08 * cm)
-        p2.lineTo(ax + tri_size, gy - 0.08 * cm)
-        p2.lineTo(ax, gy - 0.35 * cm)
-        p2.close()
-        c.drawPath(p2, fill=1, stroke=0)
-        c.drawCentredString(ax, gy - 0.6 * cm, "Ausgang")
+        _draw_dungeon_arrow(c, ax, gy, "Ausgang", FARBEN[farb_key], direction="up")
 
         cy = gy - 0.9 * cm
 
