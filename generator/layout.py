@@ -127,7 +127,7 @@ def draw_page_bg(c):
         c.rect(W - (i+1)*sq,    0,      sq, sq, fill=1, stroke=0)
 
 
-def draw_header(c, titel, untertitel, emoji, farb_key):
+def draw_header(c, titel, untertitel, emoji, farb_key, erklaerung_seite=None):
     """Farbiges Banner mit Titel oben auf der Seite."""
     col = FARBEN[farb_key]
     c.setFillColor(col)
@@ -142,15 +142,39 @@ def draw_header(c, titel, untertitel, emoji, farb_key):
     c.drawString(4.2*cm, H - 2.2*cm, titel)
     c.setFont(FONT, 12)
     c.drawString(4.2*cm, H - 2.8*cm, untertitel)
+    # Verweis auf Erklärungsseite
+    if erklaerung_seite is not None:
+        ref_text = f"Erklärung: S.{erklaerung_seite}"
+        c.setFont(FONT, 8)
+        tw = c.stringWidth(ref_text, FONT, 8)
+        rx = W - 1.5*cm - tw - 0.5*cm
+        ry = H - 1.55*cm
+        # Small rounded background
+        c.setFillColor(white)
+        c.setStrokeColor(white)
+        c.roundRect(rx - 0.15*cm, ry - 0.12*cm, tw + 0.3*cm, 0.5*cm,
+                    radius=4, fill=1, stroke=0)
+        c.setFillColor(col)
+        c.drawString(rx, ry, ref_text)
 
 
-def draw_section_label(c, text, farb_key, y):
-    """Farbige Abschnittsüberschrift."""
+def draw_section_label(c, text, farb_key, y, schwierigkeit=0):
+    """Farbige Abschnittsüberschrift mit optionaler Schwierigkeitsanzeige (1-3 Sterne)."""
     c.setFillColor(FARBEN[farb_key])
     c.roundRect(1.5*cm, y, 10*cm, 0.8*cm, radius=6, fill=1, stroke=0)
     c.setFillColor(white)
     c.setFont(FONT_BOLD, 12)
     c.drawString(2.0*cm, y + 0.22*cm, text)
+    # Schwierigkeitssterne rechts neben dem Label
+    if schwierigkeit and 1 <= schwierigkeit <= 3:
+        star_x = 11.8*cm
+        star_cy = y + 0.4*cm
+        for i in range(schwierigkeit):
+            _draw_star_shape(c, star_x + i * 0.5*cm, star_cy, 0.16*cm, 0.07*cm)
+        # Leere Sterne für die restlichen
+        c.setFillColor(FARBEN["hellgrau"])
+        for i in range(schwierigkeit, 3):
+            _draw_star_shape(c, star_x + i * 0.5*cm, star_cy, 0.16*cm, 0.07*cm)
 
 
 def draw_answer_box(c, x, y, w=2.0*cm, h=1.5*cm):
@@ -194,12 +218,12 @@ def draw_stars(c, x, y):
 def draw_page_number(c, n, show_stars=True):
     c.setFillColor(FARBEN["dunkel"])
     c.setFont(FONT, 9)
-    c.drawCentredString(W / 2, 1.2*cm, str(n))
+    c.drawCentredString(W / 2, 1.0*cm, str(n))
     if show_stars:
-        draw_stars(c, W - 7*cm, 1.8*cm)
+        draw_stars(c, W - 7*cm, 1.5*cm)
         # Kleiner Pokal neben den Sternen
         from illustrationen import draw_mini_pokal
-        draw_mini_pokal(c, W - 7.5*cm, 2.0*cm, size=0.8)
+        draw_mini_pokal(c, W - 7.5*cm, 1.7*cm, size=0.8)
 
 
 def draw_follows_arrow(c, x, y, size=0.6*cm, color=None):
