@@ -1489,8 +1489,8 @@ def draw_muster_fortsetzen(c, abschnitt, farb_key, start_y):
 
     row_h = 2.2*cm
     row_y = start_y - 2.0*cm - y_off
-    element_size = 1.0*cm
-    spacing = 1.4*cm
+    element_size = 1.2*cm
+    spacing = 1.5*cm
 
     for idx, aufg in enumerate(aufgaben):
         y0 = row_y - idx * row_h
