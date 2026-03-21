@@ -190,7 +190,7 @@ def draw_lückenaufgaben(c, abschnitt, farb_key, start_y):
     return row_y - halb * row_h - 0.5*cm   # nächste freie Y-Position
 
 
-def _draw_filled_answer_box(c, x, y, text, w=2.0*cm, h=1.5*cm):
+def _draw_filled_answer_box(c, x, y, text, w=1.6*cm, h=1.2*cm):
     """Answer box with a solution value shown inside."""
     draw_answer_box(c, x, y, w, h)
     c.setFillColor(FARBEN["gruen"])
@@ -202,18 +202,22 @@ def _draw_aufgabe_row(c, x, y, aufg, farb_key, loesung=None):
     a, op, b, ergebnis = aufg
     op_col = FARBEN[farb_key]
     dunkel = FARBEN["dunkel"]
+    # Smaller answer boxes to avoid overlapping with operators/equals
+    box_w = 1.6*cm
+    box_h = 1.2*cm
+    box_dy = 0.45*cm  # vertical offset to center box on text baseline
 
     c.setFont(FONT_BOLD, 20)
-    
+
     # a
     if a is not None:
         c.setFillColor(dunkel)
         c.drawCentredString(x + 0.6*cm, y, str(a))
     else:
         if loesung is not None:
-            _draw_filled_answer_box(c, x, y - 0.55*cm, loesung[0])
+            _draw_filled_answer_box(c, x, y - box_dy, loesung[0], w=box_w, h=box_h)
         else:
-            draw_answer_box(c, x, y - 0.55*cm)
+            draw_answer_box(c, x, y - box_dy, w=box_w, h=box_h)
 
     # Operator
     c.setFillColor(op_col)
@@ -225,9 +229,9 @@ def _draw_aufgabe_row(c, x, y, aufg, farb_key, loesung=None):
         c.drawCentredString(x + 3.6*cm, y, str(b))
     else:
         if loesung is not None:
-            _draw_filled_answer_box(c, x + 3.0*cm, y - 0.55*cm, loesung[1])
+            _draw_filled_answer_box(c, x + 3.0*cm, y - box_dy, loesung[1], w=box_w, h=box_h)
         else:
-            draw_answer_box(c, x + 3.0*cm, y - 0.55*cm)
+            draw_answer_box(c, x + 3.0*cm, y - box_dy, w=box_w, h=box_h)
 
     # =
     c.setFillColor(op_col)
@@ -239,9 +243,9 @@ def _draw_aufgabe_row(c, x, y, aufg, farb_key, loesung=None):
         c.drawCentredString(x + 6.4*cm, y, str(ergebnis))
     else:
         if loesung is not None:
-            _draw_filled_answer_box(c, x + 5.8*cm, y - 0.55*cm, loesung[2])
+            _draw_filled_answer_box(c, x + 5.8*cm, y - box_dy, loesung[2], w=box_w, h=box_h)
         else:
-            draw_answer_box(c, x + 5.8*cm, y - 0.55*cm)
+            draw_answer_box(c, x + 5.8*cm, y - box_dy, w=box_w, h=box_h)
 
 
 # ── Zahlenhaus ─────────────────────────────────────────────
@@ -1363,7 +1367,7 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
 
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 14)
-        mal_text = "mal hinein."
+        mal_text = f"mal in die {ziel}."
         c.drawString(x, y, mal_text)
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
@@ -1986,13 +1990,15 @@ def draw_textaufgaben(c, abschnitt, farb_key, start_y):
             c.drawString(2.8*cm, y - li * 0.5*cm, l)
 
         # Hint
+        hint_offset = 0
         if hinweis:
             c.setFillColor(FARBEN["grau"])
             c.setFont(FONT_ITALIC, 9)
             c.drawString(2.8*cm, y - len(lines) * 0.5*cm - 0.15*cm, hinweis)
+            hint_offset = 0.5*cm
 
         # Rechnung + Antwort
-        bottom = y - len(lines) * 0.5*cm - 0.8*cm
+        bottom = y - len(lines) * 0.5*cm - 0.8*cm - hint_offset
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 9)
         c.drawString(2.8*cm, bottom + 0.3*cm, "Rechnung:")
@@ -2117,9 +2123,13 @@ def draw_zahlenkreis(c, abschnitt, farb_key, start_y):
         radius_kreis = 1.6*cm
         node_r = 0.5*cm
 
-        # Rotation arrow in the center
-        draw_rotation_arrow(c, cx, cy, radius=0.6*cm, start_angle=45, extent=270, 
-                            color=FARBEN["hellgrau"])
+        # Rotation arrow in the center – alternate direction
+        if idx % 2 == 0:
+            draw_rotation_arrow(c, cx, cy, radius=0.6*cm, start_angle=45, extent=-270,
+                                color=FARBEN["hellgrau"])
+        else:
+            draw_rotation_arrow(c, cx, cy, radius=0.6*cm, start_angle=135, extent=270,
+                                color=FARBEN["hellgrau"])
         
         num_nodes = len(aufg)
         task_loes = loesungen[idx] if idx < len(loesungen) else None
@@ -2999,11 +3009,12 @@ def draw_zahlen_schreiben(c, abschnitt, farb_key, start_y):
     aufgaben = abschnitt["aufgaben"]
     farbe = FARBEN[farb_key]
 
-    model_size = 2.0 * cm
     box_w = 1.6 * cm
     box_h = 2.0 * cm
     box_gap = 0.25 * cm
-    practice_count = 8
+    # Model box width = 2 practice boxes wide (plus one gap)
+    model_size = 2 * box_w + box_gap
+    practice_count = 7  # slightly fewer to fit the wider model box
 
     cols = 1
     col_w = (W - 3 * cm) / cols
@@ -3186,8 +3197,18 @@ def draw_symmetrie(c, abschnitt, farb_key, start_y):
                 cx = grid_x + ci * cell_size
                 cy = grid_top - ri * cell_size
 
+                # Determine which side of the axis this cell is on
+                if achse == "vertikal":
+                    is_given_side = ci < achse_pos
+                else:
+                    is_given_side = ri < achse_pos
+
                 if cell == 1:
-                    c.setFillColor(farbe)
+                    if is_given_side:
+                        c.setFillColor(farbe)
+                    else:
+                        # Student-fill side: use neutral color so answer isn't obvious
+                        c.setFillColor(FARBEN["dunkel"])
                     c.setStrokeColor(FARBEN["dunkel"])
                     c.setLineWidth(0.5)
                     c.rect(cx, cy - cell_size, cell_size, cell_size, fill=1, stroke=1)

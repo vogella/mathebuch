@@ -21,11 +21,17 @@ abschnitte:
       - "   Die Felder müssen alle zusammenhängen – kein Sprung!"
       - ""
       - "4. Die Gitter werden größer: 4×4, dann 5×5, dann 6×6 Felder."
-      - ""
-      - "## Beispiel"
-      - "**Rechne: 2 + 1 = 3  (★ = richtiger Weg)**"
-      - "    Eingang ▼"
-      - "[★] [ 1 ] [ 4 ]"
-      - "[★] [★] [ 2 ]"
-      - "[ 5 ] [★] [ 1 ]"
-      - "    Ausgang ▼"
+
+  - typ: dungeon_flucht
+    titel: "Beispiel"
+    aufgaben:
+      - aufgabe: "2 + 1"
+        antwort: 3
+        eingang: 0
+        ausgang: 1
+        grid:
+          - [3, 1, 4]
+          - [3, 3, 2]
+          - [5, 3, 1]
+    loesungen:
+      - 3
