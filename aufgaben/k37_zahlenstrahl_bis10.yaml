@@ -15,6 +15,10 @@ abschnitte:
       - von: 0
         bis: 10
         werte: [null, 1, null, 3, null, 5, null, 7, null, 9, null]
+
+  - typ: zahlenstrahl
+    titel: "B  Knifflige Zahlenstrahlen!"
+    strahlen:
       - von: 0
         bis: 10
         werte: [0, null, null, 3, null, null, 6, null, null, 9, null]
@@ -24,3 +28,9 @@ abschnitte:
       - von: 0
         bis: 10
         werte: [0, null, 2, null, null, 5, 6, null, 8, null, null]
+      - von: 0
+        bis: 10
+        werte: [null, 1, null, null, 4, null, null, 7, null, null, 10]
+      - von: 0
+        bis: 10
+        werte: [0, null, null, null, 4, 5, null, null, null, 9, null]

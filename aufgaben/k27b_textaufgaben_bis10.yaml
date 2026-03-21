@@ -44,3 +44,18 @@ abschnitte:
       - text: "Der Bauer sammelt 4 Eier am Morgen und 6 Eier am Abend. Wie viele Eier hat er insgesamt?"
         antwort: 10
     loesungen: [4, 7, 3, 10]
+
+  - typ: textaufgaben
+    titel: "D  Im Garten"
+    schwierigkeit: 2
+    beschreibung: "Lies und rechne!"
+    aufgaben:
+      - text: "Im Garten wachsen 5 Tomaten. Die Mutter pflückt 2. Wie viele Tomaten sind noch da?"
+        antwort: 3
+      - text: "Papa pflanzt 3 Blumen am Montag und 4 Blumen am Dienstag. Wie viele Blumen hat er gepflanzt?"
+        antwort: 7
+      - text: "Auf dem Apfelbaum hängen 9 Äpfel. 6 fallen herunter. Wie viele hängen noch?"
+        antwort: 3
+      - text: "Im Beet krabbeln 2 Käfer. Dann kommen noch 8 dazu. Wie viele Käfer sind es jetzt?"
+        antwort: 10
+    loesungen: [3, 7, 3, 10]

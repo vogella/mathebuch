@@ -6,60 +6,53 @@ kapitel:
   zahlenraum: 20
 
 abschnitte:
-  - typ: dungeon_flucht
+  - typ: dungeon_abenteuer
     titel: "A  Entkomme dem großen Dungeon!"
-    beschreibung: "Löse die Aufgabe. Folge dann den Feldern mit der Lösung vom Eingang zum Ausgang!"
+    beschreibung: "Rechne immer weiter, um den nächsten Raum zu finden!"
     aufgaben:
-      - aufgabe: "8 + 7"
-        antwort: 15
-        eingang: 1
+      - eingang: 1
+        pfad: ["+ 7", "- 3", "+ 5", "- 2", "+ 4", "- 6"]
         ausgang: 4
         grid:
-          - [3, 15,  8, 12,  6, 19]
-          - [7, 15, 15, 11,  4, 13]
-          - [9, 18,  2, 15, 16,  5]
-          - [14, 6, 11, 15, 15,  8]
-          - [3, 17,  9, 12, 15, 20]
-          - [10, 4, 16,  7, 15,  1]
+          - [3, 10, 8, 12, 6]
+          - [7, 17, 14, 11, 4]
+          - [9, 18, 19, 17, 5]
+          - [14, 6, 11, 15, 15]
+          - [3, 17, 9, 12, 9]
 
-      - aufgabe: "17 − 5"
-        antwort: 12
-        eingang: 4
+      - eingang: 3
+        pfad: ["- 4", "+ 6", "- 3", "+ 8", "- 5"]
         ausgang: 1
         grid:
-          - [8, 15,  6, 19, 12,  3]
-          - [14, 7, 11, 12, 12, 16]
-          - [5, 18, 12, 12,  9,  4]
-          - [20, 12, 12,  3, 17, 10]
-          - [6, 12, 15,  8, 11,  1]
-          - [13, 12,  4, 19,  7, 16]
+          - [8, 15, 6, 16, 19]
+          - [14, 7, 12, 12, 9]
+          - [5, 18, 18, 15, 4]
+          - [20, 13, 23, 3, 10]
+          - [6, 18, 15, 8, 11]
 
-  - typ: dungeon_flucht
+  - typ: dungeon_abenteuer
     titel: "B  Der letzte Dungeon!"
+    beschreibung: "Rechne immer weiter, um den nächsten Raum zu finden!"
     aufgaben:
-      - aufgabe: "6 + 5"
-        antwort: 11
-        eingang: 3
-        ausgang: 2
+      - eingang: 0
+        pfad: ["+ 5", "+ 3", "- 4", "+ 6", "- 2"]
+        ausgang: 4
         grid:
-          - [8, 15,  6, 11, 19,  3]
-          - [14, 7, 11, 11,  9, 16]
-          - [5, 18, 11, 12,  4, 20]
-          - [17, 11, 11,  3, 10,  1]
-          - [6, 13, 11,  8, 15,  7]
-          - [20, 4, 11, 19, 16,  9]
+          - [11, 15, 6, 19, 3]
+          - [14, 16, 11, 9, 16]
+          - [5, 18, 19, 12, 4]
+          - [17, 11, 15, 3, 10]
+          - [6, 13, 11, 8, 13]
 
-      - aufgabe: "20 − 2"
-        antwort: 18
-        eingang: 0
-        ausgang: 5
+      - eingang: 4
+        pfad: ["- 3", "+ 7", "- 5", "+ 4", "- 6"]
+        ausgang: 0
         grid:
-          - [18,  5, 12,  7, 14,  3]
-          - [18, 18,  9, 16,  4, 11]
-          - [6, 13, 18,  1, 20,  8]
-          - [15, 7,  18, 18,  3, 12]
-          - [10, 19,  5, 14, 18,  6]
-          - [4, 16, 11,  9,  1, 18]
+          - [18, 5, 12, 7, 14]
+          - [11, 18, 9, 16, 4]
+          - [6, 13, 15, 1, 20]
+          - [15, 7, 10, 18, 3]
+          - [10, 19, 5, 14, 8]
 
   - typ: dungeon_abenteuer
     titel: "C  Abenteuer bis 20!"

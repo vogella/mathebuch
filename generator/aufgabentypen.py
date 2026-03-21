@@ -120,11 +120,11 @@ def _draw_dungeon_arrow(c, cx, y_base, label, color, direction="down"):
         c.setFont(FONT_BOLD, 9)
         c.drawCentredString(cx, y_base + 0.6 * cm, label)
     else:
-        # Exit: label and arrow below y_base with extra gap
+        # Exit: arrow pointing up below y_base, label below arrow
         p = c.beginPath()
-        p.moveTo(cx - tri_size, y_base - 0.2 * cm)
-        p.lineTo(cx + tri_size, y_base - 0.2 * cm)
-        p.lineTo(cx, y_base - 0.47 * cm)
+        p.moveTo(cx - tri_size, y_base - 0.47 * cm)
+        p.lineTo(cx + tri_size, y_base - 0.47 * cm)
+        p.lineTo(cx, y_base - 0.2 * cm)
         p.close()
         c.drawPath(p, fill=1, stroke=0)
         c.setFont(FONT_BOLD, 9)
@@ -465,7 +465,8 @@ def _draw_tipp_box(c, x, y, tipp_zeilen):
     c.setFillColor(FARBEN["dunkel"])
     c.setFont(FONT_BOLD, 11)
     top_y = y + box_h/2 - 1*cm
-    c.drawString(x + 0.5*cm, top_y, "💡 Tipp:")
+    draw_emoji(c, "💡", x + 0.7*cm, top_y + 0.15*cm, 0.45*cm)
+    c.drawString(x + 1.2*cm, top_y, "Tipp:")
     c.setFont(FONT, 10)
     for j, line in enumerate(tipp_zeilen):
         c.drawString(x + 0.5*cm, top_y - (j+1)*0.65*cm, line)
@@ -1550,8 +1551,8 @@ def draw_muster_fortsetzen(c, abschnitt, farb_key, start_y):
 
     row_h = 2.2*cm
     row_y = start_y - 2.0*cm - y_off
-    element_size = 1.2*cm
-    spacing = 1.5*cm
+    element_size = 1.5*cm
+    spacing = 1.7*cm
 
     for idx, aufg in enumerate(aufgaben):
         y0 = row_y - idx * row_h
@@ -1931,7 +1932,7 @@ def draw_einkaufen(c, abschnitt, farb_key, start_y):
     aufgaben = abschnitt["aufgaben"]
     loesungen = abschnitt.get("loesungen", [])
     row_y = start_y - 1.5*cm - y_off
-    row_h = 2.8*cm
+    row_h = 3.5*cm
 
     for idx, aufg in enumerate(aufgaben):
         artikel = aufg["artikel"]  # list of {name, preis}
@@ -1983,7 +1984,7 @@ def draw_kalender_raetsel(c, abschnitt, farb_key, start_y):
     aufgaben = abschnitt["aufgaben"]  # list of {text/frage}
     loesungen = abschnitt.get("loesungen", [])
     row_y = start_y - 1.5*cm - y_off
-    row_h = 2.2*cm
+    row_h = 3.0*cm
 
     for idx, aufg in enumerate(aufgaben):
         text = aufg.get("text") or aufg.get("frage", "")
@@ -2732,7 +2733,11 @@ def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
     aufgaben = abschnitt.get("aufgaben", [])
     loesungen = abschnitt.get("loesungen", [])
     row_y = start_y - 1.2*cm - y_off
-    
+
+    tipp_zeilen = abschnitt.get("tipp_zeilen", [])
+    if tipp_zeilen:
+        _draw_tipp_box(c, 13.5*cm, row_y - 1.5*cm, tipp_zeilen)
+
     if modus == "sortieren":
         # Sort given numbers into two boxes: "Gerade" and "Ungerade"
         box_w = (W - 5*cm) / 2
@@ -2790,7 +2795,8 @@ def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
             c.setFont(FONT_BOLD, 10)
             c.setFillColor(FARBEN["grau"])
             c.drawString(2*cm, row_y + 0.5*cm, "Gerade = blau, Ungerade = pink")
-            
+            row_y -= 1.0*cm
+
             for i, z in enumerate(zahlen):
                 cx = 2.5*cm + i * spacing
                 c.setStrokeColor(FARBEN["hellgrau"])
@@ -3221,7 +3227,7 @@ def draw_formen_zaehlen(c, abschnitt, farb_key, start_y):
             c.setFillColor(FARBEN["dunkel"])
             c.setFont(FONT_BOLD, 14)
             c.drawString(fx + 0.6*cm, table_y - 0.2*cm, "=")
-            draw_answer_box(c, fx + 1.1*cm, table_y - 0.45*cm, w=1.0*cm, h=0.9*cm)
+            draw_answer_box(c, fx + 1.1*cm, table_y - 0.55*cm, w=1.3*cm, h=1.1*cm)
 
         row_y = table_y - 1.5*cm
 
