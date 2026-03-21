@@ -105,27 +105,30 @@ def _draw_text_with_emojis(c, x, y, text, font_name, font_size, color):
 
 def _draw_dungeon_arrow(c, cx, y_base, label, color, direction="down"):
     """Draw a small triangle arrow with label, centered on cx.
-    direction='down' points downward, 'up' would point upward."""
+    direction='down' points downward (entrance above grid),
+    'up' points upward (exit below grid)."""
     tri_size = 0.2 * cm
     c.setFillColor(color)
     if direction == "down":
+        # Entrance: label and arrow above y_base with extra gap
         p = c.beginPath()
-        p.moveTo(cx - tri_size, y_base + 0.27 * cm)
-        p.lineTo(cx + tri_size, y_base + 0.27 * cm)
-        p.lineTo(cx, y_base)
+        p.moveTo(cx - tri_size, y_base + 0.47 * cm)
+        p.lineTo(cx + tri_size, y_base + 0.47 * cm)
+        p.lineTo(cx, y_base + 0.2 * cm)
         p.close()
         c.drawPath(p, fill=1, stroke=0)
         c.setFont(FONT_BOLD, 9)
-        c.drawCentredString(cx, y_base + 0.4 * cm, label)
+        c.drawCentredString(cx, y_base + 0.6 * cm, label)
     else:
+        # Exit: label and arrow below y_base with extra gap
         p = c.beginPath()
-        p.moveTo(cx - tri_size, y_base)
-        p.lineTo(cx + tri_size, y_base)
-        p.lineTo(cx, y_base + 0.27 * cm)
+        p.moveTo(cx - tri_size, y_base - 0.2 * cm)
+        p.lineTo(cx + tri_size, y_base - 0.2 * cm)
+        p.lineTo(cx, y_base - 0.47 * cm)
         p.close()
         c.drawPath(p, fill=1, stroke=0)
         c.setFont(FONT_BOLD, 9)
-        c.drawCentredString(cx, y_base - 0.25 * cm, label)
+        c.drawCentredString(cx, y_base - 0.65 * cm, label)
 
 
 def draw_erklaerung(c, abschnitt, farb_key, start_y):
@@ -713,8 +716,12 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
     mauern = abschnitt["mauern"]  # list of walls, each a list of rows bottom-to-top
     if not mauern:
         return start_y - (2.5*cm + y_off)
-    count = len(mauern)
-    spacing = (W - 3*cm) / count
+
+    # Optional: limit columns per visual row, wrap remaining walls below
+    spalten = abschnitt.get("spalten", len(mauern))
+    cols_per_row = min(spalten, len(mauern))
+
+    spacing = (W - 3*cm) / cols_per_row
     # Scale brick size to fit: widest wall determines max bricks per row
     max_bricks = max((max((len(row) for row in m), default=0) for m in mauern), default=1)
     brick_w = min(2.0*cm, (spacing - 0.4*cm) / max(max_bricks, 1))
@@ -731,11 +738,23 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
     aufgabe_mauer = None
 
     top_offset = 2.5*cm + y_off
+    visual_row_y = start_y - top_offset
+    lowest_y = visual_row_y
+
     for mi, mauer in enumerate(mauern):
         rows = mauer  # bottom row first
         num_rows = len(rows)
-        base_cx = 1.5*cm + spacing * mi + spacing / 2
-        base_y = start_y - top_offset - (num_rows - 1) * brick_h
+        col_idx = mi % cols_per_row
+
+        # Move to next visual row when columns are full
+        if mi > 0 and col_idx == 0:
+            # Calculate height of tallest wall in the previous visual row
+            prev_start = mi - cols_per_row
+            prev_max_rows = max(len(mauern[j]) for j in range(prev_start, mi))
+            visual_row_y = visual_row_y - prev_max_rows * brick_h - 1.2 * cm
+
+        base_cx = 1.5*cm + spacing * col_idx + spacing / 2
+        base_y = visual_row_y - (num_rows - 1) * brick_h
 
         # Determine if this is a "Lösung" wall
         is_loesung = (mi < len(mauer_labels) and
@@ -755,7 +774,7 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
             brick_gap = 0.1 * cm
             effective_w = brick_w - brick_gap
             effective_h = brick_h - brick_gap
-            
+
             row_w = num_bricks * brick_w
             rx = base_cx - row_w / 2
             ry = base_y + ri * brick_h
@@ -788,11 +807,12 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
                     c.setFont(FONT_BOLD, 16)
                     c.drawCentredString(bx + effective_w/2, ry + effective_h/2 - 0.15*cm, str(val))
 
+        lowest_y = min(lowest_y, base_y)
+
         # Remember this wall as reference for the next (Lösung) wall
         aufgabe_mauer = rows
 
-    bottom_y = start_y - top_offset - (max(len(m) for m in mauern) - 1) * brick_h
-    return bottom_y - 0.5*cm
+    return lowest_y - 0.5*cm
 
 
 # ── Größer/Kleiner/Gleich ─────────────────────────────────
@@ -2495,11 +2515,8 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
                 x0 = gx + ci * cell
                 y0 = cy - ri * cell - cell
 
-                # Cell background
-                if val == antwort:
-                    c.setFillColor(FARBEN["antwort"])
-                else:
-                    c.setFillColor(white)
+                # Cell background (no highlighting — student finds the path)
+                c.setFillColor(white)
                 c.setStrokeColor(FARBEN["hellgrau"])
                 c.setLineWidth(1)
                 c.rect(x0, y0, cell, cell, fill=1, stroke=1)
