@@ -973,13 +973,12 @@ def draw_kettenaufgaben(c, abschnitt, farb_key, start_y):
         c.setFont(FONT_BOLD, 18)
         c.drawString(x0 + 1.0*cm, y, kette)
 
-        # = and answer box
-        text_w = c.stringWidth(kette, FONT_BOLD, 18)
-        eq_x = x0 + 1.0*cm + text_w + 0.5*cm
+        # = and answer box at fixed position for left-alignment
+        eq_x = x0 + col_w - 3.2*cm
         c.setFillColor(FARBEN[farb_key])
         c.drawString(eq_x, y, "=")
 
-        ans_x = eq_x + 1.0*cm
+        ans_x = eq_x + 0.8*cm
         if idx < len(loesungen):
             _draw_filled_answer_box(c, ans_x, y - 0.55*cm,
                                     loesungen[idx], w=1.6*cm, h=1.5*cm)
