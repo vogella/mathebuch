@@ -677,8 +677,9 @@ def render_kapitel(c, kapitel_data, seitennummer, audit=False, erklaerung_seite=
 
         # Trennlinie zwischen Abschnitten (nicht vor dem ersten auf der Seite)
         if i > 0 and y < H - 6*cm:
-            zeichne_trennlinie(c, y + 0.5*cm)
-            y -= 1.2*cm
+            y -= 0.3*cm  # gap after previous content
+            zeichne_trennlinie(c, y)
+            y -= 0.5*cm  # gap before next section
 
         y_vor = y
         y = fn(c, abschnitt, farbe, y)
