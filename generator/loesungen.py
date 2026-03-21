@@ -593,12 +593,36 @@ def _solve_formen_zaehlen(abschnitt):
 
 
 def _solve_symmetrie(abschnitt):
-    """Solve symmetry by mirroring filled cells across the axis."""
+    """Solve symmetry by counting how many null fields need to be filled."""
     results = []
     for aufg in abschnitt.get("aufgaben", []):
         raster = aufg["raster"]
-        nulls = sum(1 for row in raster for cell in row if cell is None)
-        results.append(f"{nulls} Felder")
+        achse = aufg.get("achse", "vertikal")
+        zeilen = len(raster)
+        if not zeilen or not raster[0]:
+            results.append("0 Felder")
+            continue
+        spalten = len(raster[0])
+
+        fill_count = 0
+        if achse == "vertikal":
+            for r in range(zeilen):
+                for col in range(spalten // 2):
+                    mirrored_c = spalten - 1 - col
+                    if raster[r][col] == 1 and raster[r][mirrored_c] is None:
+                        fill_count += 1
+                    elif raster[r][col] is None and raster[r][mirrored_c] == 1:
+                        fill_count += 1
+        else:
+            for col in range(spalten):
+                for r in range(zeilen // 2):
+                    mirrored_r = zeilen - 1 - r
+                    if raster[r][col] == 1 and raster[mirrored_r][col] is None:
+                        fill_count += 1
+                    elif raster[r][col] is None and raster[mirrored_r][col] == 1:
+                        fill_count += 1
+
+        results.append(f"{fill_count} Felder ausmalen")
     return results
 
 
