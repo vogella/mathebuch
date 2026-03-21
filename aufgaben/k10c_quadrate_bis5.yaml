@@ -22,3 +22,27 @@ abschnitte:
       - werte: [null, 1, 1, null]
         summen: [5, 2, 5, 2]
         loesung: [4, 1]
+
+  - typ: rechenquadrat_2x2
+    titel: "B  Knifflige Quadrate"
+    beschreibung: "Jetzt wird es schwieriger! Finde alle fehlenden Zahlen!"
+    schwierigkeit: 1
+    quadrate:
+      - werte: [2, null, null, 3]
+        summen: [5, 3, 2, 6]
+        loesung: [3, 0]
+      - werte: [null, 2, 1, null]
+        summen: [3, 5, 2, 6]
+        loesung: [1, 4]
+      - werte: [null, null, 2, 1]
+        summen: [5, 3, 4, 4]
+        loesung: [2, 3]
+      - werte: [1, null, null, 2]
+        summen: [4, 5, 4, 5]
+        loesung: [3, 3]
+      - werte: [null, 0, 3, null]
+        summen: [2, 5, 5, 2]
+        loesung: [2, 2]
+      - werte: [null, null, null, 1]
+        summen: [5, 4, 5, 4]
+        loesung: [2, 3, 3]
