@@ -16,3 +16,5 @@ abschnitte:
         zielsumme: 4
       - spalten: [[0, 2], [1, 3], [0, 1]]
         zielsumme: 5
+      - spalten: [[1, 2], [2, 0], [1, 2]]
+        zielsumme: 4

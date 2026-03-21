@@ -19,6 +19,7 @@ abschnitte:
       - [8, null, 3]
       - [8, 6, null]
       - [10, 5, null]
+      - [9, null, 6]
 
   - typ: zahlzerlegung
     titel: "B  Beide Teile fehlen!"

@@ -28,7 +28,9 @@ abschnitte:
         antwort: 10
       - text: "Beim Fußball stehen 5 Spieler auf dem Feld. Noch 3 kommen dazu. Wie viele Spieler sind es jetzt?"
         antwort: 8
-    loesungen: [6, 10, 8]
+      - text: "Beim Turnen machen 7 Kinder eine Rolle. 2 setzen sich hin. Wie viele turnen noch?"
+        antwort: 5
+    loesungen: [6, 10, 8, 5]
 
   - typ: textaufgaben
     titel: "C  Auf dem Bauernhof"

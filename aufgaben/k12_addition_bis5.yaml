@@ -24,7 +24,7 @@ abschnitte:
   - typ: zahlenhaus
     titel: "B  Zahlenhaus"
     beschreibung: "Finde alle Zahlenpaare, die zusammen die Dachzahl ergeben!"
-    dachzahlen: [3, 4, 5]
+    dachzahlen: [2, 3, 4, 5]
 
   - typ: lückenaufgaben
     titel: "C  Minus"

@@ -29,3 +29,5 @@ abschnitte:
         antwort: 2
       - text: "Der Igel findet 6 Äpfel. Später findet er noch 6 Äpfel. Wie viele Äpfel hat er jetzt?"
         antwort: 12
+      - text: "Am Teich sitzen 9 Frösche. 3 Frösche springen ins Wasser. Wie viele sitzen noch am Ufer?"
+        antwort: 6

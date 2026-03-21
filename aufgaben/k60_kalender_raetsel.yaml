@@ -15,4 +15,5 @@ abschnitte:
       - frage: "Heute ist der 7. In 6 Tagen kommt Oma zu Besuch. Welcher Tag ist das?"
       - frage: "Heute ist der 15. Vor 8 Tagen hat es geschneit. Welcher Tag war das?"
       - frage: "Heute ist der 2. In 9 Tagen ist Wandertag. Welcher Tag ist das?"
-    loesungen: [8, 6, 13, 7, 11]
+      - frage: "Heute ist der 12. Vor 5 Tagen war Sporttag. Welcher Tag war das?"
+    loesungen: [8, 6, 13, 7, 11, 7]

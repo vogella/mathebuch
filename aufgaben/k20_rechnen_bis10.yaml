@@ -59,7 +59,7 @@ abschnitte:
     titel: "E  Zahlenhaus"
     neue_seite: true
     beschreibung: "Finde zwei Zahlen für das Dach."
-    dachzahlen: [8, 9, 10]
+    dachzahlen: [7, 8, 9, 10]
 
   - typ: rechenraupe
     titel: "F  Rechenraupe"

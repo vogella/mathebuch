@@ -16,6 +16,8 @@ abschnitte:
         schritte: ["-2", "+4", "-1", "+3"]
       - start: 1
         schritte: ["+4", "-3", "+5", "-2"]
+      - start: 4
+        schritte: ["+2", "-3", "+5", "-1"]
 
   - typ: schatzsuche
     titel: "B  Noch mehr Schätze!"
@@ -27,3 +29,5 @@ abschnitte:
         schritte: ["+2", "+3", "-4", "+1"]
       - start: 8
         schritte: ["-2", "-3", "+5", "+1"]
+      - start: 6
+        schritte: ["-1", "+3", "-4", "+2"]
