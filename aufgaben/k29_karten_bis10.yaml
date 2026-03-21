@@ -1,0 +1,93 @@
+kapitel:
+  titel: "Karten-Rechnen bis 10"
+  untertitel: "Addiere und subtrahiere die Spielkarten!"
+  emoji: "🃏"
+  farbe: "blau"
+  zahlenraum: 10
+
+abschnitte:
+  - typ: karten_rechnen
+    titel: "A  Karten addieren"
+    beschreibung: "Zähle die Zahlen auf den Karten zusammen!"
+    aufgaben:
+      - karten: [3, 4]
+        op: "+"
+      - karten: [5, 2]
+        op: "+"
+      - karten: [4, 4]
+        op: "+"
+      - karten: [6, 3]
+        op: "+"
+      - karten: [5, 5]
+        op: "+"
+      - karten: [7, 2]
+        op: "+"
+      - karten: [6, 4]
+        op: "+"
+      - karten: [3, 7]
+        op: "+"
+      - karten: [8, 2]
+        op: "+"
+      - karten: [1, 9]
+        op: "+"
+
+  - typ: karten_rechnen
+    titel: "B  Karten subtrahieren"
+    beschreibung: "Ziehe die zweite Karte von der ersten ab!"
+    aufgaben:
+      - karten: [6, 2]
+        op: "-"
+      - karten: [7, 3]
+        op: "-"
+      - karten: [8, 4]
+        op: "-"
+      - karten: [9, 5]
+        op: "-"
+      - karten: [10, 3]
+        op: "-"
+      - karten: [10, 6]
+        op: "-"
+      - karten: [8, 5]
+        op: "-"
+      - karten: [9, 2]
+        op: "-"
+      - karten: [7, 4]
+        op: "-"
+      - karten: [10, 1]
+        op: "-"
+
+  - typ: karten_rechnen
+    titel: "C  Drei Karten addieren"
+    beschreibung: "Zähle alle drei Karten zusammen!"
+    schwierigkeit: 1
+    aufgaben:
+      - karten: [2, 3, 1]
+        op: "+"
+      - karten: [1, 4, 2]
+        op: "+"
+      - karten: [3, 3, 2]
+        op: "+"
+      - karten: [2, 2, 4]
+        op: "+"
+      - karten: [1, 5, 3]
+        op: "+"
+      - karten: [4, 2, 3]
+        op: "+"
+      - karten: [3, 4, 3]
+        op: "+"
+      - karten: [2, 5, 2]
+        op: "+"
+
+  - typ: karten_ziel_summe
+    titel: "D  Ziel-Summe"
+    beschreibung: "Welche zwei Karten ergeben zusammen die Ziel-Zahl? Schreibe sie auf!"
+    schwierigkeit: 1
+    aufgaben:
+      - karten: [2, 5, 3, 7, 1]
+        ziel: 8
+      - karten: [4, 6, 1, 3, 5]
+        ziel: 10
+      - karten: [1, 8, 4, 2, 6]
+        ziel: 9
+      - karten: [3, 7, 2, 5, 4]
+        ziel: 7

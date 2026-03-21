@@ -1,0 +1,93 @@
+kapitel:
+  titel: "Karten-Rechnen bis 20"
+  untertitel: "Rechne mit den Spielkarten!"
+  emoji: "🃏"
+  farbe: "orange"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: karten_rechnen
+    titel: "A  Karten addieren"
+    beschreibung: "Zähle die Zahlen auf den Karten zusammen!"
+    aufgaben:
+      - karten: [7, 6]
+        op: "+"
+      - karten: [8, 5]
+        op: "+"
+      - karten: [9, 4]
+        op: "+"
+      - karten: [6, 8]
+        op: "+"
+      - karten: [7, 7]
+        op: "+"
+      - karten: [9, 6]
+        op: "+"
+      - karten: [8, 8]
+        op: "+"
+      - karten: [5, 9]
+        op: "+"
+      - karten: [10, 7]
+        op: "+"
+      - karten: [9, 9]
+        op: "+"
+
+  - typ: karten_rechnen
+    titel: "B  Karten subtrahieren"
+    beschreibung: "Ziehe die zweite Karte von der ersten ab!"
+    aufgaben:
+      - karten: [14, 5]
+        op: "-"
+      - karten: [16, 7]
+        op: "-"
+      - karten: [13, 6]
+        op: "-"
+      - karten: [18, 9]
+        op: "-"
+      - karten: [15, 8]
+        op: "-"
+      - karten: [17, 4]
+        op: "-"
+      - karten: [19, 6]
+        op: "-"
+      - karten: [20, 5]
+        op: "-"
+      - karten: [12, 7]
+        op: "-"
+      - karten: [11, 3]
+        op: "-"
+
+  - typ: karten_rechnen
+    titel: "C  Drei Karten addieren"
+    beschreibung: "Zähle alle drei Karten zusammen!"
+    schwierigkeit: 1
+    aufgaben:
+      - karten: [5, 6, 3]
+        op: "+"
+      - karten: [4, 7, 5]
+        op: "+"
+      - karten: [6, 6, 4]
+        op: "+"
+      - karten: [3, 8, 7]
+        op: "+"
+      - karten: [5, 5, 9]
+        op: "+"
+      - karten: [7, 4, 8]
+        op: "+"
+      - karten: [6, 8, 6]
+        op: "+"
+      - karten: [4, 9, 7]
+        op: "+"
+
+  - typ: karten_ziel_summe
+    titel: "D  Ziel-Summe"
+    beschreibung: "Welche zwei Karten ergeben zusammen die Ziel-Zahl? Schreibe sie auf!"
+    schwierigkeit: 1
+    aufgaben:
+      - karten: [6, 9, 3, 7, 8]
+        ziel: 15
+      - karten: [5, 8, 4, 12, 7]
+        ziel: 12
+      - karten: [9, 3, 11, 6, 4]
+        ziel: 20
+      - karten: [7, 10, 5, 8, 6]
+        ziel: 18

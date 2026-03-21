@@ -1,0 +1,57 @@
+kapitel:
+  titel: "Karten-Rechnen bis 5"
+  untertitel: "Zähle die Karten zusammen!"
+  emoji: "🃏"
+  farbe: "pink"
+  zahlenraum: 5
+
+abschnitte:
+  - typ: karten_rechnen
+    titel: "A  Karten addieren"
+    beschreibung: "Zähle die Zahlen auf den Karten zusammen!"
+    aufgaben:
+      - karten: [1, 1]
+        op: "+"
+      - karten: [2, 1]
+        op: "+"
+      - karten: [1, 2]
+        op: "+"
+      - karten: [3, 1]
+        op: "+"
+      - karten: [2, 2]
+        op: "+"
+      - karten: [1, 3]
+        op: "+"
+      - karten: [2, 3]
+        op: "+"
+      - karten: [1, 4]
+        op: "+"
+      - karten: [4, 1]
+        op: "+"
+      - karten: [3, 2]
+        op: "+"
+
+  - typ: karten_rechnen
+    titel: "B  Karten subtrahieren"
+    beschreibung: "Ziehe die zweite Karte von der ersten ab!"
+    aufgaben:
+      - karten: [2, 1]
+        op: "-"
+      - karten: [3, 1]
+        op: "-"
+      - karten: [3, 2]
+        op: "-"
+      - karten: [4, 1]
+        op: "-"
+      - karten: [4, 2]
+        op: "-"
+      - karten: [4, 3]
+        op: "-"
+      - karten: [5, 1]
+        op: "-"
+      - karten: [5, 2]
+        op: "-"
+      - karten: [5, 3]
+        op: "-"
+      - karten: [5, 4]
+        op: "-"

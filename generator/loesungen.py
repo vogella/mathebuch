@@ -664,6 +664,38 @@ def _solve_einkaufen_euro_cent(abschnitt):
     return results
 
 
+def _solve_karten_ziel_summe(abschnitt):
+    results = []
+    for aufg in abschnitt["aufgaben"]:
+        karten = aufg["karten"]
+        ziel = aufg["ziel"]
+        # Find first pair that sums to target
+        for i in range(len(karten)):
+            for j in range(i + 1, len(karten)):
+                if karten[i] + karten[j] == ziel:
+                    results.append(f"{karten[i]}+{karten[j]}")
+                    break
+            else:
+                continue
+            break
+    return results
+
+
+def _solve_karten_rechnen(abschnitt):
+    results = []
+    for aufg in abschnitt["aufgaben"]:
+        karten = aufg["karten"]
+        op = aufg.get("op", "+")
+        if op == "+":
+            results.append(str(sum(karten)))
+        else:
+            val = karten[0]
+            for k in karten[1:]:
+                val -= k
+            results.append(str(val))
+    return results
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -707,6 +739,8 @@ SOLVER = {
     "symmetrie":          _solve_symmetrie,
     "bonbon_fabrik":       _solve_bonbon_fabrik,
     "einkaufen_euro_cent": _solve_einkaufen_euro_cent,
+    "karten_rechnen":     _solve_karten_rechnen,
+    "karten_ziel_summe":  _solve_karten_ziel_summe,
 }
 
 # Types to skip (explanation, visual-only)

@@ -1936,7 +1936,7 @@ def draw_zahlenraetsel(c, abschnitt, farb_key, start_y):
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT_BOLD, 11)
         c.drawCentredString(box_x + 0.75*cm, box_cy + 1.0*cm, "Ich bin:")
-        draw_answer_box(c, box_x, box_cy - 0.3*cm, w=2.0*cm, h=1.5*cm)
+        draw_answer_box(c, box_x, box_cy - 0.3*cm, w=2.0*cm, h=0.8*cm)
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
 
@@ -1986,7 +1986,7 @@ def draw_einkaufen(c, abschnitt, farb_key, start_y):
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 9)
         c.drawString(2.8*cm, q_y - 0.7*cm, "Antwort:")
-        draw_answer_box(c, 5*cm, q_y - 1.0*cm, w=2.0*cm, h=1.5*cm)
+        draw_answer_box(c, 5*cm, q_y - 1.0*cm, w=2.0*cm, h=0.8*cm)
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
 
@@ -2081,7 +2081,7 @@ def draw_kalender_raetsel(c, abschnitt, farb_key, start_y):
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 9)
         c.drawString(2.8*cm, box_y + 0.3*cm, "Antwort:")
-        draw_answer_box(c, 5*cm, box_y, w=2.5*cm, h=1.5*cm)
+        draw_answer_box(c, 5*cm, box_y, w=2.5*cm, h=0.8*cm)
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
 
@@ -2692,7 +2692,7 @@ def draw_dungeon_abenteuer(c, abschnitt, farb_key, start_y):
         ax = gx + exit_col * cell + cell / 2
         _draw_dungeon_arrow(c, ax, gy, "Ausgang", FARBEN[farb_key], direction="up")
 
-        cy = gy - 1.1 * cm
+        cy = gy - 1.8 * cm
 
     return cy
 
@@ -3468,3 +3468,116 @@ def draw_bonbon_fabrik(c, abschnitt, farb_key, start_y):
         row_y = y - 1.5*cm
 
     return row_y
+
+
+# ── Karten Rechnen ─────────────────────────────────────────
+
+def _draw_spielkarte(c, x, y, zahl, farb_key, w=1.8*cm, h=2.4*cm):
+    """Draws a single playing card with a number."""
+    # Card background
+    c.setFillColor(white)
+    c.setStrokeColor(FARBEN[farb_key])
+    c.setLineWidth(2)
+    c.roundRect(x, y, w, h, radius=6, fill=1, stroke=1)
+    # Number in center
+    c.setFillColor(FARBEN[farb_key])
+    c.setFont(FONT_BOLD, 22)
+    c.drawCentredString(x + w / 2, y + h / 2 - 0.25*cm, str(zahl))
+    # Small number top-left and bottom-right
+    c.setFont(FONT_BOLD, 9)
+    c.drawString(x + 0.15*cm, y + h - 0.45*cm, str(zahl))
+    c.saveState()
+    c.translate(x + w - 0.15*cm, y + 0.45*cm)
+    c.rotate(180)
+    c.drawString(0, 0, str(zahl))
+    c.restoreState()
+    c.setLineWidth(1)
+
+
+def draw_karten_rechnen(c, abschnitt, farb_key, start_y):
+    """Card arithmetic: show playing cards with operator, student writes result."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]
+    row_y = start_y - 1.5*cm - y_off
+    card_w = 1.8*cm
+    card_h = 2.4*cm
+    row_h = card_h + 1.0*cm
+
+    # Two columns layout
+    halb = (len(aufgaben) + 1) // 2
+    col_offsets = [1.8*cm, 11*cm]
+
+    for col_idx, col_aufgaben in enumerate([aufgaben[:halb], aufgaben[halb:]]):
+        base_x = col_offsets[col_idx]
+        for i, aufg in enumerate(col_aufgaben):
+            karten = aufg["karten"]
+            op = aufg.get("op", "+")
+            y = row_y - i * row_h
+
+            # Draw cards with operators between them
+            cx = base_x
+            for ki, k in enumerate(karten):
+                _draw_spielkarte(c, cx, y - card_h + 0.3*cm, k, farb_key, card_w, card_h)
+                cx += card_w + 0.15*cm
+                if ki < len(karten) - 1:
+                    # Operator between cards
+                    c.setFillColor(FARBEN[farb_key])
+                    c.setFont(FONT_BOLD, 20)
+                    c.drawCentredString(cx + 0.3*cm, y - card_h / 2 + 0.3*cm, op)
+                    cx += 0.75*cm
+
+            # Equals sign and answer box
+            c.setFillColor(FARBEN[farb_key])
+            c.setFont(FONT_BOLD, 20)
+            c.drawCentredString(cx + 0.3*cm, y - card_h / 2 + 0.3*cm, "=")
+            draw_answer_box(c, cx + 0.7*cm, y - card_h / 2 - 0.3*cm, w=1.6*cm, h=1.2*cm)
+
+    return row_y - halb * row_h - 0.3*cm
+
+
+def draw_karten_ziel_summe(c, abschnitt, farb_key, start_y):
+    """Target sum: show several cards, student picks two that add to the target."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]
+    row_y = start_y - 1.5*cm - y_off
+    card_w = 1.5*cm
+    card_h = 2.0*cm
+    row_h = card_h + 2.0*cm
+
+    for idx, aufg in enumerate(aufgaben):
+        karten = aufg["karten"]
+        ziel = aufg["ziel"]
+        y = row_y - idx * row_h
+
+        # Target label
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont(FONT_BOLD, 14)
+        c.drawString(1.8*cm, y, f"Ziel: {ziel}")
+
+        # Draw available cards
+        cx = 1.8*cm
+        card_y = y - card_h - 0.3*cm
+        for k in karten:
+            _draw_spielkarte(c, cx, card_y, k, farb_key, card_w, card_h)
+            cx += card_w + 0.3*cm
+
+        # Answer: two blank boxes with + and =
+        ans_y = card_y + card_h / 2 - 0.3*cm
+        ax = cx + 0.5*cm
+        draw_answer_box(c, ax, ans_y - 0.3*cm, w=1.2*cm, h=1.0*cm)
+        ax += 1.4*cm
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont(FONT_BOLD, 18)
+        c.drawCentredString(ax + 0.2*cm, ans_y, "+")
+        ax += 0.6*cm
+        draw_answer_box(c, ax, ans_y - 0.3*cm, w=1.2*cm, h=1.0*cm)
+        ax += 1.4*cm
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont(FONT_BOLD, 18)
+        c.drawCentredString(ax + 0.2*cm, ans_y, f"= {ziel}")
+
+    return row_y - len(aufgaben) * row_h - 0.3*cm
