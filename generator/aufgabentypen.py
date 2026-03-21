@@ -2448,12 +2448,21 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
         cy -= 1.2 * cm  # space below task text (increased for taller answer box)
         gy = cy - grid_h
 
-        # Entrance arrow
+        # Entrance arrow (drawn triangle + label)
         entrance_col = aufg.get("eingang", 0)
         ex = gx + entrance_col * cell + cell / 2
         c.setFillColor(FARBEN[farb_key])
         c.setFont(FONT_BOLD, 9)
-        c.drawCentredString(ex, cy + 0.35 * cm, "▼ Eingang")
+        tri_size = 0.2 * cm
+        label_y = cy + 0.35 * cm
+        tri_cx = ex - c.stringWidth("Eingang", FONT_BOLD, 9) / 2 - 0.25 * cm
+        p = c.beginPath()
+        p.moveTo(tri_cx - tri_size, label_y + 0.2 * cm)
+        p.lineTo(tri_cx + tri_size, label_y + 0.2 * cm)
+        p.lineTo(tri_cx, label_y - 0.1 * cm)
+        p.close()
+        c.drawPath(p, fill=1, stroke=0)
+        c.drawString(tri_cx + tri_size + 0.1 * cm, label_y, "Eingang")
 
         # Draw grid
         for ri, row in enumerate(grid):
@@ -2476,12 +2485,21 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
                 c.drawCentredString(x0 + cell / 2, y0 + cell / 2 - 0.15 * cm,
                                     str(val))
 
-        # Exit arrow
+        # Exit arrow (drawn triangle + label)
         exit_col = aufg.get("ausgang", cols - 1)
         ax = gx + exit_col * cell + cell / 2
         c.setFillColor(FARBEN[farb_key])
         c.setFont(FONT_BOLD, 9)
-        c.drawCentredString(ax, gy - 0.35 * cm, "Ausgang ▼")
+        exit_label_y = gy - 0.35 * cm
+        c.drawString(ax - c.stringWidth("Ausgang", FONT_BOLD, 9) / 2 - 0.25 * cm,
+                     exit_label_y, "Ausgang")
+        tri_cx2 = ax + c.stringWidth("Ausgang", FONT_BOLD, 9) / 2 + 0.15 * cm
+        p2 = c.beginPath()
+        p2.moveTo(tri_cx2 - tri_size, exit_label_y + 0.2 * cm)
+        p2.lineTo(tri_cx2 + tri_size, exit_label_y + 0.2 * cm)
+        p2.lineTo(tri_cx2, exit_label_y - 0.1 * cm)
+        p2.close()
+        c.drawPath(p2, fill=1, stroke=0)
 
         cy = gy - 0.9 * cm
 
@@ -2534,11 +2552,21 @@ def draw_dungeon_abenteuer(c, abschnitt, farb_key, start_y):
         cy -= 0.7 * cm
         gy = cy - grid_h
 
-        # Entrance arrow
+        # Entrance arrow (drawn triangle + label)
         ex = gx + entrance_col * cell + cell / 2
         c.setFillColor(FARBEN[farb_key])
         c.setFont(FONT_BOLD, 9)
-        c.drawCentredString(ex, cy + 0.35 * cm, "▼ Eingang")
+        label_y = cy + 0.35 * cm
+        # Draw downward triangle
+        tri_size = 0.2 * cm
+        tri_cx = ex - c.stringWidth("Eingang", FONT_BOLD, 9) / 2 - 0.25 * cm
+        p = c.beginPath()
+        p.moveTo(tri_cx - tri_size, label_y + 0.2 * cm)
+        p.lineTo(tri_cx + tri_size, label_y + 0.2 * cm)
+        p.lineTo(tri_cx, label_y - 0.1 * cm)
+        p.close()
+        c.drawPath(p, fill=1, stroke=0)
+        c.drawString(tri_cx + tri_size + 0.1 * cm, label_y, "Eingang")
 
         # Draw grid
         for ri, row in enumerate(grid):
@@ -2561,12 +2589,21 @@ def draw_dungeon_abenteuer(c, abschnitt, farb_key, start_y):
                 c.setFont(FONT_BOLD, 13)
                 c.drawCentredString(x0 + cell / 2, y0 + cell / 2 - 0.15 * cm, str(val))
 
-        # Exit arrow
+        # Exit arrow (drawn triangle + label)
         exit_col = aufg.get("ausgang", cols - 1)
         ax = gx + exit_col * cell + cell / 2
         c.setFillColor(FARBEN[farb_key])
         c.setFont(FONT_BOLD, 9)
-        c.drawCentredString(ax, gy - 0.35 * cm, "Ausgang ▼")
+        exit_label_y = gy - 0.35 * cm
+        c.drawString(ax - c.stringWidth("Ausgang", FONT_BOLD, 9) / 2 - 0.25 * cm,
+                     exit_label_y, "Ausgang")
+        tri_cx2 = ax + c.stringWidth("Ausgang", FONT_BOLD, 9) / 2 + 0.15 * cm
+        p2 = c.beginPath()
+        p2.moveTo(tri_cx2 - tri_size, exit_label_y + 0.2 * cm)
+        p2.lineTo(tri_cx2 + tri_size, exit_label_y + 0.2 * cm)
+        p2.lineTo(tri_cx2, exit_label_y - 0.1 * cm)
+        p2.close()
+        c.drawPath(p2, fill=1, stroke=0)
 
         cy = gy - 0.9 * cm
 
