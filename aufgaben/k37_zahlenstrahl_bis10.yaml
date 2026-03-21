@@ -17,6 +17,7 @@ abschnitte:
         werte: [null, 1, null, 3, null, 5, null, 7, null, 9, null]
 
   - typ: zahlenstrahl
+    neue_seite: true
     titel: "B  Knifflige Zahlenstrahlen!"
     strahlen:
       - von: 0
