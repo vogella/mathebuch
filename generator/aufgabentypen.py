@@ -3030,6 +3030,11 @@ def draw_zahlen_schreiben(c, abschnitt, farb_key, start_y):
         x0 = 1.8 * cm + col * col_w
         y0 = row_y - row * group_h
 
+        # Two-digit numbers (10+) get double-wide practice boxes
+        is_wide = (int(digit) >= 10)
+        cur_box_w = (2 * box_w + box_gap) if is_wide else box_w
+        cur_practice = 3 if is_wide else practice_count
+
         c.setFillColor(farbe)
         c.setFont(FONT_BOLD, 11)
         c.drawString(x0, y0 + 0.1 * cm, "Die {}:".format(digit))
@@ -3042,24 +3047,24 @@ def draw_zahlen_schreiben(c, abschnitt, farb_key, start_y):
         c.setFont(FONT_BOLD, 52)
         c.drawCentredString(x0 + model_size / 2, y0 - box_h + 0.25 * cm, str(digit))
 
-        for p in range(practice_count):
-            bx = x0 + model_size + box_gap + p * (box_w + box_gap)
+        for p in range(cur_practice):
+            bx = x0 + model_size + box_gap + p * (cur_box_w + box_gap)
             c.setFillColor(white)
             c.setStrokeColor(FARBEN["hellgrau"])
             c.setLineWidth(1.5)
-            c.roundRect(bx, y0 - box_h, box_w, box_h, radius=4, fill=1, stroke=1)
+            c.roundRect(bx, y0 - box_h, cur_box_w, box_h, radius=4, fill=1, stroke=1)
 
             # Baseline
             baseline_y = y0 - box_h + box_h * 0.3
             c.setStrokeColor(FARBEN["hellgrau"])
             c.setLineWidth(0.8)
-            c.line(bx + 0.15 * cm, baseline_y, bx + box_w - 0.15 * cm, baseline_y)
+            c.line(bx + 0.15 * cm, baseline_y, bx + cur_box_w - 0.15 * cm, baseline_y)
 
             # Dotted midline using setDash
             midline_y = y0 - box_h + box_h * 0.65
             c.setLineWidth(0.5)
             c.setDash(0.15 * cm, 0.15 * cm)
-            c.line(bx + 0.2 * cm, midline_y, bx + box_w - 0.2 * cm, midline_y)
+            c.line(bx + 0.2 * cm, midline_y, bx + cur_box_w - 0.2 * cm, midline_y)
             c.setDash()  # Reset to solid line
 
     total_rows = (len(aufgaben) + cols - 1) // cols
