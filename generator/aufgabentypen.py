@@ -690,8 +690,10 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
         return start_y - (2.5*cm + y_off)
     count = len(mauern)
     spacing = (W - 3*cm) / count
-    brick_w = 2.0*cm
-    brick_h = 1.4*cm
+    # Scale brick size to fit: widest wall determines max bricks per row
+    max_bricks = max(max(len(row) for row in m) for m in mauern)
+    brick_w = min(2.0*cm, (spacing - 0.4*cm) / max_bricks)
+    brick_h = min(1.4*cm, brick_w * 0.7)
 
     # Row colors: bottom row gets the first color, each row up gets the next
     row_colors = [FARBEN["gruen"], FARBEN["blau"], FARBEN["orange"], FARBEN["pink"],
@@ -2000,15 +2002,16 @@ def draw_textaufgaben(c, abschnitt, farb_key, start_y):
             hint_offset = 0.5*cm
 
         # Rechnung + Antwort
-        bottom = y - len(lines) * 0.5*cm - 0.8*cm - hint_offset
+        box_h = 1.2*cm
+        bottom = y - len(lines) * 0.5*cm - 1.0*cm - hint_offset
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 9)
-        c.drawString(2.8*cm, bottom + 0.3*cm, "Rechnung:")
-        draw_answer_box(c, 5.0*cm, bottom, w=4*cm, h=1.5*cm)
+        c.drawString(2.8*cm, bottom + 0.2*cm, "Rechnung:")
+        draw_answer_box(c, 5.0*cm, bottom, w=4*cm, h=box_h)
         c.setFillColor(FARBEN["grau"])
         c.setFont(FONT, 9)
-        c.drawString(10*cm, bottom + 0.3*cm, "Antwort:")
-        draw_answer_box(c, 12*cm, bottom, w=6*cm, h=1.5*cm)
+        c.drawString(10*cm, bottom + 0.2*cm, "Antwort:")
+        draw_answer_box(c, 12*cm, bottom, w=6*cm, h=box_h)
 
         # Advance y dynamically based on actual content height
         y = bottom - 0.5*cm
@@ -3247,21 +3250,20 @@ def draw_symmetrie(c, abschnitt, farb_key, start_y):
                 else:
                     is_given_side = ri < achse_pos
 
-                if cell == 1:
-                    if is_given_side:
-                        c.setFillColor(farbe)
-                    else:
-                        # Student-fill side: use neutral color so answer isn't obvious
-                        c.setFillColor(FARBEN["dunkel"])
-                    c.setStrokeColor(FARBEN["dunkel"])
+                if not is_given_side:
+                    # Answer side: all cells look the same (blank white with border)
+                    c.setFillColor(white)
+                    c.setStrokeColor(FARBEN["hellgrau"])
                     c.setLineWidth(0.5)
                     c.rect(cx, cy - cell_size, cell_size, cell_size, fill=1, stroke=1)
-                elif cell is None:
-                    c.setFillColor(FARBEN["antwort"])
+                elif cell == 1:
+                    # Given side: filled cells in chapter color
+                    c.setFillColor(farbe)
                     c.setStrokeColor(FARBEN["dunkel"])
                     c.setLineWidth(0.5)
                     c.rect(cx, cy - cell_size, cell_size, cell_size, fill=1, stroke=1)
                 else:
+                    # Given side: empty cells
                     c.setFillColor(white)
                     c.setStrokeColor(FARBEN["hellgrau"])
                     c.setLineWidth(0.5)
