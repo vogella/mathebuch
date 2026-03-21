@@ -507,6 +507,109 @@ def render_geschafft_seite(c, seite_nr):
     draw_page_number(c, seite_nr, show_stars=False)
 
 
+def render_fortschritt_seite(c, alle_kapitel):
+    """Rendert eine Fortschritts-Seite mit einem Spielbrett-Pfad."""
+    draw_page_bg(c)
+
+    # Header
+    c.setFillColor(FARBEN["gruen"])
+    c.roundRect(1.5 * cm, H - 3.5 * cm, W - 3 * cm, 2.2 * cm,
+                radius=12, fill=1, stroke=0)
+    c.setFillColor(white)
+    c.setFont(FONT_BOLD, 20)
+    c.drawCentredString(W / 2, H - 2.5 * cm, "Mein Fortschritt")
+
+    c.setFillColor(FARBEN["dunkel"])
+    c.setFont(FONT, 10)
+    c.drawCentredString(W / 2, H - 4.2 * cm,
+                        "Male jedes Feld aus, wenn du das Kapitel geschafft hast!")
+
+    # Collect non-explanation chapters grouped by section
+    kapitel_namen = []
+    for dateiname, data in alle_kapitel:
+        kap = data["kapitel"]
+        if kap.get("erklaerungsseite", False):
+            continue
+        kapitel_namen.append({
+            "titel": kap["titel"],
+            "emoji": kap.get("emoji", "⭐"),
+            "farbe": kap.get("farbe", "blau"),
+            "zahlenraum": kap.get("zahlenraum", 20),
+        })
+
+    # Draw a snake-style game board path
+    y = H - 5.2 * cm
+    x_left = 2.0 * cm
+    x_right = W - 2.0 * cm
+    cols = 5
+    cell_w = (x_right - x_left) / cols
+    cell_h = 1.2 * cm
+    row_gap = 0.3 * cm
+
+    colors = RAND_FARBEN
+    left_to_right = True
+
+    for idx, kap in enumerate(kapitel_namen):
+        col_in_row = idx % cols
+        if not left_to_right:
+            col_in_row = cols - 1 - col_in_row
+
+        cx = x_left + col_in_row * cell_w + cell_w / 2
+        cy = y
+
+        # Draw circle (checkpoint)
+        farbe = FARBEN.get(kap["farbe"], colors[idx % len(colors)])
+        c.setStrokeColor(farbe)
+        c.setLineWidth(1.5)
+        c.setFillColor(white)
+        r = 0.4 * cm
+        c.circle(cx, cy, r, fill=1, stroke=1)
+
+        # Number inside
+        c.setFillColor(FARBEN["grau"])
+        c.setFont(FONT, 7)
+        c.drawCentredString(cx, cy - 0.1 * cm, str(idx + 1))
+
+        # Connect to next with a line
+        if idx < len(kapitel_namen) - 1:
+            next_col = (idx + 1) % cols
+            same_row = (idx // cols) == ((idx + 1) // cols)
+            if same_row:
+                if left_to_right:
+                    nx = x_left + next_col * cell_w + cell_w / 2
+                else:
+                    nx = x_left + (cols - 1 - next_col) * cell_w + cell_w / 2
+                c.setStrokeColor(FARBEN["hellgrau"])
+                c.setLineWidth(1)
+                c.line(cx + r, cy, nx - r, cy)
+
+        # At end of row, move down and reverse direction
+        if col_in_row == cols - 1:
+            if idx < len(kapitel_namen) - 1:
+                # Draw connector going down
+                old_y = y
+                y -= (cell_h + row_gap)
+                end_cx = cx if left_to_right else x_left + cell_w / 2
+                c.setStrokeColor(FARBEN["hellgrau"])
+                c.setLineWidth(1)
+                c.line(cx, old_y - r, cx, y + r + 0.1 * cm)
+            left_to_right = not left_to_right
+
+        # Stop if we run off the page
+        if y < 2.5 * cm:
+            break
+
+    # Section milestone markers
+    section_labels = {5: "Bis 5 geschafft!", 10: "Bis 10 geschafft!", 20: "Bis 20 geschafft!"}
+    prev_zr = None
+    milestone_y = y - 1.5 * cm
+    if milestone_y > 2.0 * cm:
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont(FONT, 9)
+        c.drawCentredString(W / 2, milestone_y,
+                            "Tipp: Feiere nach jedem Abschnitt – du hast es verdient!")
+
+
 def lade_kapitel(pfad):
     with open(pfad, encoding="utf-8") as f:
         return yaml.safe_load(f)
@@ -518,10 +621,10 @@ def zeichne_trennlinie(c, y):
     c.line(1.5*cm, y, W - 1.5*cm, y)
 
 
-MIN_Y = 2.5 * cm   # Untere Seitengrenze
+MIN_Y = 3.0 * cm   # Untere Seitengrenze (Platz für Sterne + Seitenzahl)
 
 
-def render_kapitel(c, kapitel_data, seitennummer, audit=False):
+def render_kapitel(c, kapitel_data, seitennummer, audit=False, erklaerung_seite=None):
     """Rendert ein Kapitel – bei Überlauf automatisch auf neue Seiten.
     Gibt die Anzahl genutzter Seiten zurück.
     Bei audit=True wird zusätzlich eine Liste von Überlauf-Verletzungen zurückgegeben."""
@@ -542,7 +645,8 @@ def render_kapitel(c, kapitel_data, seitennummer, audit=False):
             draw_page_number(c, seitennr_aktuell, show_stars=not ist_erklaerung)
             c.showPage()
         draw_page_bg(c)
-        draw_header(c, titel, untertitel, emoji, farbe)
+        draw_header(c, titel, untertitel, emoji, farbe,
+                    erklaerung_seite=erklaerung_seite if not ist_erklaerung else None)
         y = H - 5.5*cm
         pages += 1
         seitennr_aktuell = seitennummer + pages - 1
@@ -693,7 +797,7 @@ def main():
 
     # Probe-TOC um Seitenanzahl des Inhaltsverzeichnisses zu ermitteln
     # Vorläufige Seitennummern mit geschätztem Offset berechnen
-    est_offset = 4  # Titelseite (1) + Inhaltsverzeichnis (~2) + Geschafft! (1)
+    est_offset = 5  # Titelseite (1) + Inhaltsverzeichnis (~2) + Fortschritt (1) + Geschafft! (1)
     est_seiten_nummern = []
     s = est_offset
     for i, n in enumerate(seiten_pro_kapitel):
@@ -704,9 +808,9 @@ def main():
     toc_pages = render_inhaltsverzeichnis(probe_c, alle_kapitel, est_seiten_nummern)
     del probe_c, probe_buf
 
-    # Seiten-Offset: Titelseite (1) + Inhaltsverzeichnis (toc_pages)
+    # Seiten-Offset: Titelseite (1) + Inhaltsverzeichnis (toc_pages) + Fortschritt (1)
     # Kapitel starten auf der Seite danach.
-    seiten_offset = 1 + toc_pages + 1
+    seiten_offset = 1 + toc_pages + 1 + 1
 
     # Seitennummern berechnen (mit Trennseiten)
     seiten_nummern = []
@@ -716,6 +820,30 @@ def main():
             aktuelle_seite += 1  # Trennseite einfügen
         seiten_nummern.append(aktuelle_seite)
         aktuelle_seite += n
+
+    # ── Erklärungsseiten-Mapping: Aufgabentyp → Seitennummer ──
+    # Durchsuche alle Erklärungsseiten und merke uns welche Typen dort erklärt werden
+    typ_zu_erklaerung = {}
+    for i, (dateiname, data) in enumerate(alle_kapitel):
+        kap = data["kapitel"]
+        if not kap.get("erklaerungsseite", False):
+            continue
+        seite = seiten_nummern[i]
+        for abschnitt in data.get("abschnitte", []):
+            typ = abschnitt.get("typ", "")
+            if typ and typ != "erklaerung":
+                typ_zu_erklaerung.setdefault(typ, seite)
+
+    def _erklaerung_seite_fuer_kapitel(data):
+        """Findet die passende Erklärungsseite für ein Kapitel."""
+        kap = data["kapitel"]
+        if kap.get("erklaerungsseite", False):
+            return None
+        for abschnitt in data.get("abschnitte", []):
+            typ = abschnitt.get("typ", "")
+            if typ in typ_zu_erklaerung:
+                return typ_zu_erklaerung[typ]
+        return None
 
     # ── Pass 2: Finales PDF mit korrekten Seitennummern ──
     c = canvas.Canvas(output_path, pagesize=A4)
@@ -730,6 +858,11 @@ def main():
     render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern)
     c.showPage()
 
+    # Fortschritt-Seite
+    print("  Rendere Fortschritt-Seite ...")
+    render_fortschritt_seite(c, alle_kapitel)
+    c.showPage()
+
     # Kapitel (mit Trennseiten zwischen Hauptabschnitten)
     for i, (dateiname, data) in enumerate(alle_kapitel):
         if i in trennseiten_pos:
@@ -738,7 +871,8 @@ def main():
             render_trennseite(c, section)
             c.showPage()
         print(f"  Rendere Seite {seiten_nummern[i]}: {dateiname} ...")
-        render_kapitel(c, data, seiten_nummern[i])
+        erkl_seite = _erklaerung_seite_fuer_kapitel(data)
+        render_kapitel(c, data, seiten_nummern[i], erklaerung_seite=erkl_seite)
         c.showPage()
 
     # "Geschafft!" Abschlussseite

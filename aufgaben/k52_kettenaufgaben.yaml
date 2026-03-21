@@ -7,7 +7,8 @@ kapitel:
 
 abschnitte:
   - typ: kettenaufgaben
-    titel: "A  Rechne die Kette aus!"
+    titel: "A  Leichte Ketten"
+    schwierigkeit: 1
     aufgaben:
       - "3 + 2 − 1"
       - "5 + 4 − 3"
@@ -16,6 +17,12 @@ abschnitte:
       - "7 + 3 − 5"
       - "2 + 8 − 6"
       - "9 − 4 + 3"
+
+  - typ: kettenaufgaben
+    titel: "B  Knifflige Ketten"
+    schwierigkeit: 2
+    neue_seite: true
+    aufgaben:
       - "4 + 5 − 2 + 1"
       - "10 − 3 − 2 + 5"
       - "6 + 4 − 7 + 3"

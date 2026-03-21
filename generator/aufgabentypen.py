@@ -105,7 +105,7 @@ def _draw_text_with_emojis(c, x, y, text, font_name, font_size, color):
 
 def draw_erklaerung(c, abschnitt, farb_key, start_y):
     """Draws an explanation block with title and text lines."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
 
     zeilen = abschnitt.get("zeilen", [])
     y = start_y - 1.2*cm
@@ -168,7 +168,7 @@ def draw_lückenaufgaben(c, abschnitt, farb_key, start_y):
     Zeichnet zwei Spalten mit Lückenaufgaben.
     Jede Aufgabe ist [a, op, b, ergebnis], wobei None = Lücke.
     """
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]
@@ -247,7 +247,7 @@ def _draw_aufgabe_row(c, x, y, aufg, farb_key, loesung=None):
 # ── Zahlenhaus ─────────────────────────────────────────────
 
 def draw_zahlenhaus(c, abschnitt, farb_key, start_y):
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
 
     # Optional description and hint text
     y_offset = _draw_beschreibung(c, abschnitt, start_y)
@@ -330,7 +330,7 @@ def _draw_ein_zahlenhaus(c, cx, ty, roof_num, loesung=None):
 # ── Rechenraupe ────────────────────────────────────────────
 
 def draw_rechenraupe(c, abschnitt, farb_key, start_y):
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     start_val = abschnitt["start"]
@@ -430,7 +430,7 @@ def _draw_tipp_box(c, x, y, tipp_zeilen):
 
 
 def draw_magisches_dreieck(c, abschnitt, farb_key, start_y):
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     hinweis_text = abschnitt.get("hinweis", "")
@@ -455,7 +455,7 @@ def draw_magisches_dreieck(c, abschnitt, farb_key, start_y):
 
 def draw_magische_dreiecke(c, abschnitt, farb_key, start_y):
     """Draws multiple smaller magic triangles side by side."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     dreiecke = abschnitt["dreiecke"]  # list of {zielsumme, werte}
@@ -547,7 +547,7 @@ def _draw_ein_quadrat(c, gx, gy, werte, zielsumme, farb_key, cell=1.8*cm, label=
 
 def draw_magisches_quadrat(c, abschnitt, farb_key, start_y):
     """Draws a 3x3 magic square, or a pair side by side."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     werte = abschnitt["werte"]  # 9 values, None = blank
@@ -612,7 +612,7 @@ def _draw_würfel(c, x, y, wert, size=1.4*cm):
 
 def draw_würfelzählen(c, abschnitt, farb_key, start_y):
     """Draws dice-counting exercises in a grid layout. Supports 2 or 3 dice."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]
@@ -678,7 +678,7 @@ def draw_würfelzählen(c, abschnitt, farb_key, start_y):
 
 def draw_rechenmauer(c, abschnitt, farb_key, start_y):
     """Number wall: each brick = sum of the two below it."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     mauern = abschnitt["mauern"]  # list of walls, each a list of rows bottom-to-top
@@ -768,7 +768,7 @@ def draw_rechenmauer(c, abschnitt, farb_key, start_y):
 
 def draw_vergleiche(c, abschnitt, farb_key, start_y):
     """Compare exercises: child fills in >, < or = between two values."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of [left, right]
@@ -815,7 +815,7 @@ def draw_vergleiche(c, abschnitt, farb_key, start_y):
 
 def draw_nachbarzahlen(c, abschnitt, farb_key, start_y):
     """Fill in the number before and after a given number."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of [vor, zahl, nach] – None = blank
@@ -873,7 +873,7 @@ def draw_nachbarzahlen(c, abschnitt, farb_key, start_y):
 
 def draw_zahlzerlegung(c, abschnitt, farb_key, start_y):
     """Number decomposition: a number splits into two parts."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of [zahl, teil1, teil2], None = blank
@@ -938,7 +938,7 @@ def draw_zahlzerlegung(c, abschnitt, farb_key, start_y):
 
 def draw_kettenaufgaben(c, abschnitt, farb_key, start_y):
     """Chain calculations: 3 + 2 − 1 + 4 = ? (Two columns)"""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of strings like "3 + 2 − 1 + 4"
@@ -987,7 +987,7 @@ def draw_kettenaufgaben(c, abschnitt, farb_key, start_y):
 
 def draw_tauschaufgaben(c, abschnitt, farb_key, start_y):
     """Commutative property: show a + b = b + a."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of [a, b]
@@ -1041,7 +1041,7 @@ def draw_tauschaufgaben(c, abschnitt, farb_key, start_y):
 
 def draw_verdoppeln_halbieren(c, abschnitt, farb_key, start_y):
     """Double or halve numbers."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of [zahl, typ] typ = "doppelt" or "halb"
@@ -1098,7 +1098,7 @@ def draw_verdoppeln_halbieren(c, abschnitt, farb_key, start_y):
 
 def draw_zahlenstrahl(c, abschnitt, farb_key, start_y):
     """Number line with some numbers missing."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     strahlen = abschnitt["strahlen"]  # list of {von, bis, werte}
@@ -1159,7 +1159,7 @@ def draw_zahlenstrahl(c, abschnitt, farb_key, start_y):
 
 def draw_punktefeld(c, abschnitt, farb_key, start_y):
     """10-frame dot grids: child counts the filled dots."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of integers (how many dots filled)
@@ -1231,7 +1231,7 @@ def draw_punktefeld(c, abschnitt, farb_key, start_y):
 
 def draw_zahlen_ordnen(c, abschnitt, farb_key, start_y):
     """Sort numbers from smallest to largest (or reverse)."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of lists of numbers
@@ -1294,7 +1294,7 @@ def draw_zahlen_ordnen(c, abschnitt, farb_key, start_y):
 def draw_vervielfachen(c, abschnitt, farb_key, start_y):
     """How many times must you add a number to itself to reach a target?
     Shows addition chain and 'how many times fits' in a single line."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of [zahl, ziel]
@@ -1371,7 +1371,7 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
 
 def draw_rechenquadrat_2x2(c, abschnitt, farb_key, start_y):
     """2x2 calculation square with row and column sums."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     quadrate = abschnitt.get("quadrate", [])
@@ -1474,7 +1474,7 @@ def _draw_muster_element(c, x, y, size, element, farb_key):
 
 def draw_muster_fortsetzen(c, abschnitt, farb_key, start_y):
     """Pattern continuation: numbers or shapes."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt.get("aufgaben", [])
@@ -1503,7 +1503,7 @@ def draw_muster_fortsetzen(c, abschnitt, farb_key, start_y):
 def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
     """Grid-based path puzzle: pick one number per column, find the path
     that sums to the target."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]
@@ -1612,7 +1612,7 @@ def _draw_maze_path(c, abschnitt, farb_key, start_y, modus="schatz"):
     modus: 'schatz' = treasure hunt, 'flucht' = maze escape."""
     import math
 
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]
@@ -1813,7 +1813,7 @@ def _draw_hinweis_boxen(c, boxen, farb_key, start_y):
 
 def draw_zahlenraetsel(c, abschnitt, farb_key, start_y):
     """Number riddles with text clues and an answer box."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     # Optional hint boxes
@@ -1858,7 +1858,7 @@ def draw_zahlenraetsel(c, abschnitt, farb_key, start_y):
 
 def draw_einkaufen(c, abschnitt, farb_key, start_y):
     """Shopping exercises: calculate total price or change."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]
@@ -1910,7 +1910,7 @@ def draw_einkaufen(c, abschnitt, farb_key, start_y):
 
 def draw_kalender_raetsel(c, abschnitt, farb_key, start_y):
     """Calendar/date puzzles with text and answer box."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of {text/frage}
@@ -1950,7 +1950,7 @@ def draw_kalender_raetsel(c, abschnitt, farb_key, start_y):
 
 def draw_textaufgaben(c, abschnitt, farb_key, start_y):
     """Word problems with an answer box."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of {text, hinweis}
@@ -2014,7 +2014,7 @@ def draw_wuerfel_zuordnen(c, abschnitt, farb_key, start_y):
     """Connect numbers on the left with matching dice on the right.
     Uses two columns to fit more exercises and reduces gap."""
 
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]  # list of ints (single) or [a, b] (double)
@@ -2096,7 +2096,7 @@ def draw_wuerfel_zuordnen(c, abschnitt, farb_key, start_y):
 
 def draw_zahlenkreis(c, abschnitt, farb_key, start_y):
     """Draws numbers in a circular arrangement."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]
@@ -2377,7 +2377,7 @@ def _draw_gerade_ungerade_muster(c, abschnitt, farb_key, y):
 
 def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
     """Even/odd exercises: circling, sorting, or pattern continuation."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     modus = abschnitt.get("modus", "einkreisen")
@@ -2398,7 +2398,7 @@ def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
 def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
     """Draws a number grid where the student solves a task, then traces
     cells containing the answer from entrance to exit."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt.get("aufgaben", [])
@@ -2481,7 +2481,7 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
 def draw_dungeon_abenteuer(c, abschnitt, farb_key, start_y):
     """Draws a number grid where the student follows a sequence of math operations
     from cell to cell to find the path to the exit."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt.get("aufgaben", [])
@@ -2570,7 +2570,7 @@ def draw_zehneruebergang(c, abschnitt, farb_key, start_y):
     Subtraktion: a - b = a - ___ - ___ = ___
     Die Zerlegung geht schrittweise über die 10.
     """
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]
@@ -2658,7 +2658,7 @@ def draw_zehneruebergang(c, abschnitt, farb_key, start_y):
 
 def draw_gerade_ungerade(c, abschnitt, farb_key, start_y):
     """Sort and color even/odd numbers."""
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
     
     modus = abschnitt.get("modus", "sortieren") # sortieren, malen, muster
@@ -2920,7 +2920,7 @@ def draw_umkehraufgaben(c, abschnitt, farb_key, start_y):
     """
     Draws inverse operation exercises in groups.
     """
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]
@@ -2993,7 +2993,7 @@ def draw_zahlen_schreiben(c, abschnitt, farb_key, start_y):
     """
     Draws digit writing/tracing practice.
     """
-    draw_section_label(c, abschnitt["titel"], farb_key, start_y)
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
     y_off = _draw_beschreibung(c, abschnitt, start_y)
 
     aufgaben = abschnitt["aufgaben"]

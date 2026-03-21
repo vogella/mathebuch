@@ -1,0 +1,44 @@
+kapitel:
+  titel: "Textaufgaben bis 10"
+  untertitel: "Lies genau und rechne!"
+  emoji: "📝"
+  farbe: "blau"
+  zahlenraum: 10
+
+abschnitte:
+  - typ: textaufgaben
+    titel: "A  Auf dem Spielplatz"
+    schwierigkeit: 1
+    aufgaben:
+      - text: "Auf der Rutsche warten 4 Kinder. Dann kommen noch 3 dazu. Wie viele Kinder warten jetzt?"
+        hinweis: "Tipp: Zusammenzählen!"
+      - text: "Im Sandkasten spielen 7 Kinder. 2 gehen nach Hause. Wie viele Kinder spielen noch?"
+      - text: "Auf der Wippe sitzen 3 Kinder links und 5 Kinder rechts. Wie viele Kinder sind auf der Wippe?"
+      - text: "Am Klettergerüst hängen 6 Kinder. 4 springen herunter. Wie viele hängen noch?"
+    loesungen: [7, 5, 8, 2]
+
+  - typ: textaufgaben
+    titel: "B  Beim Sport"
+    schwierigkeit: 2
+    beschreibung: "Wie viele sind es?"
+    aufgaben:
+      - text: "Beim Wettlauf starten 9 Kinder. 3 Kinder müssen aufhören. Wie viele laufen weiter?"
+        antwort: 6
+      - text: "Im Schwimmbecken sind 4 Kinder. Dann springen 6 weitere ins Wasser. Wie viele sind jetzt im Becken?"
+        antwort: 10
+      - text: "Beim Fußball stehen 5 Spieler auf dem Feld. Noch 3 kommen dazu. Wie viele Spieler sind es jetzt?"
+        antwort: 8
+
+  - typ: textaufgaben
+    titel: "C  Auf dem Bauernhof"
+    schwierigkeit: 2
+    beschreibung: "Lies und rechne!"
+    aufgaben:
+      - text: "Im Stall stehen 6 Kühe. 2 Kühe gehen auf die Weide. Wie viele bleiben im Stall?"
+        antwort: 4
+      - text: "Die Henne hat 3 Küken. Dann schlüpfen noch 4 Küken. Wie viele Küken hat die Henne jetzt?"
+        antwort: 7
+      - text: "Auf dem Teich schwimmen 8 Enten. 5 fliegen weg. Wie viele Enten sind noch da?"
+        antwort: 3
+      - text: "Der Bauer sammelt 4 Eier am Morgen und 6 Eier am Abend. Wie viele Eier hat er insgesamt?"
+        antwort: 10
