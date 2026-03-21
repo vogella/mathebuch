@@ -584,7 +584,10 @@ def render_fortschritt_seite(c, alle_kapitel):
                     nx = x_left + (cols - 1 - next_col) * cell_w + cell_w / 2
                 c.setStrokeColor(FARBEN["hellgrau"])
                 c.setLineWidth(1)
-                c.line(cx + r, cy, nx - r, cy)
+                # Ensure line goes from left to right regardless of direction
+                lx = min(cx, nx)
+                rx = max(cx, nx)
+                c.line(lx + r, cy, rx - r, cy)
 
         # At end of row, move down and reverse direction
         if col_in_row == cols - 1:
