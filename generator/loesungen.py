@@ -571,6 +571,37 @@ def _solve_zahlen_schreiben(abschnitt):
     return [str(d) for d in abschnitt["aufgaben"]]
 
 
+def _solve_formen_zaehlen(abschnitt):
+    """Count shapes and return answers."""
+    results = []
+    for aufg in abschnitt.get("aufgaben", []):
+        formen = aufg["formen"]
+        fragen = aufg.get("fragen", [])
+        answers = []
+        for frage in fragen:
+            target_shape = frage["form"]
+            target_color = frage.get("farbe")
+            count = 0
+            for f in formen:
+                shape, color = f.split(":")
+                if shape == target_shape:
+                    if target_color is None or color == target_color:
+                        count += 1
+            answers.append(str(count))
+        results.append(", ".join(answers))
+    return results
+
+
+def _solve_symmetrie(abschnitt):
+    """Solve symmetry by mirroring filled cells across the axis."""
+    results = []
+    for aufg in abschnitt.get("aufgaben", []):
+        raster = aufg["raster"]
+        nulls = sum(1 for row in raster for cell in row if cell is None)
+        results.append(f"{nulls} Felder")
+    return results
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -610,6 +641,8 @@ SOLVER = {
     "motivation":         lambda ab: [],
     "umkehraufgaben":     _solve_umkehraufgaben,
     "zahlen_schreiben":   _solve_zahlen_schreiben,
+    "formen_zaehlen":     _solve_formen_zaehlen,
+    "symmetrie":          _solve_symmetrie,
 }
 
 # Types to skip (explanation, visual-only)

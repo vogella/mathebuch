@@ -3051,3 +3051,169 @@ def draw_zahlen_schreiben(c, abschnitt, farb_key, start_y):
 
     total_rows = (len(aufgaben) + cols - 1) // cols
     return row_y - total_rows * group_h - 0.3 * cm
+
+
+# ── Formen zählen ──────────────────────────────────────
+
+def _draw_shape(c, shape, x, y, size, color):
+    """Draw a geometric shape centered at (x, y)."""
+    c.setFillColor(color)
+    c.setStrokeColor(FARBEN["dunkel"])
+    c.setLineWidth(1)
+    r = size * 0.4
+    if shape == "kreis":
+        c.circle(x, y, r, fill=1, stroke=1)
+    elif shape == "quadrat":
+        c.rect(x - r, y - r, 2*r, 2*r, fill=1, stroke=1)
+    elif shape == "dreieck":
+        p = c.beginPath()
+        p.moveTo(x, y + r)
+        p.lineTo(x - r, y - r)
+        p.lineTo(x + r, y - r)
+        p.close()
+        c.drawPath(p, fill=1, stroke=1)
+    elif shape == "rechteck":
+        c.rect(x - r*1.3, y - r*0.7, 2*r*1.3, 2*r*0.7, fill=1, stroke=1)
+    elif shape == "stern":
+        pts_outer = []
+        pts_inner = []
+        for i in range(5):
+            angle_o = math.pi/2 + i * 2*math.pi/5
+            pts_outer.append((x + r * math.cos(angle_o), y + r * math.sin(angle_o)))
+            angle_i = math.pi/2 + (i + 0.5) * 2*math.pi/5
+            pts_inner.append((x + r*0.4 * math.cos(angle_i), y + r*0.4 * math.sin(angle_i)))
+        p = c.beginPath()
+        p.moveTo(*pts_outer[0])
+        for i in range(5):
+            p.lineTo(*pts_inner[i])
+            p.lineTo(*pts_outer[(i+1) % 5])
+        p.close()
+        c.drawPath(p, fill=1, stroke=1)
+    elif shape == "raute":
+        p = c.beginPath()
+        p.moveTo(x, y + r)
+        p.lineTo(x + r*0.7, y)
+        p.lineTo(x, y - r)
+        p.lineTo(x - r*0.7, y)
+        p.close()
+        c.drawPath(p, fill=1, stroke=1)
+
+
+def draw_formen_zaehlen(c, abschnitt, farb_key, start_y):
+    """Shape counting: students count how many of each shape type appear."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    color_map = {
+        "rot": FARBEN["pink"], "blau": FARBEN["blau"],
+        "gelb": FARBEN["yellow"], "gruen": FARBEN["gruen"],
+        "orange": FARBEN["orange"], "lila": FARBEN["purple"],
+    }
+    aufgaben = abschnitt.get("aufgaben", [])
+    row_y = start_y - 1.8*cm - y_off
+
+    for aufg in aufgaben:
+        formen = aufg["formen"]  # list of "shape:color" strings
+        cols = min(len(formen), 8)
+        rows_needed = (len(formen) + cols - 1) // cols
+        spacing_x = 2.0*cm
+        spacing_y = 1.8*cm
+        shape_size = 1.2*cm
+
+        # Draw shapes
+        for i, form_str in enumerate(formen):
+            shape, color_name = form_str.split(":")
+            color = color_map.get(color_name, FARBEN[farb_key])
+            col = i % cols
+            row = i // cols
+            sx = 2.5*cm + col * spacing_x
+            sy = row_y - row * spacing_y
+            _draw_shape(c, shape, sx, sy, shape_size, color)
+
+        # Draw answer table below shapes
+        fragen = aufg.get("fragen", [])
+        table_y = row_y - rows_needed * spacing_y - 0.3*cm
+        table_spacing = 3.5*cm
+
+        for fi, frage in enumerate(fragen):
+            fx = 2.5*cm + fi * table_spacing
+            shape_name = frage["form"]
+            shape_color = frage.get("farbe", "blau")
+            color = color_map.get(shape_color, FARBEN[farb_key])
+
+            # Small shape icon
+            _draw_shape(c, shape_name, fx, table_y, 0.8*cm, color)
+
+            # "= ___" answer box
+            c.setFillColor(FARBEN["dunkel"])
+            c.setFont(FONT_BOLD, 14)
+            c.drawString(fx + 0.6*cm, table_y - 0.2*cm, "=")
+            draw_answer_box(c, fx + 1.1*cm, table_y - 0.45*cm, w=1.0*cm, h=0.9*cm)
+
+        row_y = table_y - 1.5*cm
+
+    return row_y
+
+
+# ── Symmetrie ──────────────────────────────────────────
+
+def draw_symmetrie(c, abschnitt, farb_key, start_y):
+    """Symmetry exercise: students complete the mirror image on a grid."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt.get("aufgaben", [])
+    farbe = FARBEN[farb_key]
+    row_y = start_y - 1.8*cm - y_off
+
+    for aufg in aufgaben:
+        raster = aufg["raster"]  # 2D list: 1 = filled, 0 = empty, null = student fills
+        zeilen = len(raster)
+        spalten = len(raster[0]) if raster else 0
+        cell_size = min(1.0*cm, (W - 6*cm) / spalten) if spalten > 0 else 1.0*cm
+        grid_w = spalten * cell_size
+        grid_h = zeilen * cell_size
+
+        # Center the grid
+        grid_x = (W - grid_w) / 2
+        grid_top = row_y
+
+        achse = aufg.get("achse", "vertikal")
+        achse_pos = spalten // 2 if achse == "vertikal" else zeilen // 2
+
+        for ri, row in enumerate(raster):
+            for ci, cell in enumerate(row):
+                cx = grid_x + ci * cell_size
+                cy = grid_top - ri * cell_size
+
+                if cell == 1:
+                    c.setFillColor(farbe)
+                    c.setStrokeColor(FARBEN["dunkel"])
+                    c.setLineWidth(0.5)
+                    c.rect(cx, cy - cell_size, cell_size, cell_size, fill=1, stroke=1)
+                elif cell is None:
+                    c.setFillColor(FARBEN["antwort"])
+                    c.setStrokeColor(FARBEN["dunkel"])
+                    c.setLineWidth(0.5)
+                    c.rect(cx, cy - cell_size, cell_size, cell_size, fill=1, stroke=1)
+                else:
+                    c.setFillColor(white)
+                    c.setStrokeColor(FARBEN["hellgrau"])
+                    c.setLineWidth(0.5)
+                    c.rect(cx, cy - cell_size, cell_size, cell_size, fill=1, stroke=1)
+
+        # Draw symmetry axis
+        c.setStrokeColor(FARBEN["pink"])
+        c.setLineWidth(2)
+        c.setDash(0.2*cm, 0.15*cm)
+        if achse == "vertikal":
+            ax = grid_x + achse_pos * cell_size
+            c.line(ax, grid_top + 0.3*cm, ax, grid_top - grid_h - 0.3*cm)
+        else:
+            ay = grid_top - achse_pos * cell_size
+            c.line(grid_x - 0.3*cm, ay, grid_x + grid_w + 0.3*cm, ay)
+        c.setDash()
+
+        row_y = grid_top - grid_h - 1.2*cm
+
+    return row_y
