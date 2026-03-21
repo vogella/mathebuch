@@ -8,6 +8,7 @@ kapitel:
 abschnitte:
   - typ: rechenmauer
     titel: "A  Baue die Mauer auf!"
+    spalten: 3
     mauern:
       - - [1, 2]
         - [null]
