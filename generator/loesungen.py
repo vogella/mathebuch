@@ -629,6 +629,33 @@ def _solve_symmetrie(abschnitt):
     return results
 
 
+def _solve_bonbon_fabrik(abschnitt):
+    results = []
+    for aufg in abschnitt["aufgaben"]:
+        fabriken = aufg["fabriken"]
+        budget = aufg["budget"]
+        n = len(fabriken)
+        best_menge = 0
+        best_kosten = 0
+        # Brute force all subsets (max 6 factories = 64 subsets)
+        for mask in range(1, 1 << n):
+            kosten = sum(fabriken[i]["kosten"] for i in range(n) if mask & (1 << i))
+            menge = sum(fabriken[i]["menge"] for i in range(n) if mask & (1 << i))
+            if kosten <= budget and menge > best_menge:
+                best_menge = menge
+                best_kosten = kosten
+        names = []
+        for mask in range(1, 1 << n):
+            kosten = sum(fabriken[i]["kosten"] for i in range(n) if mask & (1 << i))
+            menge = sum(fabriken[i]["menge"] for i in range(n) if mask & (1 << i))
+            if kosten <= budget and menge == best_menge:
+                names = [fabriken[i]["name"] for i in range(n) if mask & (1 << i)]
+                best_kosten = kosten
+                break
+        results.append(f"{best_kosten}€, {best_menge} Stück ({', '.join(names)})")
+    return results
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -670,6 +697,7 @@ SOLVER = {
     "zahlen_schreiben":   _solve_zahlen_schreiben,
     "formen_zaehlen":     _solve_formen_zaehlen,
     "symmetrie":          _solve_symmetrie,
+    "bonbon_fabrik":       _solve_bonbon_fabrik,
 }
 
 # Types to skip (explanation, visual-only)
