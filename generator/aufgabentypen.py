@@ -2515,7 +2515,7 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
         ax = gx + exit_col * cell + cell / 2
         _draw_dungeon_arrow(c, ax, gy, "Ausgang", FARBEN[farb_key], direction="up")
 
-        cy = gy - 0.9 * cm
+        cy = gy - 1.1 * cm
 
     return cy
 
@@ -2564,9 +2564,8 @@ def draw_dungeon_abenteuer(c, abschnitt, farb_key, start_y):
             tx += c.stringWidth(op, FONT_BOLD, 10) + 0.2 * cm
 
         cy -= 0.7 * cm
-        gy = cy - grid_h
 
-        # Entrance arrow
+        # Entrance arrow (drawn triangle centered on entrance column + label)
         ex = gx + entrance_col * cell + cell / 2
         _draw_dungeon_arrow(c, ex, cy, "Eingang", FARBEN[farb_key], direction="down")
 
@@ -2596,7 +2595,7 @@ def draw_dungeon_abenteuer(c, abschnitt, farb_key, start_y):
         ax = gx + exit_col * cell + cell / 2
         _draw_dungeon_arrow(c, ax, gy, "Ausgang", FARBEN[farb_key], direction="up")
 
-        cy = gy - 0.9 * cm
+        cy = gy - 1.1 * cm
 
     return cy
 

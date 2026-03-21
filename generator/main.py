@@ -510,11 +510,9 @@ def render_geschafft_seite(c, seite_nr):
     draw_page_number(c, seite_nr, show_stars=False)
 
 
-def render_fortschritt_seite(c, alle_kapitel):
-    """Rendert eine Fortschritts-Seite mit einem Spielbrett-Pfad."""
+def _render_fortschritt_header(c):
+    """Zeichnet den Header der Fortschrittsseite."""
     draw_page_bg(c)
-
-    # Header
     c.setFillColor(FARBEN["gruen"])
     c.roundRect(1.5 * cm, H - 3.5 * cm, W - 3 * cm, 2.2 * cm,
                 radius=12, fill=1, stroke=0)
@@ -525,9 +523,14 @@ def render_fortschritt_seite(c, alle_kapitel):
     c.setFillColor(FARBEN["dunkel"])
     c.setFont(FONT, 10)
     c.drawCentredString(W / 2, H - 4.2 * cm,
-                        "Male jedes Feld aus, wenn du das Kapitel geschafft hast!")
+                        "Male den Stern aus, wenn du das Kapitel geschafft hast!")
 
-    # Collect non-explanation chapters grouped by section
+
+def render_fortschritt_seite(c, alle_kapitel):
+    """Rendert Fortschritts-Seiten als Liste mit Emoji, Titel und Ausmal-Stern."""
+    _render_fortschritt_header(c)
+
+    # Collect non-explanation chapters
     kapitel_namen = []
     for dateiname, data in alle_kapitel:
         kap = data["kapitel"]
@@ -540,80 +543,76 @@ def render_fortschritt_seite(c, alle_kapitel):
             "zahlenraum": kap.get("zahlenraum", 20),
         })
 
-    # Draw a snake-style game board path
-    y = H - 5.2 * cm
+    # Layout constants
     x_left = 2.0 * cm
-    x_right = W - 2.0 * cm
-    cols = 5
-    cell_w = (x_right - x_left) / cols
-    cell_h = 1.2 * cm
-    row_gap = 0.3 * cm
+    row_h = 0.85 * cm
+    y = H - 5.0 * cm
+    min_y = 2.5 * cm
+    emoji_col_x = x_left + 0.9 * cm
+    titel_col_x = x_left + 1.8 * cm
+    star_col_x = W - 2.8 * cm
+    pages = 1
 
-    colors = RAND_FARBEN
-    left_to_right = True
+    prev_zr = None
+    section_labels = {5: "Rechnen bis 5", 10: "Rechnen bis 10", 20: "Rechnen bis 20"}
 
     for idx, kap in enumerate(kapitel_namen):
-        col_in_row = idx % cols
-        if not left_to_right:
-            col_in_row = cols - 1 - col_in_row
+        # Section header when zahlenraum changes
+        zr = kap["zahlenraum"]
+        if zr != prev_zr:
+            if prev_zr is not None:
+                y -= 0.3 * cm
+            if y < min_y + 1.5 * cm:
+                c.showPage()
+                _render_fortschritt_header(c)
+                y = H - 5.0 * cm
+                pages += 1
+            label = section_labels.get(zr, f"Rechnen bis {zr}")
+            c.setFillColor(FARBEN["gruen"])
+            c.setFont(FONT_BOLD, 11)
+            c.drawString(x_left, y, label)
+            c.setStrokeColor(FARBEN["hellgrau"])
+            c.setLineWidth(0.5)
+            c.line(x_left, y - 0.15 * cm, W - 2.0 * cm, y - 0.15 * cm)
+            y -= 0.7 * cm
+            prev_zr = zr
 
-        cx = x_left + col_in_row * cell_w + cell_w / 2
-        cy = y
+        # Page break if needed
+        if y < min_y:
+            c.showPage()
+            _render_fortschritt_header(c)
+            y = H - 5.0 * cm
+            pages += 1
 
-        # Draw circle (checkpoint)
-        farbe = FARBEN.get(kap["farbe"], colors[idx % len(colors)])
-        c.setStrokeColor(farbe)
-        c.setLineWidth(1.5)
-        c.setFillColor(white)
-        r = 0.4 * cm
-        c.circle(cx, cy, r, fill=1, stroke=1)
+        farbe = FARBEN.get(kap["farbe"], FARBEN["blau"])
+        row_cy = y + 0.15 * cm
 
-        # Number inside
-        c.setFillColor(FARBEN["grau"])
-        c.setFont(FONT, 7)
-        c.drawCentredString(cx, cy - 0.1 * cm, str(idx + 1))
+        # Number
+        c.setFillColor(farbe)
+        c.setFont(FONT_BOLD, 9)
+        c.drawRightString(x_left + 0.6 * cm, y, str(idx + 1))
 
-        # Connect to next with a line
-        if idx < len(kapitel_namen) - 1:
-            next_col = (idx + 1) % cols
-            same_row = (idx // cols) == ((idx + 1) // cols)
-            if same_row:
-                if left_to_right:
-                    nx = x_left + next_col * cell_w + cell_w / 2
-                else:
-                    nx = x_left + (cols - 1 - next_col) * cell_w + cell_w / 2
-                c.setStrokeColor(FARBEN["hellgrau"])
-                c.setLineWidth(1)
-                # Ensure line goes from left to right regardless of direction
-                lx = min(cx, nx)
-                rx = max(cx, nx)
-                c.line(lx + r, cy, rx - r, cy)
+        # Emoji
+        draw_emoji(c, kap["emoji"], emoji_col_x + 0.3 * cm, row_cy, 0.55 * cm)
 
-        # At end of row, move down and reverse direction
-        if col_in_row == cols - 1:
-            if idx < len(kapitel_namen) - 1:
-                # Draw connector going down
-                old_y = y
-                y -= (cell_h + row_gap)
-                end_cx = cx if left_to_right else x_left + cell_w / 2
-                c.setStrokeColor(FARBEN["hellgrau"])
-                c.setLineWidth(1)
-                c.line(cx, old_y - r, cx, y + r + 0.1 * cm)
-            left_to_right = not left_to_right
-
-        # Stop if we run off the page
-        if y < 2.5 * cm:
-            break
-
-    # Section milestone markers
-    section_labels = {5: "Bis 5 geschafft!", 10: "Bis 10 geschafft!", 20: "Bis 20 geschafft!"}
-    prev_zr = None
-    milestone_y = y - 1.5 * cm
-    if milestone_y > 2.0 * cm:
+        # Title
         c.setFillColor(FARBEN["dunkel"])
-        c.setFont(FONT, 9)
-        c.drawCentredString(W / 2, milestone_y,
-                            "Tipp: Feiere nach jedem Abschnitt – du hast es verdient!")
+        c.setFont(FONT, 10)
+        titel = kap["titel"]
+        max_w = star_col_x - titel_col_x - 0.3 * cm
+        while c.stringWidth(titel, FONT, 10) > max_w and len(titel) > 5:
+            titel = titel[:-2] + "…"
+        c.drawString(titel_col_x, y, titel)
+
+        # Star checkbox (empty circle to color in)
+        c.setStrokeColor(farbe)
+        c.setLineWidth(1.2)
+        c.setFillColor(white)
+        c.circle(star_col_x + 0.4 * cm, row_cy, 0.25 * cm, fill=1, stroke=1)
+
+        y -= row_h
+
+    return pages
 
 
 def lade_kapitel(pfad):
@@ -802,9 +801,9 @@ def main():
             print("Keine Überläufe gefunden. Alles in Ordnung!", file=sys.stderr)
             sys.exit(0)
 
-    # Probe-TOC um Seitenanzahl des Inhaltsverzeichnisses zu ermitteln
+    # Probe-TOC und Fortschritt um Seitenanzahlen zu ermitteln
     # Vorläufige Seitennummern mit geschätztem Offset berechnen
-    est_offset = 5  # Titelseite (1) + Inhaltsverzeichnis (~2) + Fortschritt (1) + Geschafft! (1)
+    est_offset = 5  # Titelseite (1) + Inhaltsverzeichnis (~2) + Fortschritt (~1) + Geschafft! (1)
     est_seiten_nummern = []
     s = est_offset
     for i, n in enumerate(seiten_pro_kapitel):
@@ -813,11 +812,13 @@ def main():
         est_seiten_nummern.append(s)
         s += n
     toc_pages = render_inhaltsverzeichnis(probe_c, alle_kapitel, est_seiten_nummern)
+    probe_c.showPage()
+    fortschritt_pages = render_fortschritt_seite(probe_c, alle_kapitel)
     del probe_c, probe_buf
 
-    # Seiten-Offset: Titelseite (1) + Inhaltsverzeichnis (toc_pages) + Fortschritt (1)
-    # Kapitel starten auf der Seite danach.
-    seiten_offset = 1 + toc_pages + 1 + 1
+    # Seiten-Offset: Titelseite (1) + Inhaltsverzeichnis (toc_pages) + Fortschritt (fortschritt_pages)
+    # + Geschafft! (1). Kapitel starten auf der Seite danach.
+    seiten_offset = 1 + toc_pages + fortschritt_pages + 1
 
     # Seitennummern berechnen (mit Trennseiten)
     seiten_nummern = []
