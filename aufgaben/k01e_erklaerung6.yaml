@@ -18,15 +18,24 @@ abschnitte:
       werte: [2, 7, 6, 9, 5, 1, 4, 3, 8]
 
   - typ: rechenweg_labyrinth
-    titel: "Rechen-Labyrinth"
+    titel: "Rechen-Labyrinth – Aufgabe"
     beschreibung: "Wähle in jeder Spalte genau EINE Zahl. Zusammen müssen sie das Ziel ergeben."
     aufgaben:
       - zielsumme: 10
         spalten:
           - [3, 5]
           - [2, 7]
+
+  - typ: rechenweg_labyrinth
+    titel: "Rechen-Labyrinth – Lösung"
+    beschreibung: "Die richtigen Zahlen sind grün markiert und mit dicken Linien verbunden."
+    aufgaben:
+      - zielsumme: 10
+        spalten:
+          - [3, 5]
+          - [2, 7]
     loesungen:
-      - [3, 7]
+      - [0, 1]
 
   - typ: erklaerung
     titel: "Textaufgaben"

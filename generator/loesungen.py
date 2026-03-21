@@ -438,21 +438,24 @@ def _solve_rechenweg_labyrinth(abschnitt):
     for aufg in abschnitt.get("aufgaben", []):
         spalten = aufg.get("spalten", [])
         ziel = aufg.get("zielsumme", 0)
-        
+
         # We need to find one number per column that sums to 'ziel'
-        # Since it's usually small (3-4 columns), we can use simple recursion
         def find_path(col_idx, current_sum, current_path):
             if col_idx == len(spalten):
                 return current_path if current_sum == ziel else None
-            
             for row_idx, val in enumerate(spalten[col_idx]):
                 res = find_path(col_idx + 1, current_sum + val, current_path + [row_idx])
                 if res is not None:
                     return res
             return None
-            
+
         path = find_path(0, 0, [])
-        results.append(path if path is not None else [])
+        if path is not None:
+            # Return the actual values picked, not just row indices
+            values = [spalten[ci][ri] for ci, ri in enumerate(path)]
+            results.append(f"{'+'.join(map(str, values))}={ziel}")
+        else:
+            results.append("?")
     return results
 
 
@@ -670,7 +673,7 @@ SOLVER = {
 }
 
 # Types to skip (explanation, visual-only)
-SKIP_TYPES = {"erklaerung", "wuerfel_zuordnen", "motivation", "rechenweg_labyrinth"}
+SKIP_TYPES = {"erklaerung", "wuerfel_zuordnen", "motivation"}
 
 
 # ── Rendering ─────────────────────────────────────────────

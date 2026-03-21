@@ -23,11 +23,16 @@ abschnitte:
       - "   Beispiel: 4 - 2 = 2"
       - ""
       - "5. Gehe so Schritt für Schritt bis zum Ausgang!"
-      - ""
-      - "## Beispiel"
-      - "**Start bei 3:  ➔ + 1  ➔ - 2  ➔ Ziel**"
-      - "Eingang ▼ (Feld mit 3)"
-      - "[ 3 ] [ 1 ] [ 6 ]"
-      - "[ 4 ] [ 3 ] [ 5 ]"
-      - "[ 2 ] [ 1 ] [ 4 ]"
-      - "Ausgang ▼ (Feld mit 2)"
+
+  - typ: dungeon_abenteuer
+    titel: "Beispiel"
+    aufgaben:
+      - eingang: 0
+        ausgang: 0
+        pfad: ["+1", "-2"]
+        grid:
+          - [3, 1, 6]
+          - [4, 3, 5]
+          - [2, 1, 4]
+    loesungen:
+      - [3, 4, 2]
