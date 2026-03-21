@@ -55,3 +55,20 @@ abschnitte:
         op: "-"
       - karten: [5, 4]
         op: "-"
+
+  - typ: karten_geheim
+    titel: "C  Geheime Karte"
+    beschreibung: "Welche Zahl ist auf der geheimen Karte? Alle Karten zusammen ergeben die Zahl rechts!"
+    aufgaben:
+      - karten: [1, 1]
+        summe: 3
+      - karten: [2, 1]
+        summe: 5
+      - karten: [1, 2]
+        summe: 4
+      - karten: [1, 1]
+        summe: 5
+      - karten: [2, 2]
+        summe: 5
+      - karten: [1, 3]
+        summe: 5
