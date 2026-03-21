@@ -1,0 +1,85 @@
+kapitel:
+  titel: "Formen und Symmetrie"
+  untertitel: "Erkenne Formen und spiegle sie!"
+  emoji: "🔶"
+  farbe: "blau"
+  zahlenraum: 10
+
+abschnitte:
+  - typ: formen_zaehlen
+    titel: "A  Formen zählen"
+    schwierigkeit: 1
+    beschreibung: "Zähle die Formen und schreibe die Zahl auf."
+    aufgaben:
+      - formen:
+          - "kreis:rot"
+          - "quadrat:blau"
+          - "dreieck:gelb"
+          - "kreis:rot"
+          - "quadrat:blau"
+          - "kreis:rot"
+          - "dreieck:gelb"
+          - "quadrat:blau"
+        fragen:
+          - form: "kreis"
+            farbe: "rot"
+          - form: "quadrat"
+            farbe: "blau"
+          - form: "dreieck"
+            farbe: "gelb"
+
+  - typ: formen_zaehlen
+    titel: "B  Viele Formen"
+    schwierigkeit: 2
+    beschreibung: "Wie viele von jeder Form findest du?"
+    aufgaben:
+      - formen:
+          - "rechteck:gruen"
+          - "kreis:orange"
+          - "quadrat:blau"
+          - "rechteck:gruen"
+          - "kreis:orange"
+          - "quadrat:blau"
+          - "kreis:orange"
+          - "rechteck:gruen"
+          - "quadrat:blau"
+          - "kreis:orange"
+        fragen:
+          - form: "kreis"
+            farbe: "orange"
+          - form: "quadrat"
+            farbe: "blau"
+          - form: "rechteck"
+            farbe: "gruen"
+
+  - typ: symmetrie
+    titel: "C  Spiegelbild – Einfach"
+    schwierigkeit: 1
+    beschreibung: "Male die fehlenden Kästchen aus, damit beide Seiten gleich aussehen."
+    aufgaben:
+      - achse: "vertikal"
+        raster:
+          - [1, 0, 0, 0, 0, null, 0, 0]
+          - [1, 1, 0, 0, 0, null, null, 0]
+          - [1, 1, 1, 0, 0, null, null, null]
+          - [1, 1, 0, 0, 0, null, null, 0]
+          - [1, 0, 0, 0, 0, null, 0, 0]
+
+  - typ: symmetrie
+    titel: "D  Spiegelbild – Schwerer"
+    schwierigkeit: 2
+    beschreibung: "Vervollständige das Spiegelbild."
+    aufgaben:
+      - achse: "vertikal"
+        raster:
+          - [0, 1, 1, 0, 0, null, null, 0]
+          - [1, 0, 0, 1, null, 0, 0, null]
+          - [1, 1, 1, 1, null, null, null, null]
+          - [1, 0, 0, 1, null, 0, 0, null]
+          - [0, 1, 1, 0, 0, null, null, 0]
+      - achse: "vertikal"
+        raster:
+          - [1, 0, 1, 0, 0, null, 0, null]
+          - [0, 1, 0, 0, 0, 0, null, 0]
+          - [1, 0, 1, 0, 0, null, 0, null]
+          - [0, 1, 0, 0, 0, 0, null, 0]

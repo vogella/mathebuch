@@ -1,0 +1,79 @@
+kapitel:
+  titel: "Formen erkennen"
+  untertitel: "Welche Formen siehst du?"
+  emoji: "🔷"
+  farbe: "gruen"
+  zahlenraum: 5
+
+abschnitte:
+  - typ: formen_zaehlen
+    titel: "A  Formen zählen"
+    schwierigkeit: 1
+    beschreibung: "Zähle die Formen und schreibe die Zahl auf."
+    aufgaben:
+      - formen:
+          - "kreis:rot"
+          - "kreis:rot"
+          - "quadrat:blau"
+          - "kreis:rot"
+          - "quadrat:blau"
+        fragen:
+          - form: "kreis"
+            farbe: "rot"
+          - form: "quadrat"
+            farbe: "blau"
+
+  - typ: formen_zaehlen
+    titel: "B  Mehr Formen"
+    schwierigkeit: 1
+    beschreibung: "Wie viele sind es?"
+    aufgaben:
+      - formen:
+          - "dreieck:gelb"
+          - "dreieck:gelb"
+          - "kreis:blau"
+          - "dreieck:gelb"
+          - "kreis:blau"
+          - "kreis:blau"
+        fragen:
+          - form: "dreieck"
+            farbe: "gelb"
+          - form: "kreis"
+            farbe: "blau"
+
+  - typ: formen_zaehlen
+    titel: "C  Drei verschiedene Formen"
+    schwierigkeit: 2
+    beschreibung: "Zähle jede Form."
+    aufgaben:
+      - formen:
+          - "kreis:rot"
+          - "quadrat:gruen"
+          - "dreieck:gelb"
+          - "kreis:rot"
+          - "quadrat:gruen"
+          - "dreieck:gelb"
+          - "kreis:rot"
+        fragen:
+          - form: "kreis"
+            farbe: "rot"
+          - form: "quadrat"
+            farbe: "gruen"
+          - form: "dreieck"
+            farbe: "gelb"
+
+  - typ: symmetrie
+    titel: "D  Spiegelbild"
+    schwierigkeit: 2
+    beschreibung: "Male die fehlenden Kästchen aus, damit beide Seiten gleich aussehen."
+    aufgaben:
+      - achse: "vertikal"
+        raster:
+          - [1, 0, 0, 0, null, 0]
+          - [1, 1, 0, 0, null, null]
+          - [1, 0, 0, 0, null, 0]
+      - achse: "vertikal"
+        raster:
+          - [0, 1, 0, 0, null, 0]
+          - [1, 1, 0, 0, null, null]
+          - [0, 1, 0, 0, null, 0]

@@ -1,0 +1,101 @@
+kapitel:
+  titel: "Formen, Muster und Symmetrie"
+  untertitel: "Jetzt wird es kniffliger!"
+  emoji: "⬡"
+  farbe: "orange"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: formen_zaehlen
+    titel: "A  Viele Formen zählen"
+    schwierigkeit: 2
+    beschreibung: "Zähle jede Form. Es sind mehr als vorher!"
+    aufgaben:
+      - formen:
+          - "kreis:rot"
+          - "quadrat:blau"
+          - "dreieck:gelb"
+          - "stern:lila"
+          - "kreis:rot"
+          - "quadrat:blau"
+          - "stern:lila"
+          - "dreieck:gelb"
+          - "kreis:rot"
+          - "quadrat:blau"
+          - "stern:lila"
+          - "dreieck:gelb"
+          - "kreis:rot"
+          - "stern:lila"
+          - "quadrat:blau"
+          - "dreieck:gelb"
+        fragen:
+          - form: "kreis"
+            farbe: "rot"
+          - form: "quadrat"
+            farbe: "blau"
+          - form: "dreieck"
+            farbe: "gelb"
+          - form: "stern"
+            farbe: "lila"
+
+  - typ: formen_zaehlen
+    titel: "B  Rauten und Rechtecke"
+    schwierigkeit: 3
+    beschreibung: "Diese Formen sehen sich ähnlich. Schau genau hin!"
+    aufgaben:
+      - formen:
+          - "raute:orange"
+          - "rechteck:gruen"
+          - "quadrat:blau"
+          - "raute:orange"
+          - "rechteck:gruen"
+          - "raute:orange"
+          - "quadrat:blau"
+          - "rechteck:gruen"
+          - "raute:orange"
+          - "quadrat:blau"
+          - "rechteck:gruen"
+          - "raute:orange"
+        fragen:
+          - form: "raute"
+            farbe: "orange"
+          - form: "rechteck"
+            farbe: "gruen"
+          - form: "quadrat"
+            farbe: "blau"
+
+  - typ: symmetrie
+    titel: "C  Große Spiegelbilder"
+    schwierigkeit: 2
+    beschreibung: "Male die fehlenden Kästchen aus."
+    aufgaben:
+      - achse: "vertikal"
+        raster:
+          - [0, 0, 1, 0, 0, 0, 0, null, 0, 0]
+          - [0, 1, 1, 1, 0, 0, null, null, null, 0]
+          - [1, 1, 1, 1, 1, null, null, null, null, null]
+          - [0, 1, 1, 1, 0, 0, null, null, null, 0]
+          - [0, 0, 1, 0, 0, 0, 0, null, 0, 0]
+
+  - typ: symmetrie
+    titel: "D  Symmetrie-Profi"
+    schwierigkeit: 3
+    beschreibung: "Diese Muster sind schwieriger. Kannst du sie spiegeln?"
+    aufgaben:
+      - achse: "vertikal"
+        raster:
+          - [1, 0, 1, 0, 1, null, 0, null, 0, null]
+          - [0, 1, 0, 1, 0, 0, null, 0, null, 0]
+          - [1, 1, 0, 0, 1, null, 0, 0, null, null]
+          - [0, 1, 0, 1, 0, 0, null, 0, null, 0]
+          - [1, 0, 1, 0, 1, null, 0, null, 0, null]
+      - achse: "horizontal"
+        raster:
+          - [1, 0, 1, 0, 1, 0, 1, 0]
+          - [0, 1, 1, 1, 1, 1, 1, 0]
+          - [0, 0, 1, 0, 0, 1, 0, 0]
+          - [0, 0, 0, 1, 1, 0, 0, 0]
+          - [null, null, null, null, null, null, null, null]
+          - [null, null, null, null, null, null, null, null]
+          - [null, null, null, null, null, null, null, null]
+          - [null, null, null, null, null, null, null, null]

@@ -42,7 +42,8 @@ from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_zehneruebergang, draw_gerade_ungerade,
                            draw_rechenquadrat_2x2, draw_muster_fortsetzen,
                            draw_motivation,
-                           draw_umkehraufgaben, draw_zahlen_schreiben)
+                           draw_umkehraufgaben, draw_zahlen_schreiben,
+                           draw_formen_zaehlen, draw_symmetrie)
 W, H = A4
 
 # Mapping Typ-String → Zeichenfunktion
@@ -84,6 +85,8 @@ TYPEN = {
     "motivation":         draw_motivation,
     "umkehraufgaben":     draw_umkehraufgaben,
     "zahlen_schreiben":   draw_zahlen_schreiben,
+    "formen_zaehlen":     draw_formen_zaehlen,
+    "symmetrie":          draw_symmetrie,
 }
 
 TRENNLINIE_Y = H - 15.5   # Y-Position der Trennlinie zwischen Abschnitten
