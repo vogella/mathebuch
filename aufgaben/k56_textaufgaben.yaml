@@ -26,6 +26,8 @@ abschnitte:
         antwort: 8
       - text: "In einer Packung sind 12 Eier. 3 Eier sind kaputt. Wie viele sind noch ganz?"
         antwort: 9
+      - text: "Mama kauft 7 Brötchen und 4 Croissants. Wie viele Backwaren hat sie?"
+        antwort: 11
 
   - typ: textaufgaben
     titel: "C  Im Spielzeugladen"

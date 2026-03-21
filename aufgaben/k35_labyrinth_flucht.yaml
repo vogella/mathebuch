@@ -16,6 +16,8 @@ abschnitte:
         schritte: ["-3", "-2", "+4", "+1"]
       - start: 6
         schritte: ["-4", "+3", "+2", "-1"]
+      - start: 2
+        schritte: ["+5", "-3", "+4", "-2"]
 
   - typ: labyrinth_flucht
     titel: "B  Schnell hinaus!"
@@ -27,3 +29,5 @@ abschnitte:
         schritte: ["+6", "-3", "+2", "-1"]
       - start: 7
         schritte: ["-4", "+5", "-3", "+2"]
+      - start: 5
+        schritte: ["+3", "-4", "+6", "-2"]

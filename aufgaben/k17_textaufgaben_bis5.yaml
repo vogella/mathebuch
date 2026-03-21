@@ -26,3 +26,5 @@ abschnitte:
         antwort: 3
       - text: "Ein Kind hat 4 rote Autos und 1 blaues Auto. Wie viele Autos hat es?"
         antwort: 5
+      - text: "Auf dem Tisch liegen 5 Stifte. Lena nimmt 3 weg. Wie viele liegen noch da?"
+        antwort: 2

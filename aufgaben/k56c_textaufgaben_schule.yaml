@@ -16,6 +16,8 @@ abschnitte:
         antwort: 9
       - text: "Auf dem Tisch liegen 4 Hefte. Frau Lehrerin bringt noch 6 Hefte. Wie viele Hefte liegen jetzt dort?"
         antwort: 10
+      - text: "Im Regal stehen 8 Bücher. Tim stellt 3 Bücher zurück. Wie viele Bücher sind jetzt im Regal?"
+        antwort: 11
 
   - typ: textaufgaben
     titel: "B  In der Pause"

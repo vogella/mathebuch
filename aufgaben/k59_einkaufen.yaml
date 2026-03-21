@@ -23,7 +23,12 @@ abschnitte:
           - {name: "Käse", preis: 5}
           - {name: "Ei", preis: 1}
         frage: "Wie viel kostet alles zusammen?"
-    loesungen: [5, 7, 8]
+      - artikel:
+          - {name: "Saft", preis: 3}
+          - {name: "Banane", preis: 1}
+          - {name: "Joghurt", preis: 2}
+        frage: "Wie viel kostet alles zusammen?"
+    loesungen: [5, 7, 8, 6]
 
   - typ: einkaufen
     neue_seite: true

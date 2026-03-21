@@ -14,6 +14,7 @@ abschnitte:
       - [8, "+", 5]
       - [9, "+", 4]
       - [7, "+", 6]
+      - [6, "+", 8]
 
   - typ: zehneruebergang
     titel: "B  Rechne über den Zehner – Subtraktion"
@@ -23,4 +24,5 @@ abschnitte:
       - [13, "-", 5]
       - [15, "-", 7]
       - [12, "-", 4]
+      - [14, "-", 6]
 
