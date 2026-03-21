@@ -671,7 +671,7 @@ def render_kapitel(c, kapitel_data, seitennummer, audit=False, erklaerung_seite=
 
         # Prüfe ob noch genug Platz ist oder neue Seite erzwungen wird
         erzwinge_neue_seite = abschnitt.get("neue_seite", False)
-        if i > 0 and (erzwinge_neue_seite or y < MIN_Y + 6.5*cm):
+        if i > 0 and (erzwinge_neue_seite or y < MIN_Y + 5.0*cm):
             neue_seite()
 
         # Trennlinie zwischen Abschnitten (nicht vor dem ersten auf der Seite)
