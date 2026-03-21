@@ -46,6 +46,7 @@ abschnitte:
     loesungen: [4, 7, 3, 10]
 
   - typ: textaufgaben
+    neue_seite: true
     titel: "D  Im Garten"
     schwierigkeit: 2
     beschreibung: "Lies und rechne!"

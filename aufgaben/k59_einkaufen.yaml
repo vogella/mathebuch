@@ -26,6 +26,7 @@ abschnitte:
     loesungen: [5, 7, 8]
 
   - typ: einkaufen
+    neue_seite: true
     titel: "B  Wie viel Rückgeld?"
     beschreibung: "Du bezahlst mit dem angegebenen Betrag. Wie viel bekommst du zurück?"
     aufgaben:

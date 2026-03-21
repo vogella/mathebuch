@@ -18,6 +18,7 @@ abschnitte:
       - [4, 8]
 
   - typ: vervielfachen
+    neue_seite: true
     titel: "B  Noch mehr Vervielfachen!"
     aufgaben:
       - [3, 9]
