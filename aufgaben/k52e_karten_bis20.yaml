@@ -91,3 +91,20 @@ abschnitte:
         ziel: 20
       - karten: [7, 10, 5, 8, 6]
         ziel: 18
+
+  - typ: karten_geheim
+    titel: "E  Geheime Karte"
+    beschreibung: "Welche Zahl ist auf der geheimen Karte? Alle Karten zusammen ergeben die Zahl rechts!"
+    aufgaben:
+      - karten: [5, 4]
+        summe: 15
+      - karten: [7, 3]
+        summe: 18
+      - karten: [6, 8]
+        summe: 20
+      - karten: [9, 2]
+        summe: 17
+      - karten: [4, 7]
+        summe: 19
+      - karten: [8, 5]
+        summe: 16

@@ -681,6 +681,15 @@ def _solve_karten_ziel_summe(abschnitt):
     return results
 
 
+def _solve_karten_geheim(abschnitt):
+    results = []
+    for aufg in abschnitt["aufgaben"]:
+        karten = aufg["karten"]
+        summe = aufg["summe"]
+        results.append(str(summe - sum(karten)))
+    return results
+
+
 def _solve_karten_rechnen(abschnitt):
     results = []
     for aufg in abschnitt["aufgaben"]:
@@ -741,6 +750,7 @@ SOLVER = {
     "einkaufen_euro_cent": _solve_einkaufen_euro_cent,
     "karten_rechnen":     _solve_karten_rechnen,
     "karten_ziel_summe":  _solve_karten_ziel_summe,
+    "karten_geheim":      _solve_karten_geheim,
 }
 
 # Types to skip (explanation, visual-only)

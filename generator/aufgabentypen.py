@@ -3581,3 +3581,55 @@ def draw_karten_ziel_summe(c, abschnitt, farb_key, start_y):
         c.drawCentredString(ax + 0.2*cm, ans_y, f"= {ziel}")
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
+
+
+def draw_karten_geheim(c, abschnitt, farb_key, start_y):
+    """Secret card: visible cards + 1 hidden card, find the missing value for a target sum."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]
+    row_y = start_y - 1.5*cm - y_off
+    card_w = 1.8*cm
+    card_h = 2.4*cm
+    row_h = card_h + 1.2*cm
+
+    # Two columns
+    halb = (len(aufgaben) + 1) // 2
+    col_offsets = [1.5*cm, 10.5*cm]
+
+    for col_idx, col_aufgaben in enumerate([aufgaben[:halb], aufgaben[halb:]]):
+        base_x = col_offsets[col_idx]
+        for i, aufg in enumerate(col_aufgaben):
+            karten = aufg["karten"]
+            summe = aufg["summe"]
+            y = row_y - i * row_h
+
+            # Draw visible cards with + between them
+            cx = base_x
+            for ki, k in enumerate(karten):
+                _draw_spielkarte(c, cx, y - card_h + 0.3*cm, k, farb_key, card_w, card_h)
+                cx += card_w + 0.15*cm
+                # + after each card
+                c.setFillColor(FARBEN[farb_key])
+                c.setFont(FONT_BOLD, 18)
+                c.drawCentredString(cx + 0.25*cm, y - card_h / 2 + 0.3*cm, "+")
+                cx += 0.65*cm
+
+            # Mystery card with "?"
+            c.setFillColor(FARBEN["yellow"])
+            c.setStrokeColor(FARBEN[farb_key])
+            c.setLineWidth(2)
+            c.roundRect(cx, y - card_h + 0.3*cm, card_w, card_h, radius=6, fill=1, stroke=1)
+            c.setFillColor(FARBEN[farb_key])
+            c.setFont(FONT_BOLD, 26)
+            c.drawCentredString(cx + card_w / 2, y - card_h / 2 + 0.05*cm, "?")
+            c.setLineWidth(1)
+            cx += card_w + 0.15*cm
+
+            # = target
+            c.setFillColor(FARBEN[farb_key])
+            c.setFont(FONT_BOLD, 18)
+            c.drawCentredString(cx + 0.3*cm, y - card_h / 2 + 0.3*cm, f"= {summe}")
+
+    return row_y - halb * row_h - 0.3*cm
