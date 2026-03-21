@@ -1087,11 +1087,13 @@ def draw_verdoppeln_halbieren(c, abschnitt, farb_key, start_y):
             c.setFillColor(FARBEN[farb_key])
             c.setFont(FONT_BOLD, 18)
             c.drawString(x + text_w + 0.3*cm, y, "÷ 2 =")
+            # Fixed x position so answer boxes are left-aligned across all rows
+            box_x = x + 3.5*cm
             if loes is not None:
-                _draw_filled_answer_box(c, x + text_w + 2.5*cm, y - 0.55*cm,
+                _draw_filled_answer_box(c, box_x, y - 0.55*cm,
                                         loes, w=1.6*cm, h=1.5*cm)
             else:
-                draw_answer_box(c, x + text_w + 2.5*cm, y - 0.55*cm,
+                draw_answer_box(c, box_x, y - 0.55*cm,
                                 w=1.6*cm, h=1.5*cm)
 
     total_rows = (len(aufgaben) + cols - 1) // cols
