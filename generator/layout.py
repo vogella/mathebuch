@@ -274,7 +274,10 @@ def draw_rotation_arrow(c, cx, cy, radius, start_angle, extent, color=None):
     c.saveState()
     c.translate(tx, ty)
     # Orient tip tangent to arc direction
-    c.rotate(start_angle + extent - 90)
+    if extent < 0:
+        c.rotate(start_angle + extent - 45)
+    else:
+        c.rotate(start_angle + extent + 45)
 
     tip_size = 0.25*cm
     path = c.beginPath()

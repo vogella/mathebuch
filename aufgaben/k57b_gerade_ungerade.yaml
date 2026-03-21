@@ -10,6 +10,11 @@ abschnitte:
     titel: "A  Zahlen sortieren"
     beschreibung: "Sortiere die Zahlen in die richtigen Körbe. Gerade Zahlen lassen sich genau zur Hälfte teilen!"
     modus: sortieren
+    tipp_zeilen:
+      - "Stell dir vor, du verteilst"
+      - "Bonbons an zwei Personen:"
+      - "Geht es genau auf → gerade."
+      - "Bleibt eins übrig → ungerade."
     aufgaben:
       - zahlen: [2, 5, 8, 11, 14, 17]
 

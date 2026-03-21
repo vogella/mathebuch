@@ -478,17 +478,31 @@ def render_geschafft_seite(c, seite_nr):
     c.setFillColor(FARBEN["grau"])
     c.setFont(FONT, 10)
     c.drawString(bx + 0.3 * cm, by + box_h + 0.2 * cm, "Name des Mathe-Profis:")
-    c.drawString(bx + 0.3 * cm, by - 0.5 * cm, "Datum")
-    c.line(bx, by - 0.1 * cm, bx + 4 * cm, by - 0.1 * cm)
+    c.drawString(bx + 0.3 * cm, by - 0.5 * cm, "Fertig geworden am:")
+    c.line(bx + 3.5 * cm, by - 0.1 * cm, bx + 8 * cm, by - 0.1 * cm)
 
-    # Platz für ein Bild oder Sticker
-    c.setDash(3, 3)
-    c.setStrokeColor(FARBEN["hellgrau"])
-    c.roundRect(bx + box_w - 4 * cm, by - 3 * cm, 3.5 * cm, 3.5 * cm, radius=5, fill=0, stroke=1)
-    c.setDash()
-    c.setFont(FONT, 8)
-    c.drawCentredString(bx + box_w - 2.25 * cm, by - 1.5 * cm, "Hier ist Platz für")
-    c.drawCentredString(bx + box_w - 2.25 * cm, by - 1.9 * cm, "einen tollen Sticker!")
+    # Stempel "Matheprofi der ersten Klasse"
+    stamp_cx = W / 2
+    stamp_cy = by - 3.5 * cm
+    stamp_r = 2.2 * cm
+    # Äußerer Kreis
+    c.setStrokeColor(FARBEN["pink"])
+    c.setLineWidth(3)
+    c.circle(stamp_cx, stamp_cy, stamp_r, fill=0, stroke=1)
+    # Innerer Kreis
+    c.setLineWidth(1.5)
+    c.circle(stamp_cx, stamp_cy, stamp_r - 0.25 * cm, fill=0, stroke=1)
+    # Stern oben
+    draw_emoji(c, "⭐", stamp_cx, stamp_cy + 0.9 * cm, 0.7 * cm)
+    # Text im Stempel
+    c.setFillColor(FARBEN["pink"])
+    c.setFont(FONT_BOLD, 11)
+    c.drawCentredString(stamp_cx, stamp_cy + 0.1 * cm, "Matheprofi")
+    c.setFont(FONT_BOLD, 10)
+    c.drawCentredString(stamp_cx, stamp_cy - 0.5 * cm, "der ersten Klasse")
+    # Kleine Sterne links und rechts
+    draw_emoji(c, "⭐", stamp_cx - 1.4 * cm, stamp_cy - 0.2 * cm, 0.4 * cm)
+    draw_emoji(c, "⭐", stamp_cx + 1.4 * cm, stamp_cy - 0.2 * cm, 0.4 * cm)
 
     # Feedback-Bereich
     f_y = by - 6 * cm

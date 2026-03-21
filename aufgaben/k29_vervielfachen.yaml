@@ -16,3 +16,11 @@ abschnitte:
       - [2, 8]
       - [5, 10]
       - [4, 8]
+
+  - typ: vervielfachen
+    titel: "B  Noch mehr Vervielfachen!"
+    aufgaben:
+      - [3, 9]
+      - [2, 10]
+      - [5, 5]
+      - [1, 4]
