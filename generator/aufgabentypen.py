@@ -221,9 +221,17 @@ def draw_lückenaufgaben(c, abschnitt, farb_key, start_y):
     row_h = 1.8*cm
 
     for i, aufg in enumerate(col1):
-        _draw_aufgabe_row(c, 1.8*cm, row_y - i * row_h, aufg, farb_key, loes1[i])
+        y = row_y - i * row_h
+        c.setFillColor(FARBEN["gruen"])
+        c.setFont(FONT_BOLD, 12)
+        c.drawString(1.0*cm, y + 0.05*cm, f"{i + 1}.")
+        _draw_aufgabe_row(c, 1.8*cm, y, aufg, farb_key, loes1[i])
     for i, aufg in enumerate(col2):
-        _draw_aufgabe_row(c, 11*cm, row_y - i * row_h, aufg, farb_key, loes2[i])
+        y = row_y - i * row_h
+        c.setFillColor(FARBEN["gruen"])
+        c.setFont(FONT_BOLD, 12)
+        c.drawString(10.2*cm, y + 0.05*cm, f"{halb + i + 1}.")
+        _draw_aufgabe_row(c, 11*cm, y, aufg, farb_key, loes2[i])
 
     return row_y - halb * row_h - 0.5*cm   # nächste freie Y-Position
 
@@ -681,7 +689,12 @@ def draw_würfelzählen(c, abschnitt, farb_key, start_y):
         row = idx // cols
         x0 = 1.5*cm + col * col_w
         y0 = row_y - row * row_h
-        cx = x0
+
+        # Task number
+        c.setFillColor(FARBEN["gruen"])
+        c.setFont(FONT_BOLD, 12)
+        c.drawString(x0, y0 - dice_size / 2 - 0.1*cm, f"{idx + 1}.")
+        cx = x0 + 0.9*cm
 
         # Per-task operators: "+" or "+, −" for multi-dice
         if idx < len(operatoren_list):
@@ -865,10 +878,18 @@ def draw_vergleiche(c, abschnitt, farb_key, start_y):
 
     for i, aufg in enumerate(col1):
         loes = loes1[i] if i < len(loes1) else None
-        _draw_vergleich_row(1.5*cm, row_y - i * row_h, aufg, loes)
+        y = row_y - i * row_h
+        c.setFillColor(FARBEN["gruen"])
+        c.setFont(FONT_BOLD, 12)
+        c.drawString(0.8*cm, y + 0.05*cm, f"{i + 1}.")
+        _draw_vergleich_row(1.5*cm, y, aufg, loes)
     for i, aufg in enumerate(col2):
         loes = loes2[i] if i < len(loes2) else None
-        _draw_vergleich_row(10.5*cm, row_y - i * row_h, aufg, loes)
+        y = row_y - i * row_h
+        c.setFillColor(FARBEN["gruen"])
+        c.setFont(FONT_BOLD, 12)
+        c.drawString(9.8*cm, y + 0.05*cm, f"{halb + i + 1}.")
+        _draw_vergleich_row(10.5*cm, y, aufg, loes)
 
     return row_y - halb * row_h - 0.3*cm
 
@@ -897,6 +918,11 @@ def draw_nachbarzahlen(c, abschnitt, farb_key, start_y):
         x0 = 1.5*cm + col * col_w + 0.5*cm
         y0 = row_y - row * row_h
         loes = loesungen[idx] if idx < len(loesungen) else None
+
+        # Task number
+        c.setFillColor(FARBEN["gruen"])
+        c.setFont(FONT_BOLD, 12)
+        c.drawString(x0 - 0.7*cm, y0 - box_h/2 - 0.1*cm, f"{idx + 1}.")
 
         for j, val in enumerate(aufg):
             bx = x0 + j * (box_w + gap)
@@ -1020,7 +1046,7 @@ def draw_kettenaufgaben(c, abschnitt, farb_key, start_y):
         y = row_y - row * row_h
 
         # Number the exercise
-        c.setFillColor(FARBEN[farb_key])
+        c.setFillColor(FARBEN["gruen"])
         c.setFont(FONT_BOLD, 12)
         c.drawString(x0, y + 0.05*cm, f"{idx + 1}.")
 
@@ -1060,6 +1086,11 @@ def draw_tauschaufgaben(c, abschnitt, farb_key, start_y):
         a, b = aufg
         y = row_y - idx * row_h
         summe = loesungen[idx] if idx < len(loesungen) else None
+
+        # Task number
+        c.setFillColor(FARBEN["gruen"])
+        c.setFont(FONT_BOLD, 12)
+        c.drawString(1.0*cm, y + 0.05*cm, f"{idx + 1}.")
 
         c.setFont(FONT_BOLD, 18)
 
@@ -1120,6 +1151,11 @@ def draw_verdoppeln_halbieren(c, abschnitt, farb_key, start_y):
         row = idx // cols
         x = 1.8*cm + col * col_w
         y = row_y - row * row_h
+
+        # Task number
+        c.setFillColor(FARBEN["gruen"])
+        c.setFont(FONT_BOLD, 12)
+        c.drawString(x - 0.8*cm, y + 0.05*cm, f"{idx + 1}.")
 
         c.setFont(FONT_BOLD, 18)
 
@@ -1315,7 +1351,7 @@ def draw_zahlen_ordnen(c, abschnitt, farb_key, start_y):
         loes = loesungen[idx] if idx < len(loesungen) else None
 
         # Show the unsorted numbers in colored circles
-        c.setFillColor(FARBEN[farb_key])
+        c.setFillColor(FARBEN["gruen"])
         c.setFont(FONT_BOLD, 12)
         c.drawString(1.8*cm, y + 0.05*cm, f"{idx + 1}.")
 
@@ -1375,6 +1411,11 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
         loes = loesungen[idx] if idx < len(loesungen) else None
         x = 1.3 * cm
         y = row_y - idx * row_h
+
+        # Task number
+        c.setFillColor(FARBEN["gruen"])
+        c.setFont(FONT_BOLD, 12)
+        c.drawString(0.5 * cm, y + 0.05 * cm, f"{idx + 1}.")
 
         # ── Line 1: zahl + [___________] = ziel ──
         c.setFillColor(FARBEN["dunkel"])
@@ -1455,6 +1496,11 @@ def draw_rechenquadrat_2x2(c, abschnitt, farb_key, start_y):
         row = idx // 3
         x0 = 1.5*cm + col * col_w + (col_w - 3.5*cell_size)/2
         y0 = row_y - row * 4.5*cm
+
+        # Task number
+        c.setFillColor(FARBEN["gruen"])
+        c.setFont(FONT_BOLD, 12)
+        c.drawString(x0 - 0.1*cm, y0 + 0.5*cm, f"{idx + 1}.")
 
         werte = q["werte"]  # [a, b, c, d] in 2x2 grid
         summen = q["summen"] # [s_r1, s_r2, s_c1, s_c2]
@@ -1556,6 +1602,12 @@ def draw_muster_fortsetzen(c, abschnitt, farb_key, start_y):
 
     for idx, aufg in enumerate(aufgaben):
         y0 = row_y - idx * row_h
+
+        # Task number
+        c.setFillColor(FARBEN["gruen"])
+        c.setFont(FONT_BOLD, 12)
+        c.drawString(1.5*cm, y0 - element_size/2 + 0.1*cm, f"{idx + 1}.")
+
         elemente = aufg.get("elemente") or aufg.get("muster", [])
 
         for ei, elem in enumerate(elemente):
@@ -1901,7 +1953,7 @@ def draw_zahlenraetsel(c, abschnitt, farb_key, start_y):
         y = row_y - idx * row_h
 
         # Number label
-        c.setFillColor(FARBEN[farb_key])
+        c.setFillColor(FARBEN["gruen"])
         c.setFont(FONT_BOLD, 12)
         c.drawString(1.8*cm, y, f"{idx + 1}.")
 
@@ -1941,7 +1993,7 @@ def draw_einkaufen(c, abschnitt, farb_key, start_y):
         y = row_y - idx * row_h
 
         # Number
-        c.setFillColor(FARBEN[farb_key])
+        c.setFillColor(FARBEN["gruen"])
         c.setFont(FONT_BOLD, 12)
         c.drawString(1.8*cm, y, f"{idx + 1}.")
 
@@ -1992,7 +2044,7 @@ def draw_kalender_raetsel(c, abschnitt, farb_key, start_y):
         y = row_y - idx * row_h
 
         # Number
-        c.setFillColor(FARBEN[farb_key])
+        c.setFillColor(FARBEN["gruen"])
         c.setFont(FONT_BOLD, 12)
         c.drawString(1.8*cm, y, f"{idx + 1}.")
 
@@ -2029,7 +2081,7 @@ def draw_textaufgaben(c, abschnitt, farb_key, start_y):
         hinweis = aufg.get("hinweis", "")
 
         # Number
-        c.setFillColor(FARBEN[farb_key])
+        c.setFillColor(FARBEN["gruen"])
         c.setFont(FONT_BOLD, 12)
         c.drawString(1.8*cm, y, f"{idx + 1}.")
 
@@ -2420,7 +2472,7 @@ def _draw_gerade_ungerade_muster(c, abschnitt, farb_key, y):
         my = y - idx * row_h
 
         # Exercise number
-        c.setFillColor(FARBEN[farb_key])
+        c.setFillColor(FARBEN["gruen"])
         c.setFont(FONT_BOLD, 12)
         c.drawString(1.8*cm, my - 0.15*cm, f"{idx + 1}.")
 
@@ -2656,6 +2708,11 @@ def draw_zehneruebergang(c, abschnitt, farb_key, start_y):
         loes = loesungen[idx] if idx < len(loesungen) else None
         y = row_y - idx * row_h
         x = 1.8 * cm
+
+        # Task number
+        c.setFillColor(FARBEN["gruen"])
+        c.setFont(FONT_BOLD, 12)
+        c.drawString(1.0 * cm, y + 0.05 * cm, f"{idx + 1}.")
 
         c.setFont(FONT_BOLD, 18)
 
@@ -3017,6 +3074,11 @@ def draw_umkehraufgaben(c, abschnitt, farb_key, start_y):
         row = idx // cols
         x0 = 1.8 * cm + col * col_w
         y0 = row_y - row * group_h
+
+        # Task number
+        c.setFillColor(FARBEN["gruen"])
+        c.setFont(FONT_BOLD, 12)
+        c.drawString(x0 - 0.3 * cm, y0 + 0.05 * cm, f"{idx + 1}.")
 
         # Draw a light rounded box around the problem group
         c.setFillColor(FARBEN["bg"])
