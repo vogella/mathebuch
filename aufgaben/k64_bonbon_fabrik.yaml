@@ -1,0 +1,37 @@
+kapitel:
+  titel: "Bonbon-Fabrik"
+  untertitel: "Baue die beste Fabrik!"
+  emoji: "🍬"
+  farbe: "orange"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: bonbon_fabrik
+    titel: "A  Welche Fabriken kaufst du?"
+    beschreibung: "Wähle die Fabriken aus, die zusammen die meisten Bonbons herstellen. Du darfst nicht mehr ausgeben als du hast!"
+    aufgaben:
+      - budget: 10
+        produkt: "Bonbons"
+        fabriken:
+          - {name: "Fabrik Rot", kosten: 2, menge: 5}
+          - {name: "Fabrik Blau", kosten: 3, menge: 4}
+          - {name: "Fabrik Grün", kosten: 5, menge: 8}
+          - {name: "Fabrik Gelb", kosten: 4, menge: 6}
+          - {name: "Fabrik Lila", kosten: 1, menge: 2}
+          - {name: "Fabrik Rosa", kosten: 6, menge: 9}
+
+  - typ: bonbon_fabrik
+    neue_seite: true
+    titel: "B  Noch mehr Fabriken!"
+    beschreibung: "Wähle die Fabriken aus, die zusammen die meisten Bonbons herstellen. Du darfst nicht mehr ausgeben als du hast!"
+    schwierigkeit: 1
+    aufgaben:
+      - budget: 12
+        produkt: "Bonbons"
+        fabriken:
+          - {name: "Schoko-Werk", kosten: 3, menge: 7}
+          - {name: "Gummi-Werk", kosten: 4, menge: 5}
+          - {name: "Lolli-Werk", kosten: 5, menge: 9}
+          - {name: "Drops-Werk", kosten: 2, menge: 3}
+          - {name: "Karamell-Werk", kosten: 6, menge: 10}
+          - {name: "Lakritz-Werk", kosten: 1, menge: 2}

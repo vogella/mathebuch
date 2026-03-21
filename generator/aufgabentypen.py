@@ -3305,3 +3305,92 @@ def draw_symmetrie(c, abschnitt, farb_key, start_y):
         row_y = grid_top - grid_h - 1.2*cm
 
     return row_y
+
+
+# ── Bonbon-Fabrik ─────────────────────────────────────────
+
+def draw_bonbon_fabrik(c, abschnitt, farb_key, start_y):
+    """Factory optimization: pick factories within budget to maximize production."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]
+    row_y = start_y - 1.5*cm - y_off
+
+    for aufg_idx, aufg in enumerate(aufgaben):
+        fabriken = aufg["fabriken"]
+        budget = aufg["budget"]
+        produkt = aufg.get("produkt", "Bonbons")
+        y = row_y
+
+        # Budget info
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont(FONT_BOLD, 13)
+        c.drawString(1.8*cm, y, f"Du hast {budget}€. Kreuze die Fabriken an,")
+        y -= 0.5*cm
+        c.drawString(1.8*cm, y, f"die zusammen die meisten {produkt} herstellen!")
+        y -= 0.9*cm
+
+        # Draw factory cards in a 3x2 grid
+        card_w = 5.0*cm
+        card_h = 3.0*cm
+        gap_x = 0.8*cm
+        gap_y = 0.6*cm
+        cols = 3
+
+        for i, fab in enumerate(fabriken):
+            col = i % cols
+            row = i // cols
+            cx = 1.8*cm + col * (card_w + gap_x)
+            cy = y - row * (card_h + gap_y)
+
+            name = fab["name"]
+            kosten = fab["kosten"]
+            menge = fab["menge"]
+
+            # Card background
+            c.setFillColor(HexColor("#FFF8E7"))
+            c.setStrokeColor(FARBEN[farb_key])
+            c.setLineWidth(1.5)
+            c.roundRect(cx, cy - card_h, card_w, card_h, radius=8, fill=1, stroke=1)
+
+            # Factory name
+            c.setFillColor(FARBEN["dunkel"])
+            c.setFont(FONT_BOLD, 12)
+            c.drawCentredString(cx + card_w / 2, cy - 0.6*cm, name)
+
+            # Cost
+            c.setFont(FONT, 10)
+            c.setFillColor(FARBEN["dunkel"])
+            c.drawString(cx + 0.4*cm, cy - 1.3*cm, f"Kosten: {kosten}€")
+
+            # Production
+            c.drawString(cx + 0.4*cm, cy - 1.9*cm, f"Macht: {menge} {produkt}")
+
+            # Checkbox
+            box_size = 0.7*cm
+            c.setFillColor(white)
+            c.setStrokeColor(FARBEN["grau"])
+            c.setLineWidth(1)
+            c.rect(cx + card_w - box_size - 0.3*cm, cy - card_h + 0.3*cm,
+                   box_size, box_size, fill=1, stroke=1)
+
+        num_rows = (len(fabriken) + cols - 1) // cols
+        y -= num_rows * (card_h + gap_y) + 0.3*cm
+
+        # Answer line
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont(FONT, 11)
+        c.drawString(1.8*cm, y, f"Meine Fabriken kosten zusammen")
+        ax = 1.8*cm + c.stringWidth("Meine Fabriken kosten zusammen ", FONT, 11)
+        draw_answer_box(c, ax, y - 0.3*cm, w=1.4*cm, h=0.9*cm)
+        ax += 1.6*cm
+        c.drawString(ax, y, "€ und machen")
+        ax += c.stringWidth("€ und machen ", FONT, 11)
+        draw_answer_box(c, ax, y - 0.3*cm, w=1.4*cm, h=0.9*cm)
+        ax += 1.6*cm
+        c.drawString(ax, y, f"{produkt}.")
+
+        row_y = y - 1.5*cm
+
+    return row_y
