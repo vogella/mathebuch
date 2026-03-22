@@ -17,6 +17,7 @@ abschnitte:
     loesungen: [7, 5, 4, 12]
 
   - typ: textaufgaben
+    neue_seite: true
     titel: "B  Im Supermarkt"
     beschreibung: "Rechne aus!"
     aufgaben:
@@ -30,6 +31,7 @@ abschnitte:
         antwort: 11
 
   - typ: textaufgaben
+    neue_seite: true
     titel: "C  Im Spielzeugladen"
     beschreibung: "Lies und rechne!"
     aufgaben:

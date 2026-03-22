@@ -17,6 +17,7 @@ abschnitte:
       - [6, "+", 8]
 
   - typ: zehneruebergang
+    neue_seite: true
     titel: "B  Rechne über den Zehner – Subtraktion"
     beschreibung: "Zerlege so, dass du zuerst bis 10 kommst."
     aufgaben:

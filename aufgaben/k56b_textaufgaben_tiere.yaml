@@ -20,6 +20,7 @@ abschnitte:
         antwort: 7
 
   - typ: textaufgaben
+    neue_seite: true
     titel: "B  Im Wald"
     beschreibung: "Rechne aus!"
     aufgaben:

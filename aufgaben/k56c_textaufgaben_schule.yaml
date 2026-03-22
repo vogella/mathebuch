@@ -20,6 +20,7 @@ abschnitte:
         antwort: 11
 
   - typ: textaufgaben
+    neue_seite: true
     titel: "B  In der Pause"
     beschreibung: "Rechne mit deinen Mitschülern!"
     aufgaben:

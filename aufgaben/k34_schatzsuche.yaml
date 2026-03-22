@@ -20,6 +20,7 @@ abschnitte:
         schritte: ["+2", "-3", "+5", "-1"]
 
   - typ: schatzsuche
+    neue_seite: true
     titel: "B  Noch mehr Schätze!"
     beschreibung: "Folge dem Weg und rechne!"
     aufgaben:

@@ -15,6 +15,7 @@ abschnitte:
       - [3, 2, 5]
 
   - typ: würfelzählen
+    neue_seite: true
     titel: "B  Noch mehr Würfel!"
     aufgaben:
       - [2, 6, 4]

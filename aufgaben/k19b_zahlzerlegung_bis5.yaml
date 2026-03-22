@@ -22,6 +22,7 @@ abschnitte:
       - [5, null, 3]
 
   - typ: zahlenhaus
+    neue_seite: true
     titel: "B  Zahlenhaus"
     beschreibung: "Finde alle Zahlenpaare, die zusammen die Dachzahl ergeben!"
     dachzahlen: [2, 3, 4, 5]
