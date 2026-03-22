@@ -373,7 +373,7 @@ def render_inhaltsverzeichnis(c, alle_kapitel, seiten_nummern):
         ist_erkl = kap.get("erklaerungsseite", False)
         
         if ist_erkl:
-            group_name = "💡 So funktioniert's!"
+            group_name = "So funktioniert's!"
             group_emoji = "📖"
         else:
             group_name = _get_group_for_chapter(dateiname)
@@ -685,6 +685,8 @@ def render_kapitel(c, kapitel_data, seitennummer, audit=False, erklaerung_seite=
             zeichne_trennlinie(c, y)
             y -= 0.5*cm  # gap before next section
 
+        import aufgabentypen as _at
+        _at._erklaerung_modus = ist_erklaerung
         y_vor = y
         y = fn(c, abschnitt, farbe, y)
 
