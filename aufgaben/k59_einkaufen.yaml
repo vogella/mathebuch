@@ -61,9 +61,6 @@ abschnitte:
       - artikel:
           - {name: "Saft", euro: 3, cent: 7}
           - {name: "Keks", euro: 1, cent: 2}
-      - artikel:
-          - {name: "Banane", euro: 0, cent: 5}
-          - {name: "Traube", euro: 1, cent: 9}
 
   - typ: einkaufen_euro_cent
     neue_seite: true
