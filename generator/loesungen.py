@@ -636,22 +636,20 @@ def _solve_bonbon_fabrik(abschnitt):
         budget = aufg["budget"]
         n = len(fabriken)
         best_menge = 0
-        best_kosten = 0
+        best_kosten = float('inf')
+        best_mask = 0
         # Brute force all subsets (max 6 factories = 64 subsets)
         for mask in range(1, 1 << n):
             kosten = sum(fabriken[i]["kosten"] for i in range(n) if mask & (1 << i))
             menge = sum(fabriken[i]["menge"] for i in range(n) if mask & (1 << i))
-            if kosten <= budget and menge > best_menge:
-                best_menge = menge
-                best_kosten = kosten
-        names = []
-        for mask in range(1, 1 << n):
-            kosten = sum(fabriken[i]["kosten"] for i in range(n) if mask & (1 << i))
-            menge = sum(fabriken[i]["menge"] for i in range(n) if mask & (1 << i))
-            if kosten <= budget and menge == best_menge:
-                names = [fabriken[i]["name"] for i in range(n) if mask & (1 << i)]
-                best_kosten = kosten
-                break
+            if kosten <= budget:
+                if menge > best_menge or (menge == best_menge and kosten < best_kosten):
+                    best_menge = menge
+                    best_kosten = kosten
+                    best_mask = mask
+        if best_mask == 0:
+            best_kosten = 0
+        names = [fabriken[i]["name"] for i in range(n) if best_mask & (1 << i)]
         results.append(f"{best_kosten}€, {best_menge} Stück ({', '.join(names)})")
     return results
 
