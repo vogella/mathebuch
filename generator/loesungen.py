@@ -706,6 +706,31 @@ def _solve_karten_rechnen(abschnitt):
     return results
 
 
+def _solve_bonbon_fabrik(abschnitt):
+    results = []
+    for aufg in abschnitt["aufgaben"]:
+        fabriken = aufg["fabriken"]
+        budget = aufg["budget"]
+        n = len(fabriken)
+        best_menge = 0
+        best_kosten = float('inf')
+        best_mask = 0
+        # Brute force all subsets (max 6 factories = 64 subsets)
+        for mask in range(1, 1 << n):
+            kosten = sum(fabriken[i]["kosten"] for i in range(n) if mask & (1 << i))
+            menge = sum(fabriken[i]["menge"] for i in range(n) if mask & (1 << i))
+            if kosten <= budget:
+                if menge > best_menge or (menge == best_menge and kosten < best_kosten):
+                    best_menge = menge
+                    best_kosten = kosten
+                    best_mask = mask
+        if best_mask == 0:
+            best_kosten = 0
+        names = [fabriken[i]["name"] for i in range(n) if best_mask & (1 << i)]
+        results.append(f"{best_kosten}€, {best_menge} Stück ({', '.join(names)})")
+    return results
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -752,6 +777,7 @@ SOLVER = {
     "karten_rechnen":     _solve_karten_rechnen,
     "karten_ziel_summe":  _solve_karten_ziel_summe,
     "karten_geheim":      _solve_karten_geheim,
+    "bonbon_fabrik":       _solve_bonbon_fabrik,
 }
 
 # Types to skip (explanation, visual-only)
