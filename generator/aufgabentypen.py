@@ -13,8 +13,12 @@ from layout import (FARBEN, draw_answer_box, draw_section_label,
 W, H = A4
 
 
+_erklaerung_modus = False
+
 def _draw_task_number(c, x, y, number):
-    """Draws a green, bold task number."""
+    """Draws a green, bold task number. Skipped on explanation pages."""
+    if _erklaerung_modus:
+        return
     c.setFillColor(FARBEN["gruen"])
     c.setFont(FONT_BOLD, 12)
     c.drawString(x, y, f"{number}.")
@@ -1418,7 +1422,7 @@ def draw_vervielfachen(c, abschnitt, farb_key, start_y):
         if loes is not None:
             addition_text = (" + ".join([str(zahl)] * (loes - 1)))
             c.setFillColor(FARBEN["gruen"])
-            c.setFont(FONT_BOLD, 11)
+            c.setFont(FONT_BOLD, 14)
             c.drawCentredString(x + plus_box_w / 2, y + 0.1 * cm, addition_text)
         x += plus_box_w + 0.3 * cm
 
@@ -1630,7 +1634,7 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
         col_spacing = (W - 6*cm) / max(num_cols - 1, 1)
 
         # "Start" label
-        c.setFillColor(FARBEN["gruen"] if loes else FARBEN[farb_key])
+        c.setFillColor(FARBEN[farb_key])
         c.setFont(FONT_BOLD, 10)
         c.drawCentredString(1.8*cm, grid_top - grid_h / 2 + 0.1*cm, "Start")
 
@@ -1638,23 +1642,14 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
         if loes:
             c.setStrokeColor(FARBEN["gruen"])
             c.setLineWidth(3)
-            # Line from Start to first column
-            sy = grid_top - (loes[0] + 0.5) * (grid_h / len(spalten[0]))
-            c.line(2.3*cm, grid_top - grid_h / 2, 3*cm - node_r, sy)
-            
-            # Lines between columns
+
+            # Lines between columns only
             for ci in range(num_cols - 1):
                 sy = grid_top - (loes[ci] + 0.5) * (grid_h / len(spalten[ci]))
                 ny = grid_top - (loes[ci+1] + 0.5) * (grid_h / len(spalten[ci+1]))
                 cx1 = 3*cm + ci * col_spacing
                 cx2 = 3*cm + (ci + 1) * col_spacing
                 c.line(cx1 + node_r, sy, cx2 - node_r, ny)
-            
-            # Line to Ziel
-            last_x = 3*cm + (num_cols - 1) * col_spacing
-            last_y = grid_top - (loes[-1] + 0.5) * (grid_h / len(spalten[-1]))
-            target_x = last_x + 2*cm
-            c.line(last_x + node_r, last_y, target_x - 0.8*cm, grid_top - grid_h/2)
 
         for ci, spalte in enumerate(spalten):
             if not spalte:
@@ -1664,15 +1659,8 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
             for ri, val in enumerate(spalte):
                 cy = grid_top - (ri + 0.5) * (grid_h / len(spalte))
                 # Node circle
-                is_on_path = (loes and ci < len(loes) and loes[ci] == ri)
-                if is_on_path:
-                    c.setFillColor(FARBEN["gruen"])
-                    c.setStrokeColor(FARBEN["gruen"])
-                    c.setLineWidth(2)
-                    c.circle(col_x, cy, node_r, fill=1, stroke=1)
-                else:
-                    c.setFillColor(col_color)
-                    c.circle(col_x, cy, node_r, fill=1, stroke=0)
+                c.setFillColor(col_color)
+                c.circle(col_x, cy, node_r, fill=1, stroke=0)
                 
                 c.setFillColor(white)
                 c.setFont(FONT_BOLD, 14)
@@ -1696,7 +1684,7 @@ def draw_rechenweg_labyrinth(c, abschnitt, farb_key, start_y):
         # Target sum label (no answer box)
         target_x = 3*cm + (num_cols - 1) * col_spacing + 2*cm
         target_y = grid_top - grid_h / 2
-        c.setFillColor(FARBEN["gruen"] if loes else FARBEN[farb_key])
+        c.setFillColor(FARBEN[farb_key])
         c.setFont(FONT_BOLD, 14)
         c.drawCentredString(target_x, target_y + 0.5*cm, "Ziel:")
         c.drawCentredString(target_x, target_y - 0.2*cm, str(zielsumme))
@@ -2535,7 +2523,7 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
             c.drawCentredString(2.3 * cm + task_text_w + 0.8 * cm,
                                 cy + 0.05 * cm, str(loes[a_idx]))
 
-        cy -= 1.2 * cm  # space below task text (increased for taller answer box)
+        cy -= 1.8 * cm  # space below task text and answer box
         gy = cy - grid_h
 
         # Entrance arrow (drawn triangle centered on entrance column + label)
