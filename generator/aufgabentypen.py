@@ -3349,7 +3349,7 @@ def draw_bonbon_fabrik(c, abschnitt, farb_key, start_y):
             menge = fab["menge"]
 
             # Card background
-            c.setFillColor(HexColor("#FFF8E7"))
+            c.setFillColor(FARBEN["card_bg"])
             c.setStrokeColor(FARBEN[farb_key])
             c.setLineWidth(1.5)
             c.roundRect(cx, cy - card_h, card_w, card_h, radius=8, fill=1, stroke=1)

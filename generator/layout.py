@@ -98,6 +98,7 @@ FARBEN = {
     "hellgrau":   HexColor("#DDDDDD"),
     "hellorange": HexColor("#FFF0E8"),
     "tipp_bg":    HexColor("#FFFBEA"),
+    "card_bg":    HexColor("#FFF8E7"),
     # Illustrationsfarben
     "euli_body":    HexColor("#8B6914"),
     "euli_belly":   HexColor("#F5DEB3"),

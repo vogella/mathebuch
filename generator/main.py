@@ -43,7 +43,8 @@ from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_rechenquadrat_2x2, draw_muster_fortsetzen,
                            draw_motivation,
                            draw_umkehraufgaben, draw_zahlen_schreiben,
-                           draw_formen_zaehlen, draw_symmetrie)
+                           draw_formen_zaehlen, draw_symmetrie,
+                           draw_bonbon_fabrik)
 W, H = A4
 
 # Mapping Typ-String → Zeichenfunktion
@@ -87,6 +88,7 @@ TYPEN = {
     "zahlen_schreiben":   draw_zahlen_schreiben,
     "formen_zaehlen":     draw_formen_zaehlen,
     "symmetrie":          draw_symmetrie,
+    "bonbon_fabrik":      draw_bonbon_fabrik,
 }
 
 TRENNLINIE_Y = H - 15.5   # Y-Position der Trennlinie zwischen Abschnitten
@@ -478,12 +480,16 @@ def render_geschafft_seite(c, seite_nr):
     c.setFillColor(FARBEN["grau"])
     c.setFont(FONT, 10)
     c.drawString(bx + 0.3 * cm, by + box_h + 0.2 * cm, "Name des Mathe-Profis:")
+    c.setFillColor(FARBEN["grau"])
+    c.setFont(FONT, 10)
     c.drawString(bx + 0.3 * cm, by - 0.5 * cm, "Fertig geworden am:")
-    c.line(bx + 3.5 * cm, by - 0.1 * cm, bx + 8 * cm, by - 0.1 * cm)
+    c.setStrokeColor(FARBEN["orange"])
+    c.setLineWidth(2)
+    c.roundRect(bx, by - box_h - 0.8 * cm, box_w, box_h, radius=10, fill=0, stroke=1)
 
     # Stempel "Matheprofi der ersten Klasse"
     stamp_cx = W / 2
-    stamp_cy = by - 3.5 * cm
+    stamp_cy = by - box_h - 0.8 * cm - 2.5 * cm
     stamp_r = 2.2 * cm
     # Äußerer Kreis
     c.setStrokeColor(FARBEN["pink"])
@@ -503,23 +509,6 @@ def render_geschafft_seite(c, seite_nr):
     # Kleine Sterne links und rechts
     draw_emoji(c, "⭐", stamp_cx - 1.4 * cm, stamp_cy - 0.2 * cm, 0.4 * cm)
     draw_emoji(c, "⭐", stamp_cx + 1.4 * cm, stamp_cy - 0.2 * cm, 0.4 * cm)
-
-    # Feedback-Bereich
-    f_y = by - 6 * cm
-    c.setFillColor(FARBEN["dunkel"])
-    c.setFont(FONT_BOLD, 14)
-    c.drawString(2.5 * cm, f_y, "Wie fühlst du dich jetzt?")
-    
-    emojis = ["😊", "🤩", "💪", "😴"]
-    labels = ["Stolz", "Super", "Stark", "Müde"]
-    for i, (emo, lbl) in enumerate(zip(emojis, labels)):
-        ex = 3 * cm + i * 4 * cm
-        c.setStrokeColor(FARBEN["hellgrau"])
-        c.circle(ex, f_y - 1.3 * cm, 0.8 * cm, fill=0, stroke=1)
-        draw_emoji(c, emo, ex, f_y - 1.3 * cm, 1.2 * cm)
-        c.setFillColor(FARBEN["grau"])
-        c.setFont(FONT, 10)
-        c.drawCentredString(ex, f_y - 2.5 * cm, lbl)
 
     draw_page_number(c, seite_nr, show_stars=False)
 
