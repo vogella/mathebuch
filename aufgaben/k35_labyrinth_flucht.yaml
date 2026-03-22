@@ -20,6 +20,7 @@ abschnitte:
         schritte: ["+5", "-3", "+4", "-2"]
 
   - typ: labyrinth_flucht
+    neue_seite: true
     titel: "B  Schnell hinaus!"
     beschreibung: "Rechne dich durch das Labyrinth zum Ausgang!"
     aufgaben:

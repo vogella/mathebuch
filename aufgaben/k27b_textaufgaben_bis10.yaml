@@ -18,6 +18,7 @@ abschnitte:
     loesungen: [7, 5, 8, 2]
 
   - typ: textaufgaben
+    neue_seite: true
     titel: "B  Beim Sport"
     schwierigkeit: 2
     beschreibung: "Wie viele sind es?"
@@ -33,6 +34,7 @@ abschnitte:
     loesungen: [6, 10, 8, 5]
 
   - typ: textaufgaben
+    neue_seite: true
     titel: "C  Auf dem Bauernhof"
     schwierigkeit: 2
     beschreibung: "Lies und rechne!"
