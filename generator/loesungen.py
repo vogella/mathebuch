@@ -670,14 +670,15 @@ def _solve_karten_ziel_summe(abschnitt):
         karten = aufg["karten"]
         ziel = aufg["ziel"]
         # Find first pair that sums to target
+        solution = None
         for i in range(len(karten)):
             for j in range(i + 1, len(karten)):
                 if karten[i] + karten[j] == ziel:
-                    results.append(f"{karten[i]}+{karten[j]}")
+                    solution = f"{karten[i]}+{karten[j]}"
                     break
-            else:
-                continue
-            break
+            if solution:
+                break
+        results.append(solution or "?")
     return results
 
 
