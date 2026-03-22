@@ -79,6 +79,7 @@ abschnitte:
         op: "+"
 
   - typ: karten_ziel_summe
+    neue_seite: true
     titel: "D  Ziel-Summe"
     beschreibung: "Welche zwei Karten ergeben zusammen die Ziel-Zahl? Schreibe sie auf!"
     schwierigkeit: 1
