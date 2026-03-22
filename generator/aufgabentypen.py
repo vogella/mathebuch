@@ -2516,14 +2516,15 @@ def draw_dungeon_flucht(c, abschnitt, farb_key, start_y):
 
         # Draw answer box next to task
         task_text_w = c.stringWidth(f"Rechne: {aufgabe_text} = ?", FONT_BOLD, 11)
-        draw_answer_box(c, 2.3 * cm + task_text_w, cy - 0.4 * cm, w=1.6 * cm, h=1.5 * cm)
+        box_h = 0.9 * cm
+        draw_answer_box(c, 2.3 * cm + task_text_w, cy - 0.25 * cm, w=1.4 * cm, h=box_h)
         if loes and a_idx < len(loes):
             c.setFillColor(FARBEN["gruen"])
             c.setFont(FONT_BOLD, 12)
-            c.drawCentredString(2.3 * cm + task_text_w + 0.8 * cm,
+            c.drawCentredString(2.3 * cm + task_text_w + 0.7 * cm,
                                 cy + 0.05 * cm, str(loes[a_idx]))
 
-        cy -= 1.8 * cm  # space below task text and answer box
+        cy -= 1.5 * cm  # space below task text and answer box
         gy = cy - grid_h
 
         # Entrance arrow (drawn triangle centered on entrance column + label)
