@@ -24,6 +24,7 @@ abschnitte:
         loesung: [4, 1]
 
   - typ: rechenquadrat_2x2
+    neue_seite: true
     titel: "B  Knifflige Quadrate"
     beschreibung: "Jetzt wird es schwieriger! Finde alle fehlenden Zahlen!"
     schwierigkeit: 1
