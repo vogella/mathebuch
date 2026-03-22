@@ -45,7 +45,9 @@ from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_umkehraufgaben, draw_zahlen_schreiben,
                            draw_formen_zaehlen, draw_symmetrie,
                            draw_bonbon_fabrik,
-                           draw_einkaufen_euro_cent)
+                           draw_einkaufen_euro_cent,
+                           draw_karten_rechnen, draw_karten_ziel_summe,
+                           draw_karten_geheim)
 W, H = A4
 
 # Mapping Typ-String → Zeichenfunktion
@@ -91,6 +93,9 @@ TYPEN = {
     "symmetrie":          draw_symmetrie,
     "bonbon_fabrik":      draw_bonbon_fabrik,
     "einkaufen_euro_cent": draw_einkaufen_euro_cent,
+    "karten_rechnen":     draw_karten_rechnen,
+    "karten_ziel_summe":  draw_karten_ziel_summe,
+    "karten_geheim":      draw_karten_geheim,
 }
 
 TRENNLINIE_Y = H - 15.5   # Y-Position der Trennlinie zwischen Abschnitten
