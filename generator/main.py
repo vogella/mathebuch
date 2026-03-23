@@ -9,6 +9,7 @@ import sys
 import os
 import glob
 import argparse
+import math
 import yaml
 import random
 
@@ -206,6 +207,280 @@ def render_trennseite(c, section):
     draw_euli(c, W / 2, illust_y - 4.5 * cm, size=0.6)
 
 
+def _draw_titelseite_previews(c, top_y):
+    """Draws small decorative previews of exercise types on the title page."""
+    # Layout: 5 previews in a row, evenly spaced
+    # Each preview has a small illustration and a label below
+    margin = 1.5 * cm
+    usable_w = W - 2 * margin
+    n_items = 5
+    item_w = usable_w / n_items
+    label_font_size = 7
+    preview_size = 1.5 * cm  # approximate size for each preview
+
+    items = [
+        ("Magisches\nDreieck", "blau", "_dreieck"),
+        ("Magisches\nQuadrat", "gruen", "_quadrat"),
+        ("Zahlen\nim Kreis", "orange", "_kreis"),
+        ("Karten\naddieren", "pink", "_karten"),
+        ("Schatz-\nsuche", "purple", "_schatz"),
+    ]
+
+    for idx, (label, farb_key, preview_type) in enumerate(items):
+        cx = margin + idx * item_w + item_w / 2
+        cy = top_y - 2.0 * cm
+
+        # Draw subtle background circle
+        c.setFillColor(FARBEN["bg"])
+        c.setStrokeColor(FARBEN[farb_key])
+        c.setLineWidth(1.5)
+        c.circle(cx, cy, preview_size + 0.3 * cm, fill=1, stroke=1)
+
+        if preview_type == "_dreieck":
+            _draw_preview_dreieck(c, cx, cy, preview_size, farb_key)
+        elif preview_type == "_quadrat":
+            _draw_preview_quadrat(c, cx, cy, preview_size, farb_key)
+        elif preview_type == "_kreis":
+            _draw_preview_kreis(c, cx, cy, preview_size, farb_key)
+        elif preview_type == "_karten":
+            _draw_preview_karten(c, cx, cy, preview_size, farb_key)
+        elif preview_type == "_schatz":
+            _draw_preview_schatz(c, cx, cy, preview_size, farb_key)
+
+        # Label below
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont(FONT_BOLD, label_font_size)
+        lines = label.split("\n")
+        for li, line in enumerate(lines):
+            c.drawCentredString(cx, cy - preview_size - 0.7 * cm - li * 0.35 * cm, line)
+
+
+def _draw_preview_dreieck(c, cx, cy, size, farb_key):
+    """Draws a small magic triangle preview."""
+    r = size * 0.7
+    pts = [
+        (cx, cy + r * 0.9),
+        (cx - r * 0.85, cy - r * 0.5),
+        (cx + r * 0.85, cy - r * 0.5),
+    ]
+    # Triangle lines
+    c.setStrokeColor(FARBEN["orange"])
+    c.setLineWidth(1.5)
+    c.line(*pts[0], *pts[1])
+    c.line(*pts[1], *pts[2])
+    c.line(*pts[0], *pts[2])
+    # Corner circles with numbers
+    node_r = 0.28 * cm
+    vals = [3, 5, 7]
+    colors = [FARBEN["yellow"], FARBEN["blau"], FARBEN["gruen"]]
+    for i, (px, py) in enumerate(pts):
+        c.setFillColor(colors[i])
+        c.circle(px, py, node_r, fill=1, stroke=0)
+        c.setFillColor(white)
+        c.setFont(FONT_BOLD, 8)
+        c.drawCentredString(px, py - 0.1 * cm, str(vals[i]))
+    # Midpoint circles (smaller, answer blanks)
+    mids = [
+        ((pts[0][0] + pts[1][0]) / 2, (pts[0][1] + pts[1][1]) / 2),
+        ((pts[1][0] + pts[2][0]) / 2, (pts[1][1] + pts[2][1]) / 2),
+        ((pts[0][0] + pts[2][0]) / 2, (pts[0][1] + pts[2][1]) / 2),
+    ]
+    for mx, my in mids:
+        c.setFillColor(FARBEN["antwort"])
+        c.setStrokeColor(FARBEN[farb_key])
+        c.setLineWidth(0.8)
+        c.circle(mx, my, 0.2 * cm, fill=1, stroke=1)
+        c.setFillColor(FARBEN["grau"])
+        c.setFont(FONT_BOLD, 6)
+        c.drawCentredString(mx, my - 0.08 * cm, "?")
+
+
+def _draw_preview_quadrat(c, cx, cy, size, farb_key):
+    """Draws a small 3x3 magic square preview."""
+    cell = size * 0.42
+    grid_w = 3 * cell
+    gx = cx - grid_w / 2
+    gy = cy - grid_w / 2
+    vals = [2, 7, 6, 9, 5, 1, 4, 3, 8]
+    colors = [FARBEN["yellow"], FARBEN["blau"], FARBEN["gruen"],
+              FARBEN["pink"], FARBEN["purple"], FARBEN["orange"],
+              FARBEN["blau"], FARBEN["gruen"], FARBEN["yellow"]]
+    for row in range(3):
+        for col in range(3):
+            x = gx + col * cell
+            y = gy + (2 - row) * cell
+            idx = row * 3 + col
+            c.setFillColor(colors[idx])
+            c.setStrokeColor(white)
+            c.setLineWidth(0.5)
+            c.roundRect(x, y, cell, cell, radius=2, fill=1, stroke=1)
+            c.setFillColor(white)
+            c.setFont(FONT_BOLD, 7)
+            c.drawCentredString(x + cell / 2, y + cell / 2 - 0.1 * cm, str(vals[idx]))
+
+
+def _draw_preview_kreis(c, cx, cy, size, farb_key):
+    """Draws a small number circle preview."""
+    radius = size * 0.6
+    n_nodes = 6
+    node_r = 0.22 * cm
+    vals = [2, None, 5, None, 8, None]
+    colors_list = [FARBEN["blau"], FARBEN["gruen"], FARBEN["orange"],
+                   FARBEN["pink"], FARBEN["purple"], FARBEN["yellow"]]
+    # Draw connecting lines
+    c.setStrokeColor(FARBEN["hellgrau"])
+    c.setLineWidth(1)
+    for i in range(n_nodes):
+        a1 = math.radians(90 - i * (360 / n_nodes))
+        a2 = math.radians(90 - ((i + 1) % n_nodes) * (360 / n_nodes))
+        x1 = cx + radius * math.cos(a1)
+        y1 = cy + radius * math.sin(a1)
+        x2 = cx + radius * math.cos(a2)
+        y2 = cy + radius * math.sin(a2)
+        c.line(x1, y1, x2, y2)
+    # Draw nodes
+    for i in range(n_nodes):
+        angle = math.radians(90 - i * (360 / n_nodes))
+        nx = cx + radius * math.cos(angle)
+        ny = cy + radius * math.sin(angle)
+        val = vals[i]
+        if val is None:
+            c.setFillColor(FARBEN["antwort"])
+            c.setStrokeColor(FARBEN[farb_key])
+            c.setLineWidth(0.8)
+            c.circle(nx, ny, node_r, fill=1, stroke=1)
+            c.setFillColor(FARBEN["grau"])
+            c.setFont(FONT_BOLD, 6)
+            c.drawCentredString(nx, ny - 0.08 * cm, "?")
+        else:
+            c.setFillColor(colors_list[i])
+            c.circle(nx, ny, node_r, fill=1, stroke=0)
+            c.setFillColor(white)
+            c.setFont(FONT_BOLD, 7)
+            c.drawCentredString(nx, ny - 0.08 * cm, str(val))
+
+
+def _draw_preview_karten(c, cx, cy, size, farb_key):
+    """Draws small playing cards preview."""
+    card_w = size * 0.45
+    card_h = size * 0.65
+    gap = 0.15 * cm
+    total_w = 2 * card_w + gap + 0.6 * cm  # 2 cards + operator + equals
+    start_x = cx - total_w / 2
+    card_y = cy - card_h / 2
+
+    vals = [3, 5]
+    card_colors = [FARBEN["pink"], FARBEN["blau"]]
+    for i, (val, col) in enumerate(zip(vals, card_colors)):
+        x = start_x + i * (card_w + gap + 0.3 * cm)
+        c.setFillColor(white)
+        c.setStrokeColor(col)
+        c.setLineWidth(1.2)
+        c.roundRect(x, card_y, card_w, card_h, radius=3, fill=1, stroke=1)
+        c.setFillColor(col)
+        c.setFont(FONT_BOLD, 11)
+        c.drawCentredString(x + card_w / 2, card_y + card_h / 2 - 0.15 * cm, str(val))
+        # Small corner number
+        c.setFont(FONT_BOLD, 5)
+        c.drawString(x + 0.08 * cm, card_y + card_h - 0.25 * cm, str(val))
+
+    # Plus sign between cards
+    c.setFillColor(FARBEN[farb_key])
+    c.setFont(FONT_BOLD, 10)
+    plus_x = start_x + card_w + gap / 2 + 0.15 * cm
+    c.drawCentredString(plus_x, cy - 0.1 * cm, "+")
+
+    # Equals and answer
+    eq_x = start_x + 2 * card_w + gap + 0.45 * cm
+    c.drawCentredString(eq_x, cy - 0.1 * cm, "=")
+    c.setFillColor(FARBEN["antwort"])
+    c.setStrokeColor(FARBEN[farb_key])
+    c.setLineWidth(0.8)
+    c.roundRect(eq_x + 0.15 * cm, card_y + 0.15 * cm, card_w * 0.7, card_h * 0.7,
+                radius=3, fill=1, stroke=1)
+    c.setFillColor(FARBEN["grau"])
+    c.setFont(FONT_BOLD, 6)
+    c.drawCentredString(eq_x + 0.15 * cm + card_w * 0.35, cy - 0.08 * cm, "?")
+
+
+def _draw_preview_schatz(c, cx, cy, size, farb_key):
+    """Draws a small treasure hunt path preview."""
+    # Draw a zigzag path with nodes
+    node_r = 0.2 * cm
+    n_nodes = 5
+    path_w = size * 1.2
+    start_x = cx - path_w / 2
+    step = path_w / (n_nodes - 1)
+
+    positions = []
+    for i in range(n_nodes):
+        nx = start_x + i * step
+        ny = cy + (0.25 * cm if i % 2 == 0 else -0.25 * cm)
+        positions.append((nx, ny))
+
+    # Draw path lines
+    c.setStrokeColor(FARBEN["hellgrau"])
+    c.setLineWidth(1.5)
+    for i in range(len(positions) - 1):
+        c.line(*positions[i], *positions[i + 1])
+
+    # Draw operation labels between nodes
+    ops = ["+2", "+3", "-1", "+4"]
+    for i in range(len(positions) - 1):
+        mx = (positions[i][0] + positions[i + 1][0]) / 2
+        my = (positions[i][1] + positions[i + 1][1]) / 2 + 0.3 * cm
+        c.setFillColor(FARBEN[farb_key])
+        c.setFont(FONT_BOLD, 5)
+        c.drawCentredString(mx, my, ops[i])
+
+    # Draw nodes
+    path_colors = [FARBEN["blau"], FARBEN["gruen"], FARBEN["orange"],
+                   FARBEN["pink"], FARBEN["purple"]]
+    node_vals = ["1", "?", "?", "?", ""]
+    for i, (px, py) in enumerate(positions):
+        if i == n_nodes - 1:
+            # Treasure node (star/gold)
+            c.setFillColor(FARBEN["yellow"])
+            c.setStrokeColor(FARBEN["orange"])
+            c.setLineWidth(1)
+            # Draw a small star shape
+            _draw_mini_star(c, px, py, node_r * 1.3)
+        elif node_vals[i] == "?":
+            c.setFillColor(FARBEN["antwort"])
+            c.setStrokeColor(path_colors[i])
+            c.setLineWidth(0.8)
+            c.circle(px, py, node_r, fill=1, stroke=1)
+            c.setFillColor(FARBEN["grau"])
+            c.setFont(FONT_BOLD, 6)
+            c.drawCentredString(px, py - 0.08 * cm, "?")
+        else:
+            c.setFillColor(path_colors[i])
+            c.circle(px, py, node_r, fill=1, stroke=0)
+            c.setFillColor(white)
+            c.setFont(FONT_BOLD, 7)
+            c.drawCentredString(px, py - 0.08 * cm, node_vals[i])
+
+
+def _draw_mini_star(c, cx, cy, size):
+    """Draws a small star (treasure icon) at (cx, cy)."""
+    from reportlab.lib.colors import HexColor
+    points = 5
+    outer_r = size
+    inner_r = size * 0.45
+    path = c.beginPath()
+    for i in range(points * 2):
+        angle = math.radians(90 + i * (360 / (points * 2)))
+        r = outer_r if i % 2 == 0 else inner_r
+        x = cx + r * math.cos(angle)
+        y = cy + r * math.sin(angle)
+        if i == 0:
+            path.moveTo(x, y)
+        else:
+            path.lineTo(x, y)
+    path.close()
+    c.drawPath(path, fill=1, stroke=1)
+
+
 def render_titelseite(c):
     """Titelseite mit Buchtitel, Namensfeld, persönlichen Feldern und Malblock."""
     draw_page_bg(c)
@@ -268,42 +543,13 @@ def render_titelseite(c):
         c.roundRect(box_start_x, fy - 0.2 * cm, box_w, field_h,
                     radius=8, fill=1, stroke=1)
 
-    # Malblock: "Male dich selbst!" (reduzierte Größe ~8cm)
-    # Mehr Platz nach oben
-    mal_y = felder_y - len(felder) * (field_h + field_gap) - 2.5 * cm
+    # Aufgaben-Vorschau: Kleine dekorative Previews von Aufgabentypen
+    preview_y = felder_y - len(felder) * (field_h + field_gap) - 1.8 * cm
     c.setFillColor(FARBEN["dunkel"])
     c.setFont(FONT_BOLD, 14)
-    c.drawString(2.5 * cm, mal_y + 0.2 * cm, "Male dich selbst:")
-    # Rahmen zum Malen (8×6cm)
-    box_h = 6 * cm
-    box_w = 8 * cm
-    box_x = (W - box_w) / 2
-    c.setStrokeColor(FARBEN["hellgrau"])
-    c.setFillColor(white)
-    c.setLineWidth(1.5)
-    c.setDash(4, 4)
-    c.roundRect(box_x, mal_y - box_h, box_w, box_h,
-                radius=10, fill=1, stroke=1)
-    c.setDash()  # Reset dash
+    c.drawCentredString(W / 2, preview_y + 0.2 * cm, "Was dich erwartet:")
 
-    # Dekorative Mathe-Symbole um den Malblock
-    math_symbols = ["+", "−", "×", "=", "1", "2", "3", "4", "5"]
-    symbol_colors = RAND_FARBEN
-    c.setFont(FONT_BOLD, 18)
-
-    # Symbole links und rechts vom Malblock
-    side_configs = [
-        # (symbols, x_offset, y_step, color_start_index)
-        (math_symbols[:4], -1.0 * cm, 1.5 * cm, 0),
-        (math_symbols[4:], box_w + 1.0 * cm, 1.2 * cm, 4),
-    ]
-
-    for symbols, x_offset, y_step, color_start_idx in side_configs:
-        for i, sym in enumerate(symbols):
-            sy = mal_y - 0.5 * cm - i * y_step
-            color_idx = (color_start_idx + i) % len(symbol_colors)
-            c.setFillColor(symbol_colors[color_idx])
-            c.drawCentredString(box_x + x_offset, sy, sym)
+    _draw_titelseite_previews(c, preview_y - 1.0 * cm)
 
 
 def _draw_toc_section_header(c, y, text, line_h):
