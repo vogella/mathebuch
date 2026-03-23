@@ -125,10 +125,10 @@ TOC_ENTRY_FONT_SIZE = 9
 # TOC Grouping definition
 CHAPTER_GROUPS = [
     ("Willkommen & Grundlagen", ["k00", "k01"]),
-    ("Zahlen bis 5",            ["k10", "k11"]),
+    ("Zahlen bis 5",            ["k09", "k10", "k11"]),
     ("Plus und Minus bis 5",    ["k12", "k13", "k16"]),
     ("Rätsel & Spiele bis 5",   ["k14", "k15", "k18", "k19"]),
-    ("Zahlen bis 10",           ["k22", "k23", "k26", "k28", "k37", "k38"]),
+    ("Zahlen bis 10",           ["k19c", "k22", "k23", "k26", "k28", "k37", "k38"]),
     ("Rechnen bis 10",          ["k20", "k24", "k25", "k30", "k31", "k32"]),
     ("Entdeckungen bis 10",     ["k27", "k33", "k34", "k35", "k36", "k39"]),
     ("Geometrie & Muster",      ["k15b", "k29", "k29b", "k44", "k52d", "k57b"]),

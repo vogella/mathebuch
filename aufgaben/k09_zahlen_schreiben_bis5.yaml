@@ -1,0 +1,12 @@
+kapitel:
+  titel: "Zahlen schreiben bis 5"
+  untertitel: "Übe das Schreiben der Zahlen von 0 bis 5."
+  emoji: "✏️"
+  farbe: "gruen"
+  zahlenraum: 5
+
+abschnitte:
+  - titel: "Zahlen 0 bis 5"
+    typ: "zahlen_schreiben"
+    beschreibung: "Spure die Zahlen nach und schreibe sie dann selbst in die Kästchen."
+    aufgaben: [0, 1, 2, 3, 4, 5]
