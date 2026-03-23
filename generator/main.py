@@ -657,7 +657,7 @@ def _draw_path_segment(c, x1, y1, x2, y2, color):
     c.restoreState()
 
 
-def _draw_station(c, cx, cy, emoji, titel, farbe, nr, checkbox_only=False):
+def _draw_station(c, cx, cy, emoji, titel, farbe, nr):
     """Zeichnet eine Station auf der Reise-Karte.
 
     cx, cy: Mittelpunkt der Station
@@ -711,23 +711,21 @@ def draw_fortschritts_seite(c, alle_kapitel):
     _render_fortschritt_header(c)
     pages = 1
 
-    # Sammle Gruppen-Einträge basierend auf CHAPTER_GROUPS
-    gruppen_eintraege = []
-    kapitel_map = {}
+    # Build lookup: chapter key prefix -> kapitel data (single pass)
+    kapitel_lookup = {}
     for dateiname, data in alle_kapitel:
         kap = data["kapitel"]
-        fname = dateiname
-        kapitel_map[fname] = kap
+        kapitel_lookup[dateiname] = kap
 
+    # Sammle Gruppen-Einträge basierend auf CHAPTER_GROUPS
+    gruppen_eintraege = []
     for group_name, prefixes in CHAPTER_GROUPS:
         # Finde das erste passende Kapitel für Emoji und Farbe
         emoji = "\u2b50"
         farbe = "blau"
-        for dateiname, data in alle_kapitel:
-            fname = dateiname
-            for p in prefixes:
+        for p in prefixes:
+            for fname, kap in kapitel_lookup.items():
                 if fname.startswith(p):
-                    kap = data["kapitel"]
                     emoji = kap.get("emoji", "\u2b50")
                     farbe = kap.get("farbe", "blau")
                     break
@@ -817,7 +815,6 @@ def draw_fortschritts_seite(c, alle_kapitel):
         c.drawCentredString(ziel_x, ziel_y - 0.8 * cm, "Geschafft!")
 
     # Euli unten rechts als Ermutigung
-    from illustrationen import draw_euli_mit_sprechblase
     euli_x = W - 3.5 * cm
     euli_y = 2.8 * cm
     draw_euli(c, euli_x, euli_y, size=0.4)
