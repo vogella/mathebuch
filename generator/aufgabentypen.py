@@ -1591,7 +1591,7 @@ def draw_muster_fortsetzen(c, abschnitt, farb_key, start_y):
         y0 = row_y - idx * row_h
 
         # Task number
-        _draw_task_number(c, 1.5*cm, y0 - element_size/2 + 0.1*cm, idx + 1)
+        _draw_task_number(c, 1.5*cm, y0 - 0.15*cm, idx + 1)
 
         elemente = aufg.get("elemente") or aufg.get("muster", [])
 
