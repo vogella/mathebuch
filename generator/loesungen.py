@@ -706,6 +706,58 @@ def _solve_karten_rechnen(abschnitt):
     return results
 
 
+def _parse_muenz_wert(text):
+    """Parse coin text like '1€', '50ct' into cent value."""
+    text = text.strip()
+    if text.endswith("€"):
+        return int(text[:-1]) * 100
+    elif text.endswith("ct"):
+        return int(text[:-2])
+    return 0
+
+
+def _format_betrag(cent):
+    """Format cent value as string like '3€ 70ct' or '5€'."""
+    euro = cent // 100
+    rest = cent % 100
+    if rest == 0:
+        return f"{euro}€"
+    elif euro == 0:
+        return f"{rest}ct"
+    return f"{euro}€ {rest}ct"
+
+
+def _solve_muenzen_zaehlen(abschnitt):
+    results = []
+    for aufg in abschnitt["aufgaben"]:
+        total = sum(_parse_muenz_wert(m) for m in aufg["muenzen"])
+        results.append(_format_betrag(total))
+    return results
+
+
+def _solve_muenzen_legen(abschnitt):
+    """Return the target amount as the solution (multiple coin combinations possible)."""
+    results = []
+    coin_values = [200, 100, 50, 20, 10, 5, 2, 1]  # in cent
+    coin_names = ["2€", "1€", "50ct", "20ct", "10ct", "5ct", "2ct", "1ct"]
+    for aufg in abschnitt["aufgaben"]:
+        betrag_str = aufg["betrag"]
+        # Parse betrag
+        total = 0
+        parts = betrag_str.split()
+        for p in parts:
+            total += _parse_muenz_wert(p)
+        # Greedy coin decomposition
+        remaining = total
+        coins_used = []
+        for val, name in zip(coin_values, coin_names):
+            while remaining >= val:
+                coins_used.append(name)
+                remaining -= val
+        results.append(" + ".join(coins_used))
+    return results
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -752,6 +804,8 @@ SOLVER = {
     "karten_rechnen":     _solve_karten_rechnen,
     "karten_ziel_summe":  _solve_karten_ziel_summe,
     "karten_geheim":      _solve_karten_geheim,
+    "muenzen_zaehlen":    _solve_muenzen_zaehlen,
+    "muenzen_legen":      _solve_muenzen_legen,
 }
 
 # Types to skip (explanation, visual-only)

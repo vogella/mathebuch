@@ -47,7 +47,8 @@ from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_bonbon_fabrik,
                            draw_einkaufen_euro_cent,
                            draw_karten_rechnen, draw_karten_ziel_summe,
-                           draw_karten_geheim)
+                           draw_karten_geheim,
+                           draw_muenzen_zaehlen, draw_muenzen_legen)
 W, H = A4
 
 # Mapping Typ-String → Zeichenfunktion
@@ -96,6 +97,8 @@ TYPEN = {
     "karten_rechnen":     draw_karten_rechnen,
     "karten_ziel_summe":  draw_karten_ziel_summe,
     "karten_geheim":      draw_karten_geheim,
+    "muenzen_zaehlen":    draw_muenzen_zaehlen,
+    "muenzen_legen":      draw_muenzen_legen,
 }
 
 TRENNLINIE_Y = H - 15.5   # Y-Position der Trennlinie zwischen Abschnitten
@@ -131,7 +134,7 @@ CHAPTER_GROUPS = [
     ("Geometrie & Muster",      ["k15b", "k29", "k29b", "k44", "k52d", "k57b"]),
     ("Zahlen bis 20",           ["k40", "k41", "k42", "k43", "k50"]),
     ("Rechnen bis 20",          ["k45", "k46", "k51", "k52", "k54", "k63"]),
-    ("Sachrechnen & Alltag",    ["k56", "k59", "k60"]),
+    ("Sachrechnen & Alltag",    ["k56", "k59", "k60", "k65"]),
     ("Knobel-Aufgaben",         ["k53", "k55", "k57", "k58"]),
     ("Dungeon-Abenteuer",       ["k18_dungeon", "k36_dungeon", "k61", "k62"])
 ]

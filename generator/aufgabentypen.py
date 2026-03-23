@@ -3633,3 +3633,158 @@ def draw_karten_geheim(c, abschnitt, farb_key, start_y):
             c.drawCentredString(cx + 0.3*cm, y - card_h / 2 + 0.3*cm, f"= {summe}")
 
     return row_y - halb * row_h - 0.3*cm
+
+
+# ── Münzen-Übungen ──────────────────────────────────────
+
+
+def _parse_muenz_wert(text):
+    """Parse coin text like '1€', '2€', '50ct', '10ct' into cent value."""
+    text = text.strip()
+    if text.endswith("€"):
+        return int(text[:-1]) * 100
+    elif text.endswith("ct"):
+        return int(text[:-2])
+    return 0
+
+
+def _draw_muenze(c, x, y, wert_text, radius):
+    """Draw a single coin as a circle with denomination text inside.
+
+    Uses gold color for Euro coins, copper for 1ct/2ct/5ct, silver for 10ct+.
+    """
+    wert_text = wert_text.strip()
+    # Choose colors based on denomination
+    if wert_text.endswith("€"):
+        # Euro coins: gold
+        border_color = HexColor("#C8960C")
+        fill_color = HexColor("#FFD94A")
+        inner_color = HexColor("#E6B800")
+    elif wert_text in ("1ct", "2ct", "5ct"):
+        # Small cent coins: copper
+        border_color = HexColor("#8B4513")
+        fill_color = HexColor("#CD7F32")
+        inner_color = HexColor("#A0522D")
+    else:
+        # 10ct, 20ct, 50ct: silver/gold
+        border_color = HexColor("#B8860B")
+        fill_color = HexColor("#FFE680")
+        inner_color = HexColor("#DAA520")
+
+    # Outer circle (border)
+    c.setFillColor(border_color)
+    c.circle(x, y, radius, fill=1, stroke=0)
+    # Inner circle
+    c.setFillColor(fill_color)
+    c.circle(x, y, radius * 0.85, fill=1, stroke=0)
+    # Inner ring
+    c.setStrokeColor(inner_color)
+    c.setLineWidth(1)
+    c.circle(x, y, radius * 0.7, fill=0, stroke=1)
+
+    # Denomination text
+    c.setFillColor(HexColor("#3D2B00"))
+    font_size = radius * 0.7
+    if len(wert_text) > 2:
+        font_size = radius * 0.55
+    c.setFont(FONT_BOLD, font_size)
+    c.drawCentredString(x, y - font_size * 0.35, wert_text)
+
+
+def draw_muenzen_zaehlen(c, abschnitt, farb_key, start_y):
+    """Count coins: students see a collection of coins and write the total value."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]
+    row_y = start_y - 1.5*cm - y_off
+
+    # Two columns layout
+    halb = (len(aufgaben) + 1) // 2
+    col_offsets = [1.5*cm, 10.5*cm]
+    row_h = 3.2*cm
+
+    for col_idx, col_aufgaben in enumerate([aufgaben[:halb], aufgaben[halb:]]):
+        base_x = col_offsets[col_idx]
+        for i, aufg in enumerate(col_aufgaben):
+            muenzen = aufg["muenzen"]
+            y = row_y - i * row_h
+
+            # Task number
+            _draw_task_number(c, base_x, y, col_idx * halb + i + 1)
+
+            # Draw coins in a row
+            coin_x = base_x + 0.8*cm
+            for mi, m in enumerate(muenzen):
+                is_euro = m.strip().endswith("€")
+                radius = 0.55*cm if is_euro else 0.45*cm
+                _draw_muenze(c, coin_x + radius, y - 0.5*cm, m, radius)
+                coin_x += radius * 2 + 0.15*cm
+
+            # Answer: "= ___ "
+            ans_y = y - 1.8*cm
+            c.setFillColor(FARBEN[farb_key])
+            c.setFont(FONT_BOLD, 14)
+            c.drawString(base_x + 0.8*cm, ans_y + 0.25*cm, "=")
+            draw_answer_box(c, base_x + 1.5*cm, ans_y - 0.15*cm, w=2.5*cm, h=1.0*cm)
+
+    return row_y - halb * row_h - 0.3*cm
+
+
+def draw_muenzen_legen(c, abschnitt, farb_key, start_y):
+    """Make amount with coins: students write which coins are needed for a target amount."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt["aufgaben"]
+    row_y = start_y - 1.5*cm - y_off
+
+    # Show available coin types as reference
+    ref_y = row_y
+    c.setFillColor(FARBEN["dunkel"])
+    c.setFont(FONT, 9)
+    c.drawString(2.0*cm, ref_y, "Deine Münzen:")
+    coin_types = ["1ct", "2ct", "5ct", "10ct", "20ct", "50ct", "1€", "2€"]
+    ref_x = 4.5*cm
+    for ct in coin_types:
+        is_euro = ct.endswith("€")
+        r = 0.4*cm if is_euro else 0.32*cm
+        _draw_muenze(c, ref_x, ref_y + 0.1*cm, ct, r)
+        ref_x += r * 2 + 0.3*cm
+
+    row_y -= 1.5*cm
+    row_h = 3.0*cm
+
+    for idx, aufg in enumerate(aufgaben):
+        betrag = aufg["betrag"]
+        y = row_y - idx * row_h
+
+        # Task number and target amount
+        _draw_task_number(c, 1.8*cm, y, idx + 1)
+
+        # Target amount in a colored badge
+        badge_text = betrag
+        badge_w = c.stringWidth(badge_text, FONT_BOLD, 14) + 1.0*cm
+        c.setFillColor(FARBEN[farb_key])
+        c.roundRect(2.8*cm, y - 0.3*cm, badge_w, 0.9*cm, radius=5, fill=1, stroke=0)
+        c.setFillColor(white)
+        c.setFont(FONT_BOLD, 14)
+        c.drawString(3.3*cm, y - 0.05*cm, badge_text)
+
+        # Lined answer box for writing coins
+        box_x = 2.8*cm + badge_w + 0.5*cm
+        box_w = W - box_x - 1.5*cm
+        box_h = 1.2*cm
+        box_y = y - 0.8*cm
+        c.setFillColor(FARBEN["antwort"])
+        c.setStrokeColor(FARBEN["blau"])
+        c.setLineWidth(1.5)
+        c.roundRect(box_x, box_y, box_w, box_h, radius=5, fill=1, stroke=1)
+        # Dotted lines inside the box
+        c.setStrokeColor(FARBEN["hellgrau"])
+        c.setLineWidth(0.5)
+        c.setDash(3, 3)
+        c.line(box_x + 0.2*cm, box_y + box_h * 0.5, box_x + box_w - 0.2*cm, box_y + box_h * 0.5)
+        c.setDash()
+
+    return row_y - len(aufgaben) * row_h - 0.3*cm
