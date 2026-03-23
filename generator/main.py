@@ -49,7 +49,8 @@ from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
                            draw_einkaufen_euro_cent,
                            draw_karten_rechnen, draw_karten_ziel_summe,
                            draw_karten_geheim,
-                           draw_muenzen_zaehlen, draw_muenzen_legen)
+                           draw_muenzen_zaehlen, draw_muenzen_legen,
+                           draw_uhr_lesen)
 W, H = A4
 
 # Mapping Typ-String → Zeichenfunktion
@@ -100,6 +101,7 @@ TYPEN = {
     "karten_geheim":      draw_karten_geheim,
     "muenzen_zaehlen":    draw_muenzen_zaehlen,
     "muenzen_legen":      draw_muenzen_legen,
+    "uhr_lesen":          draw_uhr_lesen,
 }
 
 TRENNLINIE_Y = H - 15.5   # Y-Position der Trennlinie zwischen Abschnitten

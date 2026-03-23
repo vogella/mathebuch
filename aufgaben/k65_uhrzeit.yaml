@@ -1,0 +1,45 @@
+kapitel:
+  titel: "Uhrzeit lesen"
+  untertitel: "Wie spät ist es?"
+  emoji: "🕐"
+  farbe: "blau"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: uhr_lesen
+    titel: "A  Volle Stunden"
+    beschreibung: "Wie spät ist es? Schreibe die Uhrzeit auf!"
+    schwierigkeit: 1
+    aufgaben:
+      - {stunde: 3, minute: 0}
+      - {stunde: 7, minute: 0}
+      - {stunde: 12, minute: 0}
+      - {stunde: 1, minute: 0}
+      - {stunde: 9, minute: 0}
+      - {stunde: 6, minute: 0}
+
+  - typ: uhr_lesen
+    titel: "B  Halbe Stunden"
+    beschreibung: "Wie spät ist es? Achte auf den großen Zeiger!"
+    schwierigkeit: 2
+    neue_seite: true
+    aufgaben:
+      - {stunde: 3, minute: 30}
+      - {stunde: 8, minute: 30}
+      - {stunde: 11, minute: 30}
+      - {stunde: 5, minute: 30}
+      - {stunde: 2, minute: 30}
+      - {stunde: 10, minute: 30}
+
+  - typ: uhr_lesen
+    titel: "C  Volle und halbe Stunden gemischt"
+    beschreibung: "Wie spät ist es?"
+    schwierigkeit: 3
+    neue_seite: true
+    aufgaben:
+      - {stunde: 4, minute: 0}
+      - {stunde: 7, minute: 30}
+      - {stunde: 12, minute: 0}
+      - {stunde: 1, minute: 30}
+      - {stunde: 6, minute: 0}
+      - {stunde: 9, minute: 30}
