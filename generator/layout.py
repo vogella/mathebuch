@@ -85,7 +85,7 @@ def draw_emoji(c, emoji_char, cx, cy, size):
 
 # ── Farbpalette ────────────────────────────────────────────
 FARBEN = {
-    "bg":       HexColor("#FFFDF5"),
+    "bg":       HexColor("#FFFFFF"),
     "yellow":   HexColor("#FFD94A"),
     "orange":   HexColor("#FF8C42"),
     "blau":     HexColor("#4ABFFF"),
@@ -93,12 +93,12 @@ FARBEN = {
     "pink":     HexColor("#FF6B9D"),
     "purple":   HexColor("#A78BFA"),
     "dunkel":   HexColor("#2D2A3E"),
-    "antwort":  HexColor("#E8F4FF"),
+    "antwort":  HexColor("#FFFFFF"),
     "grau":       HexColor("#AAAAAA"),
     "hellgrau":   HexColor("#DDDDDD"),
-    "hellorange": HexColor("#FFF0E8"),
-    "tipp_bg":    HexColor("#FFFBEA"),
-    "card_bg":    HexColor("#FFF8E7"),
+    "hellorange": HexColor("#E0E0E0"),
+    "tipp_bg":    HexColor("#E0E0E0"),
+    "card_bg":    HexColor("#E0E0E0"),
     # Illustrationsfarben
     "euli_body":    HexColor("#8B6914"),
     "euli_belly":   HexColor("#F5DEB3"),
@@ -109,8 +109,7 @@ FARBEN = {
 }
 
 RAND_FARBEN = [
-    FARBEN["yellow"], FARBEN["orange"], FARBEN["blau"],
-    FARBEN["gruen"],  FARBEN["pink"],   FARBEN["purple"],
+    HexColor("#999999"), HexColor("#CCCCCC"), HexColor("#555555"),
 ]
 
 
@@ -170,7 +169,7 @@ def draw_section_label(c, text, farb_key, y, schwierigkeit=0):
     if schwierigkeit and 1 <= schwierigkeit <= 3:
         star_x = 11.8*cm
         star_cy = y + 0.4*cm
-        c.setFillColor(FARBEN["yellow"])
+        c.setFillColor(HexColor("#555555"))
         for i in range(schwierigkeit):
             _draw_star_shape(c, star_x + i * 0.5*cm, star_cy, 0.16*cm, 0.07*cm)
         # Leere Sterne für die restlichen
@@ -180,11 +179,10 @@ def draw_section_label(c, text, farb_key, y, schwierigkeit=0):
 
 
 def draw_answer_box(c, x, y, w=2.0*cm, h=1.5*cm):
-    """Zeichnet ein hellblaues Feld für die Lösung."""
-    c.setFillColor(FARBEN["antwort"])
-    c.setStrokeColor(FARBEN["blau"])
+    """Zeichnet ein Feld für die Lösung (ohne Hintergrund, dunkler Rand)."""
+    c.setStrokeColor(HexColor("#555555"))
     c.setLineWidth(1.5)
-    c.roundRect(x, y, w, h, radius=5, fill=1, stroke=1)
+    c.roundRect(x, y, w, h, radius=5, fill=0, stroke=1)
 
 
 def _draw_star_shape(c, cx, cy, outer_r, inner_r):
@@ -213,7 +211,7 @@ def draw_stars(c, x, y):
         c.setStrokeColor(FARBEN["hellgrau"])
         c.setLineWidth(1)
         c.rect(x + 2*cm + i*1.1*cm, y - 0.15*cm, 0.9*cm, 0.85*cm, fill=1, stroke=1)
-        c.setFillColor(FARBEN["yellow"])
+        c.setFillColor(HexColor("#555555"))
         _draw_star_shape(c, x + 2.45*cm + i*1.1*cm, y + 0.2*cm, 0.22*cm, 0.09*cm)
 
 
