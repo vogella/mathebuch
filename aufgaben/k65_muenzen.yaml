@@ -1,0 +1,45 @@
+kapitel:
+  titel: "Münzen und Scheine"
+  untertitel: "Erkenne und zähle Geld!"
+  emoji: "🪙"
+  farbe: "yellow"
+  zahlenraum: 20
+
+abschnitte:
+  - typ: muenzen_zaehlen
+    titel: "A  Wie viel Geld liegt hier?"
+    beschreibung: "Zähle alle Münzen zusammen!"
+    schwierigkeit: 1
+    aufgaben:
+      - muenzen: ["1€", "2€"]
+      - muenzen: ["1€", "1€", "1€"]
+      - muenzen: ["2€", "2€", "1€"]
+      - muenzen: ["50ct", "50ct"]
+      - muenzen: ["2€", "50ct", "50ct"]
+      - muenzen: ["1€", "20ct", "10ct"]
+
+  - typ: muenzen_zaehlen
+    titel: "B  Mehr Münzen zählen"
+    beschreibung: "Zähle alle Münzen zusammen!"
+    schwierigkeit: 2
+    neue_seite: true
+    aufgaben:
+      - muenzen: ["2€", "1€", "50ct", "20ct"]
+      - muenzen: ["1€", "1€", "50ct", "50ct"]
+      - muenzen: ["2€", "20ct", "20ct", "10ct"]
+      - muenzen: ["50ct", "20ct", "20ct", "10ct"]
+      - muenzen: ["2€", "2€", "50ct", "20ct", "10ct"]
+      - muenzen: ["1€", "50ct", "20ct", "20ct", "10ct"]
+
+  - typ: muenzen_legen
+    titel: "C  Welche Münzen brauchst du?"
+    beschreibung: "Welche Münzen brauchst du für den Betrag? Schreibe sie auf!"
+    schwierigkeit: 2
+    neue_seite: true
+    aufgaben:
+      - betrag: "3€"
+      - betrag: "5€"
+      - betrag: "1€ 50ct"
+      - betrag: "2€ 30ct"
+      - betrag: "4€ 50ct"
+      - betrag: "3€ 70ct"
