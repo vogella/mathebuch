@@ -523,6 +523,106 @@ def render_geschafft_seite(c, seite_nr):
     draw_page_number(c, seite_nr, show_stars=False)
 
 
+def draw_urkunde_seite(c):
+    """Rendert eine Urkunde/Zertifikat-Seite als letztes Blatt des Buches."""
+    from illustrationen import draw_euli, draw_mini_pokal
+
+    draw_page_bg(c)
+
+    # ── Festlicher Header ──────────────────────────────────────────
+    c.setFillColor(FARBEN["yellow"])
+    c.roundRect(1.5 * cm, H - 4.5 * cm, W - 3 * cm, 3.2 * cm,
+                radius=15, fill=1, stroke=0)
+    c.setFillColor(FARBEN["dunkel"])
+    c.setFont(FONT_BOLD, 36)
+    c.drawCentredString(W / 2, H - 2.8 * cm, "Geschafft!")
+    draw_emoji(c, "\U0001f389", 3.0 * cm, H - 2.8 * cm, 1.2 * cm)
+    draw_emoji(c, "\U0001f389", W - 3.0 * cm, H - 2.8 * cm, 1.2 * cm)
+    c.setFont(FONT_BOLD, 14)
+    c.setFillColor(FARBEN["dunkel"])
+    c.drawCentredString(W / 2, H - 4.0 * cm, "Urkunde")
+
+    # ── Zertifikat-Rahmen ──────────────────────────────────────────
+    frame_x = 1.8 * cm
+    frame_y = 3.0 * cm
+    frame_w = W - 3.6 * cm
+    frame_h = H - 8.5 * cm
+
+    # Doppelter Rahmen
+    c.setStrokeColor(FARBEN["orange"])
+    c.setLineWidth(3)
+    c.roundRect(frame_x, frame_y, frame_w, frame_h, radius=12, fill=0, stroke=1)
+    c.setStrokeColor(FARBEN["yellow"])
+    c.setLineWidth(1.5)
+    c.roundRect(frame_x + 0.2 * cm, frame_y + 0.2 * cm,
+                frame_w - 0.4 * cm, frame_h - 0.4 * cm,
+                radius=10, fill=0, stroke=1)
+
+    # ── Zertifikats-Text ───────────────────────────────────────────
+    text_y = frame_y + frame_h - 1.5 * cm
+
+    c.setFillColor(FARBEN["dunkel"])
+    c.setFont(FONT_BOLD, 16)
+    c.drawCentredString(W / 2, text_y, "Ich,")
+
+    # Namenszeile mit Linie
+    text_y -= 1.4 * cm
+    line_w = 10 * cm
+    line_x = (W - line_w) / 2
+    c.setStrokeColor(FARBEN["dunkel"])
+    c.setLineWidth(1)
+    c.line(line_x, text_y, line_x + line_w, text_y)
+    c.setFillColor(FARBEN["grau"])
+    c.setFont(FONT_ITALIC, 9)
+    c.drawCentredString(W / 2, text_y - 0.4 * cm, "(Name eintragen)")
+
+    text_y -= 1.2 * cm
+    c.setFillColor(FARBEN["dunkel"])
+    c.setFont(FONT_BOLD, 16)
+    c.drawCentredString(W / 2, text_y, "habe das Mathebuch geschafft!")
+
+    # ── "Das kannst du jetzt alles!" ───────────────────────────────
+    text_y -= 1.8 * cm
+    c.setFillColor(FARBEN["pink"])
+    c.setFont(FONT_BOLD, 14)
+    c.drawCentredString(W / 2, text_y, "Das kannst du jetzt alles!")
+
+    skills = [
+        ("Zahlen bis 20 lesen und schreiben", "gruen"),
+        ("Plus und Minus rechnen", "blau"),
+        ("Formen erkennen und z\u00e4hlen", "purple"),
+        ("Zahlenr\u00e4tsel l\u00f6sen", "orange"),
+        ("Rechengeschichten verstehen", "pink"),
+    ]
+
+    text_y -= 0.7 * cm
+    for skill_text, farb_key in skills:
+        draw_emoji(c, "\u2705", 4.0 * cm, text_y + 0.1 * cm, 0.45 * cm)
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont(FONT, 12)
+        c.drawString(4.8 * cm, text_y, skill_text)
+        text_y -= 0.65 * cm
+
+    # ── Euli mit Pokal ─────────────────────────────────────────────
+    euli_cx = W / 2
+    euli_cy = text_y - 1.5 * cm
+    draw_euli(c, euli_cx, euli_cy, size=0.9)
+    # Pokal neben Euli
+    draw_mini_pokal(c, euli_cx + 2.0 * cm, euli_cy + 0.8 * cm, size=2.5)
+    draw_mini_pokal(c, euli_cx - 2.0 * cm, euli_cy + 0.8 * cm, size=2.5)
+
+    # ── Datumszeile ────────────────────────────────────────────────
+    datum_y = frame_y + 1.2 * cm
+    c.setFillColor(FARBEN["dunkel"])
+    c.setFont(FONT, 12)
+    c.drawString(3.5 * cm, datum_y, "Datum:")
+    date_line_x = 5.8 * cm
+    date_line_w = 8 * cm
+    c.setStrokeColor(FARBEN["dunkel"])
+    c.setLineWidth(1)
+    c.line(date_line_x, datum_y, date_line_x + date_line_w, datum_y)
+
+
 def _render_fortschritt_header(c):
     """Zeichnet den Header der Fortschrittsseite."""
     draw_page_bg(c)
@@ -915,6 +1015,11 @@ def main():
     if n_loes > 0:
         c.showPage()
     print(f"  → {n_loes} Lösungsseite(n)")
+
+    # Urkunde-Seite ganz am Ende
+    print("  Rendere Urkunde-Seite ...")
+    draw_urkunde_seite(c)
+    c.showPage()
 
     c.save()
     print(f"\n✓ PDF gespeichert: {output_path}")
