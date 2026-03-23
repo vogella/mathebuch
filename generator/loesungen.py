@@ -9,6 +9,7 @@ from reportlab.lib.colors import HexColor, white
 from reportlab.lib.units import cm
 from reportlab.lib.pagesizes import A4
 from layout import FARBEN, draw_page_bg, draw_page_number, FONT, FONT_BOLD
+from aufgabentypen import _parse_muenz_wert
 
 W, H = A4
 
@@ -705,15 +706,6 @@ def _solve_karten_rechnen(abschnitt):
             results.append(str(val))
     return results
 
-
-def _parse_muenz_wert(text):
-    """Parse coin text like '1€', '50ct' into cent value."""
-    text = text.strip()
-    if text.endswith("€"):
-        return int(text[:-1]) * 100
-    elif text.endswith("ct"):
-        return int(text[:-2])
-    return 0
 
 
 def _format_betrag(cent):
