@@ -595,7 +595,7 @@ def draw_urkunde_seite(c):
     text_y -= 0.7 * cm
     for skill_text, farb_key in skills:
         draw_emoji(c, "\u2705", 4.0 * cm, text_y + 0.1 * cm, 0.45 * cm)
-        c.setFillColor(FARBEN["dunkel"])
+        c.setFillColor(FARBEN[farb_key])
         c.setFont(FONT, 12)
         c.drawString(4.8 * cm, text_y, skill_text)
         text_y -= 0.65 * cm
@@ -917,7 +917,7 @@ def main():
 
     # Probe-TOC und Fortschritt um Seitenanzahlen zu ermitteln
     # Vorläufige Seitennummern mit geschätztem Offset berechnen
-    est_offset = 5  # Titelseite (1) + Inhaltsverzeichnis (~2) + Fortschritt (~1) + Geschafft! (1)
+    est_offset = 4  # Titelseite (1) + Inhaltsverzeichnis (~2) + Fortschritt (~1)
     est_seiten_nummern = []
     s = est_offset
     for i, n in enumerate(seiten_pro_kapitel):
@@ -931,8 +931,8 @@ def main():
     del probe_c, probe_buf
 
     # Seiten-Offset: Titelseite (1) + Inhaltsverzeichnis (toc_pages) + Fortschritt (fortschritt_pages)
-    # + Geschafft! (1). Kapitel starten auf der Seite danach.
-    seiten_offset = 1 + toc_pages + fortschritt_pages + 1
+    # Kapitel starten auf der Seite danach.
+    seiten_offset = 1 + toc_pages + fortschritt_pages
 
     # Seitennummern berechnen (mit Trennseiten)
     seiten_nummern = []
@@ -996,13 +996,6 @@ def main():
         erkl_seite = _erklaerung_seite_fuer_kapitel(data)
         render_kapitel(c, data, seiten_nummern[i], erklaerung_seite=erkl_seite)
         c.showPage()
-
-    # "Geschafft!" Abschlussseite
-    geschafft_seite_nr = aktuelle_seite
-    print(f"  Rendere Geschafft!-Seite (S. {geschafft_seite_nr}) ...")
-    render_geschafft_seite(c, geschafft_seite_nr)
-    c.showPage()
-    aktuelle_seite += 1
 
     # Lösungsseiten am Ende
     from loesungen import render_loesungsseiten
