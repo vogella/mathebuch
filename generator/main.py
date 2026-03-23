@@ -22,7 +22,7 @@ from reportlab.lib.units import cm
 from reportlab.lib.colors import white
 from layout import (draw_page_bg, draw_header, draw_emoji,
                     draw_page_number, FARBEN, RAND_FARBEN,
-                    FONT, FONT_BOLD, FONT_ITALIC)
+                    FONT, FONT_BOLD, FONT_ITALIC, _draw_star_shape)
 from illustrationen import (draw_euli, draw_euli_mit_sprechblase,
                             draw_separator_illustration)
 from aufgabentypen import (draw_erklaerung, draw_lückenaufgaben,
@@ -444,7 +444,7 @@ def _draw_preview_schatz(c, cx, cy, size, farb_key):
             c.setStrokeColor(FARBEN["orange"])
             c.setLineWidth(1)
             # Draw a small star shape
-            _draw_mini_star(c, px, py, node_r * 1.3)
+            _draw_star_shape(c, px, py, node_r * 1.3, node_r * 1.3 * 0.45)
         elif node_vals[i] == "?":
             c.setFillColor(FARBEN["antwort"])
             c.setStrokeColor(path_colors[i])
@@ -459,26 +459,6 @@ def _draw_preview_schatz(c, cx, cy, size, farb_key):
             c.setFillColor(white)
             c.setFont(FONT_BOLD, 7)
             c.drawCentredString(px, py - 0.08 * cm, node_vals[i])
-
-
-def _draw_mini_star(c, cx, cy, size):
-    """Draws a small star (treasure icon) at (cx, cy)."""
-    from reportlab.lib.colors import HexColor
-    points = 5
-    outer_r = size
-    inner_r = size * 0.45
-    path = c.beginPath()
-    for i in range(points * 2):
-        angle = math.radians(90 + i * (360 / (points * 2)))
-        r = outer_r if i % 2 == 0 else inner_r
-        x = cx + r * math.cos(angle)
-        y = cy + r * math.sin(angle)
-        if i == 0:
-            path.moveTo(x, y)
-        else:
-            path.lineTo(x, y)
-    path.close()
-    c.drawPath(path, fill=1, stroke=1)
 
 
 def render_titelseite(c):
