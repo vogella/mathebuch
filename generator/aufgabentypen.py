@@ -1590,7 +1590,7 @@ def draw_muster_fortsetzen(c, abschnitt, farb_key, start_y):
     for idx, aufg in enumerate(aufgaben):
         y0 = row_y - idx * row_h
 
-        # Task number
+        # 0.15cm offset centers the 8pt task number text against pattern elements
         _draw_task_number(c, 1.5*cm, y0 - 0.15*cm, idx + 1)
 
         elemente = aufg.get("elemente") or aufg.get("muster", [])
