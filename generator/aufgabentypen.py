@@ -3789,3 +3789,106 @@ def draw_muenzen_legen(c, abschnitt, farb_key, start_y):
         c.setDash()
 
     return row_y - len(aufgaben) * row_h - 0.3*cm
+
+
+# ── Uhr lesen ──────────────────────────────────────────
+
+def _draw_clock_face(c, cx, cy, radius, stunde, minute, farb_key):
+    """Draws an analog clock face centered at (cx, cy)."""
+    farbe = FARBEN[farb_key]
+
+    # White clock face with colored border
+    c.setFillColor(white)
+    c.setStrokeColor(farbe)
+    c.setLineWidth(2.5)
+    c.circle(cx, cy, radius, fill=1, stroke=1)
+
+    # Hour markers and numbers
+    c.setFillColor(FARBEN["dunkel"])
+    c.setFont(FONT_BOLD, 9 if radius > 1.2*cm else 7)
+    for h in range(1, 13):
+        angle = math.radians(90 - h * 30)
+        # Tick marks
+        outer_x = cx + (radius - 0.1*cm) * math.cos(angle)
+        outer_y = cy + (radius - 0.1*cm) * math.sin(angle)
+        inner_x = cx + (radius - 0.25*cm) * math.cos(angle)
+        inner_y = cy + (radius - 0.25*cm) * math.sin(angle)
+        c.setStrokeColor(FARBEN["dunkel"])
+        c.setLineWidth(1.5)
+        c.line(inner_x, inner_y, outer_x, outer_y)
+
+        # Numbers
+        num_r = radius - 0.45*cm
+        num_x = cx + num_r * math.cos(angle)
+        num_y = cy + num_r * math.sin(angle)
+        c.setFillColor(FARBEN["dunkel"])
+        c.drawCentredString(num_x, num_y - 0.1*cm, str(h))
+
+    # Center dot
+    c.setFillColor(FARBEN["dunkel"])
+    c.circle(cx, cy, 0.08*cm, fill=1, stroke=0)
+
+    # Hour hand (shorter, thicker)
+    # At half-hour, the hour hand moves halfway to the next hour
+    hour_angle_deg = 90 - (stunde % 12) * 30 - minute * 0.5
+    hour_angle = math.radians(hour_angle_deg)
+    hour_len = radius * 0.5
+    hx = cx + hour_len * math.cos(hour_angle)
+    hy = cy + hour_len * math.sin(hour_angle)
+    c.setStrokeColor(FARBEN["dunkel"])
+    c.setLineWidth(3)
+    c.setLineCap(1)  # round cap
+    c.line(cx, cy, hx, hy)
+
+    # Minute hand (longer, thinner)
+    min_angle_deg = 90 - minute * 6
+    min_angle = math.radians(min_angle_deg)
+    min_len = radius * 0.75
+    mx = cx + min_len * math.cos(min_angle)
+    my = cy + min_len * math.sin(min_angle)
+    c.setStrokeColor(farbe)
+    c.setLineWidth(2)
+    c.line(cx, cy, mx, my)
+    c.setLineCap(0)  # reset
+
+
+def draw_uhr_lesen(c, abschnitt, farb_key, start_y):
+    """Clock reading exercise: students read analog clocks and write the time."""
+    draw_section_label(c, abschnitt["titel"], farb_key, start_y, abschnitt.get("schwierigkeit", 0))
+    y_off = _draw_beschreibung(c, abschnitt, start_y)
+
+    aufgaben = abschnitt.get("aufgaben", [])
+    clocks_per_row = 3
+    clock_radius = 1.3*cm
+    col_spacing = (W - 3*cm) / clocks_per_row
+    row_h = 4.2*cm
+    row_y = start_y - 1.8*cm - y_off
+
+    for i, aufg in enumerate(aufgaben):
+        col = i % clocks_per_row
+        row = i // clocks_per_row
+
+        cx = 2.5*cm + col * col_spacing + col_spacing / 2
+        cy = row_y - row * row_h
+
+        stunde = aufg["stunde"]
+        minute = aufg["minute"]
+
+        # Task number
+        _draw_task_number(c, cx - clock_radius - 0.1*cm, cy + clock_radius + 0.15*cm, i + 1)
+
+        # Clock face
+        _draw_clock_face(c, cx, cy, clock_radius, stunde, minute, farb_key)
+
+        # Answer box below clock
+        box_w = 2.2*cm
+        box_h = 0.9*cm
+        draw_answer_box(c, cx - box_w / 2, cy - clock_radius - box_h - 0.3*cm, w=box_w, h=box_h)
+
+        # "Uhr" label next to box
+        c.setFillColor(FARBEN["grau"])
+        c.setFont(FONT, 9)
+        c.drawString(cx + box_w / 2 + 0.15*cm, cy - clock_radius - box_h + 0.05*cm, "Uhr")
+
+    total_rows = (len(aufgaben) + clocks_per_row - 1) // clocks_per_row
+    return row_y - total_rows * row_h - 0.5*cm

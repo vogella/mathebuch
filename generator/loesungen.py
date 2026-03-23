@@ -750,6 +750,15 @@ def _solve_muenzen_legen(abschnitt):
     return results
 
 
+def _solve_uhr_lesen(abschnitt):
+    results = []
+    for aufg in abschnitt["aufgaben"]:
+        stunde = aufg["stunde"]
+        minute = aufg["minute"]
+        results.append(f"{stunde}:{minute:02d} Uhr")
+    return results
+
+
 # ── Solver-Registry ───────────────────────────────────────
 
 SOLVER = {
@@ -798,6 +807,7 @@ SOLVER = {
     "karten_geheim":      _solve_karten_geheim,
     "muenzen_zaehlen":    _solve_muenzen_zaehlen,
     "muenzen_legen":      _solve_muenzen_legen,
+    "uhr_lesen":          _solve_uhr_lesen,
 }
 
 # Types to skip (explanation, visual-only)
