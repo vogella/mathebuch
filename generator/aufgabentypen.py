@@ -3076,7 +3076,7 @@ def draw_umkehraufgaben(c, abschnitt, farb_key, start_y):
     cols = 2
     col_w = (W - 3 * cm) / cols
     row_h_inner = 1.1 * cm
-    group_h = 3 * row_h_inner + 0.9 * cm
+    group_h = 3 * row_h_inner + 0.55 * cm
     ANSWER_BOX_W = 1.3 * cm
     ANSWER_BOX_H = 1.0 * cm
 
@@ -3089,9 +3089,6 @@ def draw_umkehraufgaben(c, abschnitt, farb_key, start_y):
         x0 = 1.8 * cm + col * col_w
         y0 = row_y - row * group_h
 
-        # Task number
-        _draw_task_number(c, x0 - 0.3 * cm, y0 + 0.05 * cm, idx + 1)
-
         # Draw a light rounded box around the problem group
         c.setFillColor(FARBEN["bg"])
         c.setStrokeColor(FARBEN["hellgrau"])
@@ -3099,6 +3096,9 @@ def draw_umkehraufgaben(c, abschnitt, farb_key, start_y):
         c.roundRect(x0 - 0.3 * cm, y0 - group_h + 0.5 * cm,
                     col_w - 0.4 * cm, group_h - 0.2 * cm,
                     radius=6, fill=1, stroke=1)
+
+        # Task number (drawn after background so it remains visible)
+        _draw_task_number(c, x0 - 0.3 * cm, y0 + 0.05 * cm, idx + 1)
 
         # Retrieve solution answers for the two blank rows
         loes = loesungen[idx] if idx < len(loesungen) else None
