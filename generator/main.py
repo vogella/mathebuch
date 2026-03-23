@@ -626,106 +626,201 @@ def draw_urkunde_seite(c):
 def _render_fortschritt_header(c):
     """Zeichnet den Header der Fortschrittsseite."""
     draw_page_bg(c)
-    c.setFillColor(FARBEN["gruen"])
+    c.setFillColor(FARBEN["purple"])
     c.roundRect(1.5 * cm, H - 3.5 * cm, W - 3 * cm, 2.2 * cm,
                 radius=12, fill=1, stroke=0)
+    # Kompass-Emoji links im Header
+    c.setFillColor(white)
+    c.circle(2.8 * cm, H - 2.4 * cm, 0.7 * cm, fill=1, stroke=0)
+    draw_emoji(c, "\U0001f5fa", 2.8 * cm, H - 2.4 * cm, 0.9 * cm)
     c.setFillColor(white)
     c.setFont(FONT_BOLD, 20)
-    c.drawCentredString(W / 2, H - 2.5 * cm, "Mein Fortschritt")
+    c.drawCentredString(W / 2 + 0.5 * cm, H - 2.2 * cm, "Meine Mathe-Reise")
+    c.setFont(FONT, 12)
+    c.drawCentredString(W / 2 + 0.5 * cm, H - 2.8 * cm,
+                        "Dein Weg durch das Mathebuch")
 
     c.setFillColor(FARBEN["dunkel"])
     c.setFont(FONT, 10)
     c.drawCentredString(W / 2, H - 4.2 * cm,
-                        "Male den Stern aus, wenn du das Kapitel geschafft hast!")
+                        "Kreuze jedes Kapitel an, wenn du es geschafft hast!")
 
 
-def render_fortschritt_seite(c, alle_kapitel):
-    """Rendert Fortschritts-Seiten als Liste mit Emoji, Titel und Ausmal-Stern."""
+def _draw_path_segment(c, x1, y1, x2, y2, color):
+    """Zeichnet ein gestricheltes Pfadsegment zwischen zwei Stationen."""
+    c.saveState()
+    c.setStrokeColor(color)
+    c.setLineWidth(2)
+    c.setDash(4, 4)
+    c.line(x1, y1, x2, y2)
+    c.setDash()
+    c.restoreState()
+
+
+def _draw_station(c, cx, cy, emoji, titel, farbe, nr, checkbox_only=False):
+    """Zeichnet eine Station auf der Reise-Karte.
+
+    cx, cy: Mittelpunkt der Station
+    emoji: Kapitel-Emoji
+    titel: Kurzform des Kapiteltitels
+    farbe: Farbschlüssel
+    nr: Stationsnummer
+    """
+    color = FARBEN.get(farbe, FARBEN["blau"])
+
+    # Farbiger Kreis als Station
+    c.setFillColor(color)
+    c.circle(cx, cy, 0.45 * cm, fill=1, stroke=0)
+
+    # Emoji in der Station
+    draw_emoji(c, emoji, cx, cy, 0.55 * cm)
+
+    # Checkbox (leeres Kästchen) rechts neben der Station
+    box_size = 0.35 * cm
+    box_x = cx + 0.6 * cm
+    box_y = cy - box_size / 2
+    c.setFillColor(white)
+    c.setStrokeColor(color)
+    c.setLineWidth(1.5)
+    c.rect(box_x, box_y, box_size, box_size, fill=1, stroke=1)
+
+    # Stationsnummer (klein, über der Station)
+    c.setFillColor(FARBEN["grau"])
+    c.setFont(FONT, 7)
+    c.drawCentredString(cx, cy + 0.65 * cm, str(nr))
+
+    # Titel unter der Station (gekürzt)
+    c.setFillColor(FARBEN["dunkel"])
+    c.setFont(FONT, 7)
+    max_w = 3.0 * cm
+    t = titel
+    if c.stringWidth(t, FONT, 7) > max_w:
+        while c.stringWidth(t + "…", FONT, 7) > max_w and len(t) > 3:
+            t = t[:-1]
+        t = t + "…"
+    c.drawCentredString(cx, cy - 0.7 * cm, t)
+
+
+def draw_fortschritts_seite(c, alle_kapitel):
+    """Rendert eine visuelle Fortschritts-Übersicht als Reise-Karte.
+
+    Zeigt die CHAPTER_GROUPS als Stationen auf einem gewundenen Pfad.
+    Jede Gruppe hat ein Emoji, einen Kurztitel und ein Ankreuz-Kästchen.
+    Gibt die Anzahl der verwendeten Seiten zurück.
+    """
     _render_fortschritt_header(c)
-
-    # Collect non-explanation chapters
-    kapitel_namen = []
-    for dateiname, data in alle_kapitel:
-        kap = data["kapitel"]
-        if kap.get("erklaerungsseite", False):
-            continue
-        kapitel_namen.append({
-            "titel": kap["titel"],
-            "emoji": kap.get("emoji", "⭐"),
-            "farbe": kap.get("farbe", "blau"),
-            "zahlenraum": kap.get("zahlenraum", 20),
-        })
-
-    # Layout constants
-    x_left = 2.0 * cm
-    row_h = 0.85 * cm
-    y = H - 5.0 * cm
-    min_y = 2.5 * cm
-    emoji_col_x = x_left + 0.9 * cm
-    titel_col_x = x_left + 1.8 * cm
-    star_col_x = W - 2.8 * cm
     pages = 1
 
-    prev_zr = None
-    section_labels = {5: "Rechnen bis 5", 10: "Rechnen bis 10", 20: "Rechnen bis 20"}
+    # Sammle Gruppen-Einträge basierend auf CHAPTER_GROUPS
+    gruppen_eintraege = []
+    kapitel_map = {}
+    for dateiname, data in alle_kapitel:
+        kap = data["kapitel"]
+        fname = dateiname
+        kapitel_map[fname] = kap
 
-    for idx, kap in enumerate(kapitel_namen):
-        # Section header when zahlenraum changes
-        zr = kap["zahlenraum"]
-        if zr != prev_zr:
-            if prev_zr is not None:
-                y -= 0.3 * cm
-            if y < min_y + 1.5 * cm:
-                c.showPage()
-                _render_fortschritt_header(c)
-                y = H - 5.0 * cm
-                pages += 1
-            label = section_labels.get(zr, f"Rechnen bis {zr}")
-            c.setFillColor(FARBEN["gruen"])
-            c.setFont(FONT_BOLD, 11)
-            c.drawString(x_left, y, label)
-            c.setStrokeColor(FARBEN["hellgrau"])
-            c.setLineWidth(0.5)
-            c.line(x_left, y - 0.15 * cm, W - 2.0 * cm, y - 0.15 * cm)
-            y -= 0.7 * cm
-            prev_zr = zr
+    for group_name, prefixes in CHAPTER_GROUPS:
+        # Finde das erste passende Kapitel für Emoji und Farbe
+        emoji = "\u2b50"
+        farbe = "blau"
+        for dateiname, data in alle_kapitel:
+            fname = dateiname
+            for p in prefixes:
+                if fname.startswith(p):
+                    kap = data["kapitel"]
+                    emoji = kap.get("emoji", "\u2b50")
+                    farbe = kap.get("farbe", "blau")
+                    break
+            else:
+                continue
+            break
 
-        # Page break if needed
+        gruppen_eintraege.append({
+            "titel": group_name,
+            "emoji": emoji,
+            "farbe": farbe,
+            "anzahl": len(prefixes),
+        })
+
+    # Layout: Schlängelnder Pfad von oben nach unten
+    y_start = H - 5.2 * cm
+    min_y = 2.8 * cm
+    row_h = 1.8 * cm  # Vertikaler Abstand zwischen Stationen
+
+    # Wir legen die Stationen in einem Zickzack-Muster an
+    # Ungerade Reihen: links, gerade Reihen: rechts
+    x_left = 4.5 * cm
+    x_right = W - 4.5 * cm
+    x_center = W / 2
+
+    y = y_start
+    prev_x = None
+    prev_y = None
+    station_nr = 0
+
+    # Farben für die Pfadsegmente (wechselnd)
+    pfad_farben = [FARBEN["yellow"], FARBEN["orange"], FARBEN["blau"],
+                   FARBEN["gruen"], FARBEN["pink"], FARBEN["purple"]]
+
+    for idx, gruppe in enumerate(gruppen_eintraege):
+        # Prüfe ob Seitenumbruch nötig
         if y < min_y:
             c.showPage()
             _render_fortschritt_header(c)
-            y = H - 5.0 * cm
+            y = y_start
+            prev_x = None
+            prev_y = None
             pages += 1
 
-        farbe = FARBEN.get(kap["farbe"], FARBEN["blau"])
-        row_cy = y + 0.15 * cm
+        station_nr += 1
 
-        # Number
-        c.setFillColor(farbe)
-        c.setFont(FONT_BOLD, 9)
-        c.drawRightString(x_left + 0.6 * cm, y, str(idx + 1))
+        # Zickzack: abwechselnd links und rechts
+        if idx % 2 == 0:
+            cx = x_left
+        else:
+            cx = x_right
 
-        # Emoji
-        draw_emoji(c, kap["emoji"], emoji_col_x + 0.3 * cm, row_cy, 0.55 * cm)
+        # Pfadsegment zur vorherigen Station zeichnen
+        if prev_x is not None and prev_y is not None:
+            pfad_farbe = pfad_farben[idx % len(pfad_farben)]
+            _draw_path_segment(c, prev_x, prev_y, cx, y, pfad_farbe)
 
-        # Title
-        c.setFillColor(FARBEN["dunkel"])
-        c.setFont(FONT, 10)
-        titel = kap["titel"]
-        max_w = star_col_x - titel_col_x - 0.3 * cm
-        if c.stringWidth(titel, FONT, 10) > max_w:
-            while c.stringWidth(titel + "…", FONT, 10) > max_w and len(titel) > 4:
-                titel = titel[:-1]
-            titel = titel + "…"
-        c.drawString(titel_col_x, y, titel)
+        # Station zeichnen
+        _draw_station(c, cx, y, gruppe["emoji"], gruppe["titel"],
+                      gruppe["farbe"], station_nr)
 
-        # Star checkbox (empty circle to color in)
-        c.setStrokeColor(farbe)
-        c.setLineWidth(1.2)
-        c.setFillColor(white)
-        c.circle(star_col_x + 0.4 * cm, row_cy, 0.25 * cm, fill=1, stroke=1)
+        # Anzahl der Kapitel in der Gruppe (kleiner Hinweis)
+        c.setFillColor(FARBEN["grau"])
+        c.setFont(FONT_ITALIC, 6)
+        anz_text = f"({gruppe['anzahl']} Kapitel)"
+        c.drawCentredString(cx, y - 0.95 * cm, anz_text)
 
+        prev_x = cx
+        prev_y = y
         y -= row_h
+
+    # Ziel-Markierung am Ende: Pokal
+    if prev_x is not None and prev_y is not None:
+        ziel_y = y
+        if ziel_y < min_y:
+            # Zeichne das Ziel auf die letzte gültige Position
+            ziel_y = prev_y - 1.4 * cm
+        ziel_x = x_center
+        _draw_path_segment(c, prev_x, prev_y, ziel_x, ziel_y,
+                           FARBEN["yellow"])
+        # Pokal-Emoji als Ziel
+        c.setFillColor(FARBEN["yellow"])
+        c.circle(ziel_x, ziel_y, 0.55 * cm, fill=1, stroke=0)
+        draw_emoji(c, "\U0001f3c6", ziel_x, ziel_y, 0.7 * cm)
+        c.setFillColor(FARBEN["dunkel"])
+        c.setFont(FONT_BOLD, 9)
+        c.drawCentredString(ziel_x, ziel_y - 0.8 * cm, "Geschafft!")
+
+    # Euli unten rechts als Ermutigung
+    from illustrationen import draw_euli_mit_sprechblase
+    euli_x = W - 3.5 * cm
+    euli_y = 2.8 * cm
+    draw_euli(c, euli_x, euli_y, size=0.4)
 
     return pages
 
@@ -930,7 +1025,7 @@ def main():
         s += n
     toc_pages = render_inhaltsverzeichnis(probe_c, alle_kapitel, est_seiten_nummern)
     probe_c.showPage()
-    fortschritt_pages = render_fortschritt_seite(probe_c, alle_kapitel)
+    fortschritt_pages = draw_fortschritts_seite(probe_c, alle_kapitel)
     del probe_c, probe_buf
 
     # Seiten-Offset: Titelseite (1) + Inhaltsverzeichnis (toc_pages) + Fortschritt (fortschritt_pages)
@@ -985,7 +1080,7 @@ def main():
 
     # Fortschritt-Seite
     print("  Rendere Fortschritt-Seite ...")
-    render_fortschritt_seite(c, alle_kapitel)
+    draw_fortschritts_seite(c, alle_kapitel)
     c.showPage()
 
     # Kapitel (mit Trennseiten zwischen Hauptabschnitten)
