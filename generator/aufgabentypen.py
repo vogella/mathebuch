@@ -3637,6 +3637,13 @@ def draw_karten_geheim(c, abschnitt, farb_key, start_y):
 
 # ── Münzen-Übungen ──────────────────────────────────────
 
+# Coin color schemes
+MUENZ_FARBEN = {
+    "euro": {"border": HexColor("#C8960C"), "fill": HexColor("#FFD94A"), "inner": HexColor("#E6B800")},
+    "cent_klein": {"border": HexColor("#8B4513"), "fill": HexColor("#CD7F32"), "inner": HexColor("#A0522D")},
+    "cent_gross": {"border": HexColor("#B8860B"), "fill": HexColor("#FFE680"), "inner": HexColor("#DAA520")},
+}
+
 
 def _parse_muenz_wert(text):
     """Parse coin text like '1€', '2€', '50ct', '10ct' into cent value."""
@@ -3656,20 +3663,14 @@ def _draw_muenze(c, x, y, wert_text, radius):
     wert_text = wert_text.strip()
     # Choose colors based on denomination
     if wert_text.endswith("€"):
-        # Euro coins: gold
-        border_color = HexColor("#C8960C")
-        fill_color = HexColor("#FFD94A")
-        inner_color = HexColor("#E6B800")
+        scheme = MUENZ_FARBEN["euro"]
     elif wert_text in ("1ct", "2ct", "5ct"):
-        # Small cent coins: copper
-        border_color = HexColor("#8B4513")
-        fill_color = HexColor("#CD7F32")
-        inner_color = HexColor("#A0522D")
+        scheme = MUENZ_FARBEN["cent_klein"]
     else:
-        # 10ct, 20ct, 50ct: silver/gold
-        border_color = HexColor("#B8860B")
-        fill_color = HexColor("#FFE680")
-        inner_color = HexColor("#DAA520")
+        scheme = MUENZ_FARBEN["cent_gross"]
+    border_color = scheme["border"]
+    fill_color = scheme["fill"]
+    inner_color = scheme["inner"]
 
     # Outer circle (border)
     c.setFillColor(border_color)
@@ -3752,8 +3753,8 @@ def draw_muenzen_legen(c, abschnitt, farb_key, start_y):
         _draw_muenze(c, ref_x, ref_y + 0.1*cm, ct, r)
         ref_x += r * 2 + 0.3*cm
 
-    row_y -= 1.5*cm
-    row_h = 3.0*cm
+    row_y -= 1.2*cm
+    row_h = 2.5*cm
 
     for idx, aufg in enumerate(aufgaben):
         betrag = aufg["betrag"]
@@ -3774,8 +3775,8 @@ def draw_muenzen_legen(c, abschnitt, farb_key, start_y):
         # Lined answer box for writing coins
         box_x = 2.8*cm + badge_w + 0.5*cm
         box_w = W - box_x - 1.5*cm
-        box_h = 1.2*cm
-        box_y = y - 0.8*cm
+        box_h = 1.0*cm
+        box_y = y - 0.7*cm
         c.setFillColor(FARBEN["antwort"])
         c.setStrokeColor(FARBEN["blau"])
         c.setLineWidth(1.5)
