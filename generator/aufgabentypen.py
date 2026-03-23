@@ -3520,19 +3520,19 @@ def draw_karten_rechnen(c, abschnitt, farb_key, start_y):
             cx = base_x
             for ki, k in enumerate(karten):
                 _draw_spielkarte(c, cx, y - card_h + 0.3*cm, k, farb_key, card_w, card_h)
-                cx += card_w + 0.15*cm
+                cx += card_w + 0.25*cm
                 if ki < len(karten) - 1:
                     # Operator between cards
                     c.setFillColor(FARBEN[farb_key])
                     c.setFont(FONT_BOLD, 20)
                     c.drawCentredString(cx + 0.3*cm, y - card_h / 2 + 0.3*cm, op)
-                    cx += 0.75*cm
+                    cx += 0.8*cm
 
             # Equals sign and answer box
             c.setFillColor(FARBEN[farb_key])
             c.setFont(FONT_BOLD, 20)
-            c.drawCentredString(cx + 0.3*cm, y - card_h / 2 + 0.3*cm, "=")
-            draw_answer_box(c, cx + 0.7*cm, y - card_h / 2 - 0.3*cm, w=1.6*cm, h=1.2*cm)
+            c.drawCentredString(cx + 0.35*cm, y - card_h / 2 + 0.3*cm, "=")
+            draw_answer_box(c, cx + 0.8*cm, y - card_h / 2 - 0.35*cm, w=1.8*cm, h=1.3*cm)
 
     return row_y - halb * row_h - 0.3*cm
 
@@ -3567,15 +3567,15 @@ def draw_karten_ziel_summe(c, abschnitt, farb_key, start_y):
 
         # Answer: two blank boxes with + and =
         ans_y = card_y + card_h / 2 - 0.3*cm
-        ax = cx + 0.5*cm
-        draw_answer_box(c, ax, ans_y - 0.3*cm, w=1.2*cm, h=1.0*cm)
-        ax += 1.4*cm
+        ax = cx + 0.7*cm
+        draw_answer_box(c, ax, ans_y - 0.35*cm, w=1.4*cm, h=1.2*cm)
+        ax += 1.6*cm
         c.setFillColor(FARBEN[farb_key])
         c.setFont(FONT_BOLD, 18)
         c.drawCentredString(ax + 0.2*cm, ans_y, "+")
         ax += 0.6*cm
-        draw_answer_box(c, ax, ans_y - 0.3*cm, w=1.2*cm, h=1.0*cm)
-        ax += 1.4*cm
+        draw_answer_box(c, ax, ans_y - 0.35*cm, w=1.4*cm, h=1.2*cm)
+        ax += 1.6*cm
         c.setFillColor(FARBEN[farb_key])
         c.setFont(FONT_BOLD, 18)
         c.drawCentredString(ax + 0.2*cm, ans_y, f"= {ziel}")
@@ -3609,12 +3609,12 @@ def draw_karten_geheim(c, abschnitt, farb_key, start_y):
             cx = base_x
             for ki, k in enumerate(karten):
                 _draw_spielkarte(c, cx, y - card_h + 0.3*cm, k, farb_key, card_w, card_h)
-                cx += card_w + 0.15*cm
+                cx += card_w + 0.25*cm
                 # + after each card
                 c.setFillColor(FARBEN[farb_key])
                 c.setFont(FONT_BOLD, 18)
                 c.drawCentredString(cx + 0.25*cm, y - card_h / 2 + 0.3*cm, "+")
-                cx += 0.65*cm
+                cx += 0.7*cm
 
             # Mystery card with "?"
             c.setFillColor(FARBEN["yellow"])
@@ -3625,12 +3625,12 @@ def draw_karten_geheim(c, abschnitt, farb_key, start_y):
             c.setFont(FONT_BOLD, 26)
             c.drawCentredString(cx + card_w / 2, y - card_h / 2 + 0.05*cm, "?")
             c.setLineWidth(1)
-            cx += card_w + 0.15*cm
+            cx += card_w + 0.35*cm
 
             # = target
             c.setFillColor(FARBEN[farb_key])
             c.setFont(FONT_BOLD, 18)
-            c.drawCentredString(cx + 0.3*cm, y - card_h / 2 + 0.3*cm, f"= {summe}")
+            c.drawCentredString(cx + 0.35*cm, y - card_h / 2 + 0.3*cm, f"= {summe}")
 
     return row_y - halb * row_h - 0.3*cm
 
